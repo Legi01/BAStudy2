@@ -22,11 +22,11 @@ public class FileManager
             new Quat4fSurrogate());
         _surrogateSelector.AddSurrogate(typeof(Vector3s), new StreamingContext(StreamingContextStates.All),
             new Vector3sSurrogate());
-        //_surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
-        //new Vector3Surrogate());
+        _surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
+            new Vector3Surrogate());
     }
 
-    public void saveToCSV(List<SuitData> data)
+    public void SaveToCSV(List<SuitData> data)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -35,11 +35,10 @@ public class FileManager
         sb.Append(data[0].GetCsvHeader(seperator));
         foreach (var suitData in data)
         {
-            Debug.Log(suitData);
             sb.Append(suitData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/suitData.csv";
+        string path = Application.dataPath + "/mocap.csv";
 
         using (var writer = new StreamWriter(path, false))
         {
@@ -49,29 +48,39 @@ public class FileManager
         Debug.Log($"Saved {data.Count} entries.");
     }
 
-    public List<SuitData> load()
+    public void Save(List<SuitData> data)
     {
-        string path = Application.dataPath + "/suitData.tsdat";
-        FileStream file;
-
-        if (File.Exists(path))
-        {
-            file = File.OpenRead(path);
-        }
-        else
-        {
-            Debug.LogError("Suit data file not found");
-            return null;
-        }
-
-        BinaryFormatter bf = new BinaryFormatter
+        BinaryFormatter formatter = new BinaryFormatter
         {
             SurrogateSelector = _surrogateSelector
         };
+        string path = Application.dataPath + "/MoCap.mocap";
+        FileStream stream = new FileStream(path, FileMode.Create);
 
-        List<SuitData> data = (List<SuitData>)bf.Deserialize(file);
-        file.Close();
+        // Serialize to a file
+        formatter.Serialize(stream, data);
+        stream.Close();
+    }
+    public List<SuitData> Load()
+    {
+        string path = Application.dataPath + "/MoCap.mocap";
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter()
+            {
+                SurrogateSelector = _surrogateSelector
+            };
+            FileStream stream = new FileStream(path, FileMode.Open);
 
-        return data;
+            List<SuitData> data = (List<SuitData>)formatter.Deserialize(stream);
+            stream.Close();
+
+            return data;
+        }
+        else
+        {
+            Debug.Log("Mocap FIle not Found");
+            return null;
+        }
     }
 }

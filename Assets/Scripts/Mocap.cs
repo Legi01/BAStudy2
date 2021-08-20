@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TeslasuitAPI;
 using UnityEngine;
 
-public class MotionCapture : MonoBehaviour
+public class Mocap : MonoBehaviour
 {
     private Transform _teslasuitMan;
     private MocapJoints _mocapJoints;

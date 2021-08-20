@@ -51,12 +51,13 @@ public class MocapReplay : MonoBehaviour
     //     }
     // }
 
-    public void load()
+    public void Load()
     {
-        replayData = _fileManager.load();
+        //replayData = _fileManager.LoadMocapData();
+        replayData = _fileManager.Load();
     }
 
-    public void startStopReplay()
+    public void StartStopReplay()
     {
         replayIndex = 0;
         doReplay = !doReplay;

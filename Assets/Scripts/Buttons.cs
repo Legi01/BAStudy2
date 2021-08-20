@@ -20,7 +20,9 @@ public class Buttons : MonoBehaviour
 
     private GameStatus status;
 
-    public MotionRecorder motionRecorder;
+    public MocapRecorder mocapRecorder;
+    public MocapReplay motionReplay;
+
 
     // Start is called before the first frame update
     void Start()
@@ -67,7 +69,7 @@ public class Buttons : MonoBehaviour
         replayButtonStart.gameObject.SetActive(false);
         replayButtonStop.gameObject.SetActive(false);
 
-        motionRecorder.StartStopRecording(true);
+        mocapRecorder.StartStopRecording();
     }
 
     void OnStopRecording()
@@ -79,8 +81,8 @@ public class Buttons : MonoBehaviour
         replayButtonStart.gameObject.SetActive(true);
         replayButtonStop.gameObject.SetActive(false);
 
-        motionRecorder.StartStopRecording(false);
-        motionRecorder.Save();
+        mocapRecorder.StartStopRecording();
+        mocapRecorder.Save();
     }
 
     void OnStartReplaying()
@@ -91,6 +93,9 @@ public class Buttons : MonoBehaviour
         recordButtonStop.gameObject.SetActive(false);
         replayButtonStart.gameObject.SetActive(false);
         replayButtonStop.gameObject.SetActive(true);
+
+        motionReplay.Load();
+        motionReplay.StartStopReplay();
     }
 
     void OnStopReplaying()
@@ -101,6 +106,8 @@ public class Buttons : MonoBehaviour
         recordButtonStop.gameObject.SetActive(false);
         replayButtonStart.gameObject.SetActive(true);
         replayButtonStop.gameObject.SetActive(false);
+
+        motionReplay.StartStopReplay();
     }
 
     public void OnQuitApplication()
