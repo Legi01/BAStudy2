@@ -4,21 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-enum GameStatus { Recording, Replaying, None };
-
 public class Buttons : MonoBehaviour
 {
-    public Button recordButtonStart;
-    public Button recordButtonStop;
-
-    public Button replayButtonStart;
-    public Button replayButtonStop;
-
+    public Button recordButton;
+    public Button replayButton;
     public Button quitButton;
 
     public TextMeshProUGUI applicationStatus;
-
-    private GameStatus status;
 
     public MocapRecorder mocapRecorder;
     public MocapReplay motionReplay;
@@ -27,18 +19,11 @@ public class Buttons : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        status = GameStatus.None;
+        Button btn_record_start = recordButton.GetComponent<Button>();
+        btn_record_start.onClick.AddListener(OnStartStopRecording);
 
-        Button btn_record_start = recordButtonStart.GetComponent<Button>();
-        btn_record_start.onClick.AddListener(OnStartRecording);
-        Button btn_record_stop = recordButtonStop.GetComponent<Button>();
-        btn_record_stop.onClick.AddListener(OnStopRecording);
-
-        Button btn_replay_start = replayButtonStart.GetComponent<Button>();
-        btn_replay_start.onClick.AddListener(OnStartReplaying);
-
-        Button btn_replay_stop = replayButtonStop.GetComponent<Button>();
-        btn_replay_stop.onClick.AddListener(OnStopReplaying);
+        Button btn_replay_start = replayButton.GetComponent<Button>();
+        btn_replay_start.onClick.AddListener(OnStartStopReplaying);
 
         Button btn_quit = quitButton.GetComponent<Button>();
         btn_quit.onClick.AddListener(OnQuitApplication);
@@ -48,66 +33,46 @@ public class Buttons : MonoBehaviour
     void Update()
     {
 
-        switch (status) {
-            case GameStatus.None:
-                break;
-            case GameStatus.Recording:       
-                break;
-            case GameStatus.Replaying:
-                break;
-            default:
-                break;
+    }
+
+    void OnStartStopRecording()
+    {
+        if (!mocapRecorder.IsRecording())
+        {
+            applicationStatus.text = "Recording...";
+            recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop recording";
+            replayButton.gameObject.SetActive(false);
+
+            mocapRecorder.StartStopRecording();
+        }
+        else {
+            applicationStatus.text = "";
+            recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start recording";
+            replayButton.gameObject.SetActive(true);
+
+            mocapRecorder.StartStopRecording();
+            mocapRecorder.Save();
         }
     }
 
-    void OnStartRecording()
+    void OnStartStopReplaying()
     {
-        status = GameStatus.Recording;
-        applicationStatus.text = "Recording";
-        recordButtonStart.gameObject.SetActive(false);
-        recordButtonStop.gameObject.SetActive(true);
-        replayButtonStart.gameObject.SetActive(false);
-        replayButtonStop.gameObject.SetActive(false);
+        if (!motionReplay.IsReplaying())
+        {
+            applicationStatus.text = "Replaying...";
+            replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop replaying";
+            recordButton.gameObject.SetActive(false);
 
-        mocapRecorder.StartStopRecording();
-    }
-
-    void OnStopRecording()
-    {
-        status = GameStatus.None;
-        applicationStatus.text = "";
-        recordButtonStart.gameObject.SetActive(true);
-        recordButtonStop.gameObject.SetActive(false);
-        replayButtonStart.gameObject.SetActive(true);
-        replayButtonStop.gameObject.SetActive(false);
-
-        mocapRecorder.StartStopRecording();
-        mocapRecorder.Save();
-    }
-
-    void OnStartReplaying()
-    {
-        status = GameStatus.Replaying;
-        applicationStatus.text = "Replaying";
-        recordButtonStart.gameObject.SetActive(false);
-        recordButtonStop.gameObject.SetActive(false);
-        replayButtonStart.gameObject.SetActive(false);
-        replayButtonStop.gameObject.SetActive(true);
-
-        motionReplay.Load();
-        motionReplay.StartStopReplay();
-    }
-
-    void OnStopReplaying()
-    {
-        status = GameStatus.None;
-        applicationStatus.text = "";
-        recordButtonStart.gameObject.SetActive(true);
-        recordButtonStop.gameObject.SetActive(false);
-        replayButtonStart.gameObject.SetActive(true);
-        replayButtonStop.gameObject.SetActive(false);
-
-        motionReplay.StartStopReplay();
+            motionReplay.Load();
+            motionReplay.StartStopReplay();
+        }
+        else
+        {
+            applicationStatus.text = "";
+            recordButton.gameObject.SetActive(true);
+            replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start replaying";
+            motionReplay.StartStopReplay();
+        }
     }
 
     public void OnQuitApplication()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TeslasuitAPI;
@@ -12,55 +13,83 @@ public class MocapReplay : MonoBehaviour
 
     private List<SuitData> replayData;
     private int replayIndex;
-    private Boolean doReplay = false;
-    public bool DoReplay => doReplay;
+    private Boolean replaying = false;
 
     private Boolean replayPaused = true;
     public bool ReplayPaused => replayPaused;
-    
+
     private double nextReplayTime;
     private double firstReplayPointOffset;
     private double repReplayStartTime;
 
     private int labelStartIndex = -1;
     private string _label;
-    
+
     private FileManager _fileManager = new FileManager();
 
-    private Stopwatch _stopwatch = new Stopwatch();
+    public Mocap motionCapture;
 
-    // private void Update()
-    // {
-    //     if (!replayPaused)
-    //     {
-    //         double elapsedTime = _stopwatch.Elapsed.TotalMilliseconds - repReplayStartTime;
-    //         Debug.Log($"Elapsed {elapsedTime} next {nextReplayTime}");
-    //         
-    //         if (elapsedTime >= nextReplayTime)
-    //         {
-    //             replayIndex++;
-    //
-    //             if (replayIndex == replayData.Count - 1)
-    //             {
-    //                 replayIndex = 0;
-    //                 repReplayStartTime = elapsedTime;
-    //             }
-    //
-    //             nextReplayTime = replayData[replayIndex + 1].timestamp - firstReplayPointOffset;
-    //         }
-    //     }
-    // }
+    public SuitAPIObject suitApi;
+    private MocapSkeleton skeleton;
+
+    private Stopwatch stopwatch = new Stopwatch();
+
+    private void Start()
+    {
+        replaying = false;
+        MocapJoints mocapJoints = MocapJoints.GetInstance();
+        stopwatch.Start();
+
+        StartCoroutine(UpdateMocapOptions());
+    }
+
+    private IEnumerator UpdateMocapOptions()
+    {
+        yield return new WaitUntil(() => suitApi.Mocap is { isStarted: true });
+
+        //suitApi.Mocap.Updated += OnMocapUpdate;
+
+        TSMocapOptions options = new TSMocapOptions();
+        options.frequency = TSMocapFrequency.TS_MOCAP_FPS_50;
+        options.sensors_mask = Config.TsMocapSensorMask();
+
+        suitApi.Mocap.UpdateOptions(options);
+        skeleton = suitApi.Mocap.Skeleton;
+        Debug.Log($"Updated Mocap Options. Sensor mask is {options.sensors_mask}");
+    }
+
+    private void OnMocapUpdate()
+    {
+        SuitData suitData;
+
+        SuitData replayData = GetCurrentReplayData();
+        suitData = new SuitData(replayData.data, stopwatch.Elapsed.TotalMilliseconds, replayData.jointData);
+    }
+
+    private void Update()
+    {
+        if (replaying)
+        {
+            // TODO: Doesnt work
+            SuitData suitData;
+
+            SuitData replayData = GetCurrentReplayData();
+            suitData = new SuitData(replayData.data, stopwatch.Elapsed.TotalMilliseconds, replayData.jointData);
+
+            skeleton.mocapData = suitData.data;
+        }
+
+    }
 
     public void Load()
     {
-        //replayData = _fileManager.LoadMocapData();
         replayData = _fileManager.Load();
     }
 
     public void StartStopReplay()
     {
         replayIndex = 0;
-        doReplay = !doReplay;
+        replaying = !replaying;
         firstReplayPointOffset = replayData[0].timestamp;
         nextReplayTime = replayData[replayIndex + 1].timestamp - firstReplayPointOffset;
         repReplayStartTime = 0;
@@ -69,12 +98,14 @@ public class MocapReplay : MonoBehaviour
     public void pauseResumeReplay()
     {
         replayPaused = !replayPaused;
-        
+
         if (replayPaused)
-            _stopwatch.Stop();
+        {
+            stopwatch.Stop();
+        }
         else
         {
-            _stopwatch.Start();
+            stopwatch.Start();
         }
     }
 
@@ -117,7 +148,7 @@ public class MocapReplay : MonoBehaviour
     {
         for (int index = 0; index < this.replayData[replayIndex].data.Length; ++index)
         {
-            if ((long) this.replayData[replayIndex].data[index].mocap_bone_index == (long) boneIndex)
+            if ((long)this.replayData[replayIndex].data[index].mocap_bone_index == (long)boneIndex)
                 return index;
         }
 
@@ -126,6 +157,11 @@ public class MocapReplay : MonoBehaviour
 
     public void sliderValueChanged(float value)
     {
-        replayIndex = (int) (value * replayData.Count);
+        replayIndex = (int)(value * replayData.Count);
+    }
+
+    public Boolean IsReplaying()
+    {
+        return replaying;
     }
 }

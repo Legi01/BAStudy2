@@ -10,9 +10,9 @@ using System.Linq;
 public class MocapRecorder : MonoBehaviour
 {
     private bool recording;
-    private readonly List<SuitData> _recordedSuitData = new List<SuitData>();
+    private readonly List<SuitData> recordedSuitData = new List<SuitData>();
     
-    private readonly FileManager _fileManager = new FileManager();
+    private readonly FileManager fileManager = new FileManager();
 
     public Mocap motionCapture;
 
@@ -54,8 +54,7 @@ public class MocapRecorder : MonoBehaviour
         Array.Copy(data, slicedData, 10);
         suitData = new SuitData(slicedData, stopwatch.Elapsed.TotalMilliseconds, motionCapture.JointData.Values.ToArray());
 
-        if (!recording) return;
-        _recordedSuitData.Add(suitData);
+        if (recording) recordedSuitData.Add(suitData);
     }
 
     public void StartStopRecording()
@@ -65,9 +64,12 @@ public class MocapRecorder : MonoBehaviour
 
     public void Save()
     {
-        _fileManager.SaveToCSV(_recordedSuitData);
-        _fileManager.Save(_recordedSuitData);
+        fileManager.SaveToCSV(recordedSuitData);
+        fileManager.Save(recordedSuitData);
     }
-    
-    
+
+    public bool IsRecording()
+    {
+        return recording;
+    }
 }
