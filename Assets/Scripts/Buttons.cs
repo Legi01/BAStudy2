@@ -20,6 +20,8 @@ public class Buttons : MonoBehaviour
 
     private GameStatus status;
 
+    public MotionRecorder motionRecorder;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,11 +49,9 @@ public class Buttons : MonoBehaviour
         switch (status) {
             case GameStatus.None:
                 break;
-            case GameStatus.Recording:
-                
+            case GameStatus.Recording:       
                 break;
             case GameStatus.Replaying:
-                
                 break;
             default:
                 break;
@@ -66,6 +66,8 @@ public class Buttons : MonoBehaviour
         recordButtonStop.gameObject.SetActive(true);
         replayButtonStart.gameObject.SetActive(false);
         replayButtonStop.gameObject.SetActive(false);
+
+        motionRecorder.StartStopRecording(true);
     }
 
     void OnStopRecording()
@@ -76,6 +78,9 @@ public class Buttons : MonoBehaviour
         recordButtonStop.gameObject.SetActive(false);
         replayButtonStart.gameObject.SetActive(true);
         replayButtonStop.gameObject.SetActive(false);
+
+        motionRecorder.StartStopRecording(false);
+        motionRecorder.Save();
     }
 
     void OnStartReplaying()
