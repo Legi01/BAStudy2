@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 enum GameStatus { Recording, Replaying, None };
 
@@ -15,7 +16,7 @@ public class Buttons : MonoBehaviour
 
     public Button quitButton;
 
-    public Text applicationStatus;
+    public TextMeshProUGUI applicationStatus;
 
     private GameStatus status;
 

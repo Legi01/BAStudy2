@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: tutorialMessage_Mocap 2
   m_EditorClassIdentifier: 
   title: Mocap 1.3
-  popupPrefab: {fileID: 114223545441814056, guid: f93286c9acac9a04da55537efe160305,
-    type: 3}
+  popupPrefab: {fileID: 114223545441814056, guid: f93286c9acac9a04da55537efe160305, type: 3}

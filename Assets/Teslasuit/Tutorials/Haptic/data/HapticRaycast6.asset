@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: HapticRaycast6
   m_EditorClassIdentifier: 
   title: '2.6 Haptic Raycasts - '
-  popupPrefab: {fileID: 114090066203516090, guid: 91f120ad96c387348a39eb6aecc2db84,
-    type: 3}
+  popupPrefab: {fileID: 114090066203516090, guid: 91f120ad96c387348a39eb6aecc2db84, type: 3}

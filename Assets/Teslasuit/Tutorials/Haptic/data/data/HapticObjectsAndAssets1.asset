@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,5 +13,4 @@ MonoBehaviour:
   m_Name: HapticObjectsAndAssets1
   m_EditorClassIdentifier: 
   title: '3.1 Haptic Objects and Assets - '
-  popupPrefab: {fileID: 114758676743271396, guid: 10761e06e786dde45b3b313faa692336,
-    type: 2}
+  popupPrefab: {fileID: 114758676743271396, guid: 10761e06e786dde45b3b313faa692336, type: 3}

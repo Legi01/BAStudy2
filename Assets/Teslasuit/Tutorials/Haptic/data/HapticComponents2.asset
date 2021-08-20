@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: HapticComponents2
   m_EditorClassIdentifier: 
   title: 1.2 HapticComponents - Suit API Object
-  popupPrefab: {fileID: 114156244921324476, guid: f23df9b9e467b2c48869a9be520d3bc6,
-    type: 3}
+  popupPrefab: {fileID: 114156244921324476, guid: f23df9b9e467b2c48869a9be520d3bc6, type: 3}
