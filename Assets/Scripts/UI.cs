@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Buttons : MonoBehaviour
+public class UI : MonoBehaviour
 {
     public Button recordButton;
     public Button replayButton;

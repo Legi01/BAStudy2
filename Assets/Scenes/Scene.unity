@@ -1216,7 +1216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathNode:
   - {fileID: 1816439218}
-  - {fileID: 228352040}
+  - {fileID: 1806194090}
   - {fileID: 228352040}
 --- !u!1 &951096242
 GameObject:
@@ -1709,9 +1709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78cfc335f19044853b2f731f27354de6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  suitMocapSkeleton: {fileID: 1103749813}
   motionCapture: {fileID: 1103749822}
-  suitApi: {fileID: 1103749812}
 --- !u!114 &1103749821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2454,6 +2452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6fa265782e763424384486adfe7c4c3b, type: 3}
+--- !u!1 &1806194090 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4002537286042715828, guid: 6fa265782e763424384486adfe7c4c3b, type: 3}
+  m_PrefabInstance: {fileID: 1806194089}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1816439218 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4002537286042715828, guid: 6fa265782e763424384486adfe7c4c3b, type: 3}
