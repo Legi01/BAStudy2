@@ -9,7 +9,7 @@ using Debug = UnityEngine.Debug;
 
 public class MocapReplay : MonoBehaviour
 {
-    private List<SuitData> replayData;
+    private List<MocapData> replayData;
     private int replayIndex;
     private bool replaying;
 
@@ -47,7 +47,7 @@ public class MocapReplay : MonoBehaviour
 
             if (elapsedTime >= nextReplayTime)
             {
-                SuitData replayData = GetCurrentReplayData();
+                MocapData replayData = GetCurrentReplayData();
 
                 for (int i = 0; i < replayData.data.Length; i++)
                 {
@@ -184,9 +184,9 @@ public class MocapReplay : MonoBehaviour
         return replayData[replayIndex].data[nodeIndex].quat9x;
     }
 
-    private SuitData GetCurrentReplayData()
+    private MocapData GetCurrentReplayData()
     {
-        SuitData data = replayData[replayIndex];
+        MocapData data = replayData[replayIndex];
         //replayIndex = (replayIndex + 1) % replayData.Count;
         nextReplayTime = replayData[replayIndex + 1].timestamp - firstReplayPointOffset;
         return data;

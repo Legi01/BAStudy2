@@ -26,7 +26,7 @@ public class FileManager
             new Vector3Surrogate());
     }
 
-    public void SaveToCSV(List<SuitData> data)
+    public void SaveToCSV(List<MocapData> data)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -48,7 +48,51 @@ public class FileManager
         Debug.Log($"Saved {data.Count} entries.");
     }
 
-    public void Save(List<SuitData> data)
+    public void SaveToCSV(List<ECGData> data)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // To let Excel know
+        sb.Append("SEP=").Append(seperator).Append("\n");
+        sb.Append(data[0].GetCSVHeader(seperator));
+        foreach (var ecg in data)
+        {
+            sb.Append(ecg.ToCSV(seperator)).Append("\n");
+        }
+
+        string path = Application.dataPath + "/ecg.csv";
+
+        using (var writer = new StreamWriter(path, false))
+        {
+            writer.Write(sb.ToString());
+        }
+
+        Debug.Log($"Saved {data.Count} entries.");
+    }
+
+    public void SaveToCSV(List<GSRData> data)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // To let Excel know
+        sb.Append("SEP=").Append(seperator).Append("\n");
+        sb.Append(data[0].GetCSVHeader(seperator));
+        foreach (var gsr in data)
+        {
+            sb.Append(gsr.ToCSV(seperator)).Append("\n");
+        }
+
+        string path = Application.dataPath + "/gsr.csv";
+
+        using (var writer = new StreamWriter(path, false))
+        {
+            writer.Write(sb.ToString());
+        }
+
+        Debug.Log($"Saved {data.Count} entries.");
+    }
+
+    public void Save(List<MocapData> data)
     {
         BinaryFormatter formatter = new BinaryFormatter
         {
@@ -61,7 +105,7 @@ public class FileManager
         formatter.Serialize(stream, data);
         stream.Close();
     }
-    public List<SuitData> Load()
+    public List<MocapData> Load()
     {
         string path = Application.dataPath + "/MoCap.mocap";
         if (File.Exists(path))
@@ -72,7 +116,7 @@ public class FileManager
             };
             FileStream stream = new FileStream(path, FileMode.Open);
 
-            List<SuitData> data = (List<SuitData>)formatter.Deserialize(stream);
+            List<MocapData> data = (List<MocapData>)formatter.Deserialize(stream);
             stream.Close();
 
             return data;

@@ -15,6 +15,7 @@ public class UI : MonoBehaviour
     public MocapRecorder mocapRecorder;
     public MocapReplay motionReplay;
 
+    public BiometricRecorder biometricRecorder;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,7 @@ public class UI : MonoBehaviour
             replayButton.gameObject.SetActive(false);
 
             mocapRecorder.StartStopRecording();
+            biometricRecorder.StartStopRecording();
         }
         else {
             applicationStatus.text = "";
@@ -51,7 +53,9 @@ public class UI : MonoBehaviour
             replayButton.gameObject.SetActive(true);
 
             mocapRecorder.StartStopRecording();
+            biometricRecorder.StartStopRecording();
             mocapRecorder.Save();
+            biometricRecorder.Save();
         }
     }
 

@@ -6,21 +6,21 @@ using TeslasuitAPI;
 using UnityEngine;
 
 [Serializable]
-public class SuitData
+public class MocapData
 {
     public TSMocapData[] data;
     public string label;
     public Vector3[] jointRotations; // Contains euler angles for each joint
     public double timestamp;
 
-    public SuitData(TSMocapData[] data, double timestamp, Vector3[] jointRotations)
+    public MocapData(TSMocapData[] data, double timestamp, Vector3[] jointRotations)
     {
         this.data = data;
         this.timestamp = timestamp;
         this.jointRotations = jointRotations;
     }
 
-    public String ToCSV(string seperator, bool filtered = false)
+    public string ToCSV(string seperator, bool filtered = false)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append(timestamp.ToString(CultureInfo.InvariantCulture)).Append(seperator);
@@ -96,14 +96,14 @@ public class SuitData
         return sb.ToString();
     }
 
-    public String GetCSVHeader(string seperator)
+    public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("index").Append(seperator).Append("label").Append(seperator);
 
         foreach (var tsMocapData in data)
         {
-            String nodeName = Enum.GetName(typeof(MocapBone), tsMocapData.mocap_bone_index);
+            string nodeName = Enum.GetName(typeof(MocapBone), tsMocapData.mocap_bone_index);
             sb.Append(nodeName + "_boneIndex").Append(seperator);
 
             foreach (var property in Config.propertyNames)
