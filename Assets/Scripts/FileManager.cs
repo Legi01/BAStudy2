@@ -32,7 +32,7 @@ public class FileManager
 
         // To let Excel know
         sb.Append("SEP=").Append(seperator).Append("\n");
-        sb.Append(data[0].GetCsvHeader(seperator));
+        sb.Append(data[0].GetCSVHeader(seperator));
         foreach (var suitData in data)
         {
             sb.Append(suitData.ToCSV(seperator)).Append("\n");

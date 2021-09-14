@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using TeslasuitAPI;
@@ -9,19 +10,16 @@ public class SuitData
 {
     public TSMocapData[] data;
     public string label;
-    public Vector3[] jointData;
+    public Vector3[] jointRotations; // Contains euler angles for each joint
     public double timestamp;
 
-    public SuitData(TSMocapData[] data, double timestamp, Vector3[] jointData)
+    public SuitData(TSMocapData[] data, double timestamp, Vector3[] jointRotations)
     {
         this.data = data;
         this.timestamp = timestamp;
-        this.jointData = jointData;
+        this.jointRotations = jointRotations;
     }
 
-    /**
-     * filtered: Whether CSV should be filtered for transmission to Python
-     */
     public String ToCSV(string seperator, bool filtered = false)
     {
         StringBuilder sb = new StringBuilder();
@@ -38,31 +36,31 @@ public class SuitData
             }
 
             if (Config.streamedProperties["quat9x"])
-                sb.Append(quatToString(tsMocapData.quat9x, seperator));
+                sb.Append(QuatToString(tsMocapData.quat9x, seperator));
             if (Config.streamedProperties["quat6x"])
-                sb.Append(quatToString(tsMocapData.quat6x, seperator));
+                sb.Append(QuatToString(tsMocapData.quat6x, seperator));
             if (Config.streamedProperties["gyroscope"])
-                sb.Append(vector3sToString(tsMocapData.gyroscope, seperator));
+                sb.Append(Vector3sToString(tsMocapData.gyroscope, seperator));
             if (Config.streamedProperties["magnetometer"])
-                sb.Append(vector3sToString(tsMocapData.magnetometer, seperator));
+                sb.Append(Vector3sToString(tsMocapData.magnetometer, seperator));
             if (Config.streamedProperties["accelerometer"])
-                sb.Append(vector3sToString(tsMocapData.accelerometer, seperator));
+                sb.Append(Vector3sToString(tsMocapData.accelerometer, seperator));
             if (Config.streamedProperties["linearAccel"])
-                sb.Append(vector3sToString(tsMocapData.linear_accel, seperator));
+                sb.Append(Vector3sToString(tsMocapData.linear_accel, seperator));
             if (Config.streamedProperties["temperature"])
                 sb.Append(tsMocapData.temperature.ToString()).Append(seperator);
         }
 
-        for (int i = 0; i < jointData.Length; i++)
+        for (int i = 0; i < jointRotations.Length; i++)
         {
-            Vector3 joint = jointData[i];
-            sb.Append(Vector3ToString(joint, seperator, endLine: i == jointData.Length - 1));
+            Vector3 joint = jointRotations[i];
+            sb.Append(Vector3ToString(joint, seperator, endLine: i == jointRotations.Length - 1));
         }
 
         return sb.ToString();
     }
 
-    private string quatToString(Quat4f quat4F, string seperator)
+    private string QuatToString(Quat4f quat4F, string seperator)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append(quat4F.w.ToString(CultureInfo.InvariantCulture)).Append(seperator)
@@ -73,7 +71,7 @@ public class SuitData
         return sb.ToString();
     }
 
-    private string vector3sToString(Vector3s vector3S, string separator)
+    private string Vector3sToString(Vector3s vector3S, string separator)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append(vector3S.x.ToString(CultureInfo.InvariantCulture)).Append(separator)
@@ -83,7 +81,7 @@ public class SuitData
         return sb.ToString();
     }
 
-    private string Vector3ToString(Vector3 vector, String separator, bool endLine = false)
+    private string Vector3ToString(Vector3 vector, string separator, bool endLine = false)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append(vector.x.ToString(CultureInfo.InvariantCulture)).Append(separator)
@@ -98,7 +96,7 @@ public class SuitData
         return sb.ToString();
     }
 
-    public String GetCsvHeader(string seperator)
+    public String GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("index").Append(seperator).Append("label").Append(seperator);
@@ -134,7 +132,10 @@ public class SuitData
             }
         }
 
-        foreach (var joint in MocapJoints.GetInstance().JointNames)
+        List<string> jointNames = new List<string> {"Spine", "Chest", "RightUpperArm", "RightLowerArm",
+            "LeftUpperArm", "LeftLowerArm", "RightUpperLeg", "RightLowerLeg", "LeftUpperLeg", "LeftLowerLeg"};
+
+        foreach (string joint in jointNames)
         {
             sb.Append(joint + "_x").Append(seperator);
             sb.Append(joint + "_y").Append(seperator);

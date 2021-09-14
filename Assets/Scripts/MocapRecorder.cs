@@ -10,21 +10,22 @@ using System.Linq;
 public class MocapRecorder : MonoBehaviour
 {
     private bool recording;
-    private readonly List<SuitData> recordedSuitData = new List<SuitData>();
+    private List<SuitData> recordedSuitData;
     
-    private readonly FileManager fileManager = new FileManager();
+    private FileManager fileManager;
 
     public Mocap motionCapture;
 
     public SuitAPIObject suitApi;
     private MocapSkeleton skeleton;
 
-    private Stopwatch stopwatch = new Stopwatch();
+    private readonly Stopwatch stopwatch = new Stopwatch();
 
     private void Start()
     {
         recording = false;
-        MocapJoints mocapJoints = MocapJoints.GetInstance();
+        recordedSuitData = new List<SuitData>();
+        fileManager = new FileManager();
         stopwatch.Start();
 
         StartCoroutine(UpdateMocapOptions());
@@ -37,12 +38,12 @@ public class MocapRecorder : MonoBehaviour
         suitApi.Mocap.Updated += OnMocapUpdate;
 
         TSMocapOptions options = new TSMocapOptions();
-        options.frequency = TSMocapFrequency.TS_MOCAP_FPS_50;
+        options.frequency = TSMocapFrequency.TS_MOCAP_FPS_100;
         options.sensors_mask = Config.TsMocapSensorMask();
 
         suitApi.Mocap.UpdateOptions(options);
         skeleton = suitApi.Mocap.Skeleton;
-        Debug.Log($"Updated Mocap Options. Sensor mask is {options.sensors_mask}");
+        Debug.Log($"Updated mocap options: MoCap frequency is {options.frequency}. Sensor mask is {options.sensors_mask}.");
     }
 
     private void OnMocapUpdate()
@@ -52,7 +53,7 @@ public class MocapRecorder : MonoBehaviour
         TSMocapData[] data = skeleton.mocapData;
         TSMocapData[] slicedData = new TSMocapData[10];
         Array.Copy(data, slicedData, 10);
-        suitData = new SuitData(slicedData, stopwatch.Elapsed.TotalMilliseconds, motionCapture.JointData.Values.ToArray());
+        suitData = new SuitData(slicedData, stopwatch.Elapsed.TotalMilliseconds, motionCapture.jointRotations.Values.ToArray());
 
         if (recording) recordedSuitData.Add(suitData);
     }
@@ -72,4 +73,10 @@ public class MocapRecorder : MonoBehaviour
     {
         return recording;
     }
+
+    /*void OnApplicationQuit()
+    {
+        Debug.Log("Stopping MoCap");
+        suitApi.Mocap.Stop();
+    }*/
 }
