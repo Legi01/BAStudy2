@@ -104,12 +104,14 @@ public class MocapReplay : MonoBehaviour
 
                         animator.GetBoneTransform(bone).rotation = heading * rawRotation;*/
 
-                       
+                        animator.GetBoneTransform(bone).localEulerAngles = GetEulerJointAngles(mocapBone); // working
 
-                        Vector3 eulerAngle = GetEulerJointAngles(mocapBone);
-                        animator.GetBoneTransform(bone).eulerAngles = eulerAngle; // new Vector3(0, 0, 0);
+                        /*if (mocapBone == MocapBone.Spine)
+                        {
+                            Quaternion test = animator.GetBoneTransform(bone).localRotation;
+                            Debug.Log(bone.ToString() + " quaternion " + rawRotation + " euler " + rawRotation.eulerAngles + " eulerangle " + test);
 
-                        Debug.Log(animator.GetBoneTransform(bone).name + " " + bone.ToString() + " quaternion " + rawRotation + " euler " + rawRotation.eulerAngles + " eulerangle " + eulerAngle);
+                        }*/
                     }
                 }
             }
