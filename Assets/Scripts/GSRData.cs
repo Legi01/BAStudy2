@@ -8,13 +8,23 @@ using UnityEngine;
 [Serializable]
 public class GSRData
 {
-    GSRBufferedData[] data;
-    public double timestamp;
+    private GSRBufferedData[] data;
+    private double timestamp;
 
     public GSRData(GSRBufferedData[] data, double timestamp)
     {
         this.data = data;
         this.timestamp = timestamp;
+    }
+
+    public GSRBufferedData[] GetData()
+    {
+        return data;
+    }
+
+    public double GetTimestamp()
+    {
+        return timestamp;
     }
 
     public string ToCSV(string seperator)

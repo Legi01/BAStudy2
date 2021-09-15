@@ -33,9 +33,9 @@ public class FileManager
         // To let Excel know
         sb.Append("SEP=").Append(seperator).Append("\n");
         sb.Append(data[0].GetCSVHeader(seperator));
-        foreach (var suitData in data)
+        foreach (var mocapData in data)
         {
-            sb.Append(suitData.ToCSV(seperator)).Append("\n");
+            sb.Append(mocapData.ToCSV(seperator)).Append("\n");
         }
 
         string path = Application.dataPath + "/mocap.csv";
@@ -55,9 +55,9 @@ public class FileManager
         // To let Excel know
         sb.Append("SEP=").Append(seperator).Append("\n");
         sb.Append(data[0].GetCSVHeader(seperator));
-        foreach (var ecg in data)
+        foreach (var ecgData in data)
         {
-            sb.Append(ecg.ToCSV(seperator)).Append("\n");
+            sb.Append(ecgData.ToCSV(seperator)).Append("\n");
         }
 
         string path = Application.dataPath + "/ecg.csv";
@@ -77,9 +77,9 @@ public class FileManager
         // To let Excel know
         sb.Append("SEP=").Append(seperator).Append("\n");
         sb.Append(data[0].GetCSVHeader(seperator));
-        foreach (var gsr in data)
+        foreach (var gsrData in data)
         {
-            sb.Append(gsr.ToCSV(seperator)).Append("\n");
+            sb.Append(gsrData.ToCSV(seperator)).Append("\n");
         }
 
         string path = Application.dataPath + "/gsr.csv";
@@ -123,7 +123,7 @@ public class FileManager
         }
         else
         {
-            Debug.Log("Mocap FIle not Found");
+            Debug.Log("Mocap fIle not found");
             return null;
         }
     }

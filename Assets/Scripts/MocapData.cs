@@ -8,16 +8,63 @@ using UnityEngine;
 [Serializable]
 public class MocapData
 {
-    public TSMocapData[] data;
-    public string label;
-    public Vector3[] jointRotations; // Contains euler angles for each joint
-    public double timestamp;
+    private TSMocapData[] data;
+    private string label;
+    private double timestamp;
 
-    public MocapData(TSMocapData[] data, double timestamp, Vector3[] jointRotations)
+    private Vector3[] eulerJointAngles; // Contains euler angles for each joint
+    Dictionary<string, Vector3> eulerJointAnglesDictionary;
+    public List<string> bones = new List<string> { // Must be same as in Mocap.cs
+        MocapBone.Spine.ToString(),
+        MocapBone.Chest.ToString(),
+        MocapBone.RightUpperArm.ToString(),
+        MocapBone.RightLowerArm.ToString(),
+        MocapBone.LeftUpperArm.ToString(),
+        MocapBone.LeftLowerArm.ToString(),
+        MocapBone.RightUpperLeg.ToString(),
+        MocapBone.RightLowerLeg.ToString(),
+        MocapBone.LeftUpperLeg.ToString(),
+        MocapBone.LeftLowerLeg.ToString(),
+    };
+
+    public MocapData(double timestamp, TSMocapData[] data, Vector3[] jointRotations)
     {
-        this.data = data;
         this.timestamp = timestamp;
-        this.jointRotations = jointRotations;
+        this.data = data;
+        this.eulerJointAngles = jointRotations;
+
+        eulerJointAnglesDictionary = new Dictionary<string, Vector3>();
+        int pos = 0;
+        foreach (string jointName in bones)
+        {
+            eulerJointAnglesDictionary[jointName] = jointRotations[pos];
+            ++pos;
+        }
+    }
+
+    public TSMocapData[] GetData()
+    {
+        return data;
+    }
+
+    public Vector3[] GetJointRotations()
+    {
+        return eulerJointAngles;
+    }
+
+    public Dictionary<string, Vector3> GetEulerJointAngles()
+    {
+        return eulerJointAnglesDictionary;
+    }
+
+    public double GetTimestamp()
+    {
+        return timestamp;
+    }
+
+    public string GetLabel()
+    {
+        return label;
     }
 
     public string ToCSV(string seperator, bool filtered = false)
@@ -51,10 +98,10 @@ public class MocapData
                 sb.Append(tsMocapData.temperature.ToString()).Append(seperator);
         }
 
-        for (int i = 0; i < jointRotations.Length; i++)
+        for (int i = 0; i < eulerJointAngles.Length; i++)
         {
-            Vector3 joint = jointRotations[i];
-            sb.Append(Vector3ToString(joint, seperator, endLine: i == jointRotations.Length - 1));
+            Vector3 joint = eulerJointAngles[i];
+            sb.Append(Vector3ToString(joint, seperator, endLine: i == eulerJointAngles.Length - 1));
         }
 
         return sb.ToString();
@@ -132,14 +179,11 @@ public class MocapData
             }
         }
 
-        List<string> jointNames = new List<string> {"Spine", "Chest", "RightUpperArm", "RightLowerArm",
-            "LeftUpperArm", "LeftLowerArm", "RightUpperLeg", "RightLowerLeg", "LeftUpperLeg", "LeftLowerLeg"};
-
-        foreach (string joint in jointNames)
+        foreach (string boneName in bones)
         {
-            sb.Append(joint + "_x").Append(seperator);
-            sb.Append(joint + "_y").Append(seperator);
-            sb.Append(joint + "_z").Append(seperator);
+            sb.Append(boneName + "_x").Append(seperator);
+            sb.Append(boneName + "_y").Append(seperator);
+            sb.Append(boneName + "_z").Append(seperator);
         }
 
         sb.Append("\n");

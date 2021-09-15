@@ -8,13 +8,24 @@ using UnityEngine;
 [Serializable]
 public class ECGData
 {
-    ECG_MV[] data;
-    public double timestamp;
+    // Data consists of a delta timestamp and mV (amplitude or voltage, measured in millivolts)
+    private ECG_MV[] data;
+    private double timestamp;
 
     public ECGData(ECG_MV[] data, double timestamp)
     {
         this.data = data;
         this.timestamp = timestamp;
+    }
+
+    public ECG_MV[] GetData()
+    {
+        return data;
+    }
+
+    public double GetTimestamp()
+    {
+        return timestamp;
     }
 
     public string ToCSV(string seperator)
