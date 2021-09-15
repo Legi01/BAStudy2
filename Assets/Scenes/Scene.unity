@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1134932740}
-  aPIObject: {fileID: 1103749812}
+  apiObject: {fileID: 1103749812}
 --- !u!1 &433849724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1101,7 +1101,7 @@ MonoBehaviour:
   applicationStatus: {fileID: 1698229450}
   mocapRecorder: {fileID: 1103749821}
   motionReplay: {fileID: 1103749820}
-  biometricRecorder: {fileID: 0}
+  biometricRecorder: {fileID: 1103749817}
 --- !u!1 &883671843
 GameObject:
   m_ObjectHideFlags: 0
@@ -1710,7 +1710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2591a57ece12d4becb27bacb4d5616a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  suitApi: {fileID: 1103749812}
 --- !u!114 &1103749820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1735,7 +1734,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26988cb83d72a4280a9c0a9161f28edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  suitApi: {fileID: 1103749812}
+--- !u!114 &1103749823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103749811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2591a57ece12d4becb27bacb4d5616a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1134932738
 GameObject:
   m_ObjectHideFlags: 0

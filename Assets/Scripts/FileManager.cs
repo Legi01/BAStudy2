@@ -45,7 +45,7 @@ public class FileManager
             writer.Write(sb.ToString());
         }
 
-        Debug.Log($"Saved {data.Count} entries.");
+        Debug.Log($"Saved {data.Count} mocap entries.");
     }
 
     public void SaveToCSV(List<ECGData> data)

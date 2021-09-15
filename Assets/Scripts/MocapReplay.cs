@@ -13,6 +13,8 @@ public class MocapReplay : MonoBehaviour
     private int replayIndex;
     private bool replaying;
 
+    private SuitAPIObject suitApi;
+
     private double nextReplayTime;
     private double firstReplayPointOffset;
     private double repReplayStartTime;
@@ -32,6 +34,8 @@ public class MocapReplay : MonoBehaviour
         replaying = false;
         stopwatch.Start();
 
+        suitApi = this.GetComponent<SuitAPIObject>();
+
         animator = this.GetComponent<Animator>();
         root = GameObject.Find("Maniken_skeletool:root").transform;
     }
@@ -45,7 +49,7 @@ public class MocapReplay : MonoBehaviour
 
             if (elapsedTime >= nextReplayTime)
             {
-                MocapData replayData = GetCurrentReplayData();
+               MocapData replayData = GetCurrentReplayData();
 
                 for (int i = 0; i < replayData.GetData().Length; i++)
                 {
@@ -57,32 +61,32 @@ public class MocapReplay : MonoBehaviour
                     switch (FindNodeIndex(replayData.GetData()[i].mocap_bone_index))
                     {
                         case 0:
-                            // RightUpperArm
+                            // RightUpperArm (Maniken_skeletool:shoulder_r)
                             bone = MocapBones.TeslasuitToUnityBones[MocapBone.RightUpperArm];
                             mocapBone = MocapBone.RightUpperArm;
                             break;
                         case 1:
-                            // RightLowerArm
+                            // RightLowerArm (Maniken_skeletool:shoulder_r)
                             bone = MocapBones.TeslasuitToUnityBones[MocapBone.RightLowerArm];
                             mocapBone = MocapBone.RightLowerArm;
                             break;
                         case 2:
-                            // LeftUpperArm
+                            // LeftUpperArm (Maniken_skeletool:shoulder_l)
                             bone = MocapBones.TeslasuitToUnityBones[MocapBone.LeftUpperArm];
                             mocapBone = MocapBone.LeftUpperArm;
                             break;
                         case 3:
-                            // LeftLowerArm
+                            // LeftLowerArm (Maniken_skeletool:shoulder_l)
                             bone = MocapBones.TeslasuitToUnityBones[MocapBone.LeftLowerArm];
                             mocapBone = MocapBone.LeftLowerArm;
                             break;
                         case 4:
-                            // Chest
+                            // Chest (Maniken_skeletool:spine_02)
                             bone = MocapBones.TeslasuitToUnityBones[MocapBone.Chest];
                             mocapBone = MocapBone.Chest;
                             break;
                         case 5:
-                            // Spine
+                            // Spine (Maniken_skeletool:spine_01)
                             bone = MocapBones.TeslasuitToUnityBones[MocapBone.Spine];
                             mocapBone = MocapBone.Spine;
                             break;
@@ -93,17 +97,19 @@ public class MocapReplay : MonoBehaviour
                     if (bone != HumanBodyBones.LastBone)
                     {
                         // TODO: Doesnt work
-                        /*Quaternion rawRotation = GetCurrentReplayRotation(replayData.GetData()[i].mocap_bone_index).Quaternion();
+                        Quaternion rawRotation = GetCurrentReplayRotation(replayData.GetData()[i].mocap_bone_index).Quaternion();
 
-                        Quaternion heading = TransformExtensions.HeadingOffset(Quaternion.identity, root.transform.rotation);
+                        /*Quaternion heading = TransformExtensions.HeadingOffset(Quaternion.identity, root.transform.rotation);
                         //Quaternion heading = root.transform.rotation;
 
-                        animator.GetBoneTransform(bone).rotation = heading * rawRotation;
+                        animator.GetBoneTransform(bone).rotation = heading * rawRotation;*/
 
-                        //Debug.Log(bone.ToString() + " quaternion " + q + " euler " + q.eulerAngles);*/
+                       
 
                         Vector3 eulerAngle = GetEulerJointAngles(mocapBone);
-                        animator.GetBoneTransform(bone).eulerAngles = eulerAngle;
+                        animator.GetBoneTransform(bone).eulerAngles = eulerAngle; // new Vector3(0, 0, 0);
+
+                        Debug.Log(animator.GetBoneTransform(bone).name + " " + bone.ToString() + " quaternion " + rawRotation + " euler " + rawRotation.eulerAngles + " eulerangle " + eulerAngle);
                     }
                 }
             }
@@ -124,8 +130,16 @@ public class MocapReplay : MonoBehaviour
         nextReplayTime = replayData[replayIndex + 1].GetTimestamp() - firstReplayPointOffset;
         repReplayStartTime = 0;
 
-        if (replaying) stopwatch.Start();
-        else stopwatch.Stop();
+        if (replaying)
+        {
+            stopwatch.Start();
+            suitApi.Mocap.Stop();
+        }
+        else
+        {
+            stopwatch.Stop();
+            suitApi.Mocap.Start();
+        }
     }
 
     private Quat4f GetCurrentReplayRotation(ulong boneIndex)
@@ -144,7 +158,7 @@ public class MocapReplay : MonoBehaviour
     private MocapData GetCurrentReplayData()
     {
         MocapData data = replayData[replayIndex];
-        //replayIndex = (replayIndex + 1) % replayData.Count;
+        replayIndex = (replayIndex + 1) % replayData.Count;
         nextReplayTime = replayData[replayIndex + 1].GetTimestamp() - firstReplayPointOffset;
         return data;
     }

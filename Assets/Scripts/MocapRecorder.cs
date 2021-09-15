@@ -14,7 +14,7 @@ public class MocapRecorder : MonoBehaviour
     
     private FileManager fileManager;
 
-    public SuitAPIObject suitApi;
+    private SuitAPIObject suitApi;
     private MocapSkeleton skeleton;
 
     private readonly Stopwatch stopwatch = new Stopwatch();
@@ -51,6 +51,7 @@ public class MocapRecorder : MonoBehaviour
         fileManager = new FileManager();
         stopwatch.Start();
 
+        suitApi = this.GetComponent<SuitAPIObject>();
         StartCoroutine(UpdateMocapOptions());
 
         animator = this.GetComponent<Animator>();
@@ -116,10 +117,12 @@ public class MocapRecorder : MonoBehaviour
         /*_jointPositionReferenceFrame.position = _rightWrist.position;
         _jointPositionReferenceFrame.rotation = indicatorQuaternion;*/
 
-        foreach (MocapBone jointName in jointRotations.Keys)
+        foreach (var jointName in jointRotations.Keys.ToList())
         {
             Transform transform = animator.GetBoneTransform(MocapBones.TeslasuitToUnityBones[jointName]);
-            jointRotations[jointName] = /*_jointPositionReferenceFrame.InverseTransformPoint*/(transform.eulerAngles);
+            Vector3 rot = UnityEditor.TransformUtils.GetInspectorRotation(transform.transform);
+            //jointRotations[jointName] = /*_jointPositionReferenceFrame.InverseTransformPoint*/(transform.eulerAngles);
+            jointRotations[jointName] = rot;
         }
     }
 
