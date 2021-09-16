@@ -11,35 +11,13 @@ public class MocapData
     private TSMocapData[] data;
     private string label;
     private double timestamp;
+    private Dictionary<HumanBodyBones, Vector3> eulerJointAngles; // Contains euler angles for each joint
 
-    private Vector3[] eulerJointAngles; // Contains euler angles for each joint
-    Dictionary<string, Vector3> eulerJointAnglesDictionary;
-    public List<string> bones = new List<string> { // Must be same as in Mocap.cs
-        MocapBone.Spine.ToString(),
-        MocapBone.Chest.ToString(),
-        MocapBone.RightUpperArm.ToString(),
-        MocapBone.RightLowerArm.ToString(),
-        MocapBone.LeftUpperArm.ToString(),
-        MocapBone.LeftLowerArm.ToString(),
-        MocapBone.RightUpperLeg.ToString(),
-        MocapBone.RightLowerLeg.ToString(),
-        MocapBone.LeftUpperLeg.ToString(),
-        MocapBone.LeftLowerLeg.ToString(),
-    };
-
-    public MocapData(double timestamp, TSMocapData[] data, Vector3[] jointRotations)
+    public MocapData(double timestamp, TSMocapData[] data, Dictionary<HumanBodyBones, Vector3> eulerJointAngles)
     {
         this.timestamp = timestamp;
         this.data = data;
-        this.eulerJointAngles = jointRotations;
-
-        eulerJointAnglesDictionary = new Dictionary<string, Vector3>();
-        int pos = 0;
-        foreach (string jointName in bones)
-        {
-            eulerJointAnglesDictionary[jointName] = jointRotations[pos];
-            ++pos;
-        }
+        this.eulerJointAngles = eulerJointAngles;
     }
 
     public TSMocapData[] GetData()
@@ -47,14 +25,9 @@ public class MocapData
         return data;
     }
 
-    public Vector3[] GetJointRotations()
+    public Dictionary<HumanBodyBones, Vector3> GetJointRotations()
     {
         return eulerJointAngles;
-    }
-
-    public Dictionary<string, Vector3> GetEulerJointAngles()
-    {
-        return eulerJointAnglesDictionary;
     }
 
     public double GetTimestamp()
@@ -98,10 +71,11 @@ public class MocapData
                 sb.Append(tsMocapData.temperature.ToString()).Append(seperator);
         }
 
-        for (int i = 0; i < eulerJointAngles.Length; i++)
+        int count = 0;
+        foreach (var joint in eulerJointAngles.Values)
         {
-            Vector3 joint = eulerJointAngles[i];
-            sb.Append(Vector3ToString(joint, seperator, endLine: i == eulerJointAngles.Length - 1));
+            sb.Append(Vector3ToString(joint, seperator, endLine: count == eulerJointAngles.Count - 1));
+            count++;
         }
 
         return sb.ToString();
@@ -179,7 +153,7 @@ public class MocapData
             }
         }
 
-        foreach (string boneName in bones)
+        foreach (var boneName in eulerJointAngles.Keys)
         {
             sb.Append(boneName + "_x").Append(seperator);
             sb.Append(boneName + "_y").Append(seperator);

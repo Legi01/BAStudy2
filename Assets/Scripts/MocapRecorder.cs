@@ -40,7 +40,7 @@ public class MocapRecorder : MonoBehaviour
 
     //private Transform _jointPositionReferenceFrame;
 
-    public Dictionary<MocapBone, Vector3> jointRotations;
+    public Dictionary<HumanBodyBones, Vector3> jointRotations;
 
     private Animator animator;
 
@@ -70,19 +70,19 @@ public class MocapRecorder : MonoBehaviour
 
         //_jointPositionReferenceFrame = GameObject.Find("ReferenceFrame").transform;
 
-        // Must be same as in MocapData.cs
-        jointRotations = new Dictionary<MocapBone, Vector3>
+        // The order must be same as in MocapData.cs
+        jointRotations = new Dictionary<HumanBodyBones, Vector3>
             {
-                {MocapBone.Spine,          Vector3.zero},
-                {MocapBone.Chest,          Vector3.zero},
-                {MocapBone.RightUpperArm,  Vector3.zero},
-                {MocapBone.RightLowerArm,  Vector3.zero},
-                {MocapBone.LeftUpperArm,   Vector3.zero},
-                {MocapBone.LeftLowerArm,   Vector3.zero},
-                {MocapBone.RightUpperLeg,  Vector3.zero},
-                {MocapBone.RightLowerLeg,  Vector3.zero},
-                {MocapBone.LeftUpperLeg,   Vector3.zero},
-                {MocapBone.LeftLowerLeg,   Vector3.zero},
+                {HumanBodyBones.Spine,          Vector3.zero},
+                {HumanBodyBones.Chest,          Vector3.zero},
+                {HumanBodyBones.RightUpperArm,  Vector3.zero},
+                {HumanBodyBones.RightLowerArm,  Vector3.zero},
+                {HumanBodyBones.LeftUpperArm,   Vector3.zero},
+                {HumanBodyBones.LeftLowerArm,   Vector3.zero},
+                {HumanBodyBones.RightUpperLeg,  Vector3.zero},
+                {HumanBodyBones.RightLowerLeg,  Vector3.zero},
+                {HumanBodyBones.LeftUpperLeg,   Vector3.zero},
+                {HumanBodyBones.LeftLowerLeg,   Vector3.zero},
             };
     }
 
@@ -119,8 +119,8 @@ public class MocapRecorder : MonoBehaviour
 
         foreach (var jointName in jointRotations.Keys.ToList())
         {
-            Transform transform = animator.GetBoneTransform(MocapBones.TeslasuitToUnityBones[jointName]);
-            Vector3 rot = UnityEditor.TransformUtils.GetInspectorRotation(transform.transform);
+            Transform transform = animator.GetBoneTransform(jointName);
+            Vector3 rot = UnityEditor.TransformUtils.GetInspectorRotation(transform);
             //jointRotations[jointName] = /*_jointPositionReferenceFrame.InverseTransformPoint*/(transform.eulerAngles);
             jointRotations[jointName] = rot;
         }
@@ -146,7 +146,7 @@ public class MocapRecorder : MonoBehaviour
         TSMocapData[] data = skeleton.mocapData;
         TSMocapData[] slicedData = new TSMocapData[10];
         Array.Copy(data, slicedData, 10);
-        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointRotations.Values.ToArray());
+        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointRotations);
 
         if (recording) recordedMocapData.Add(suitData);
     }
