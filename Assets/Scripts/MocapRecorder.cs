@@ -41,6 +41,7 @@ public class MocapRecorder : MonoBehaviour
     //private Transform _jointPositionReferenceFrame;
 
     public Dictionary<HumanBodyBones, Vector3> jointRotations;
+    private List<string> jointNames;
 
     private Animator animator;
 
@@ -84,6 +85,7 @@ public class MocapRecorder : MonoBehaviour
                 {HumanBodyBones.LeftUpperLeg,   Vector3.zero},
                 {HumanBodyBones.LeftLowerLeg,   Vector3.zero},
             };
+        jointNames = jointRotations.Select(boneName => boneName.Key.ToString()).ToList();
     }
 
     private void Update()
@@ -120,14 +122,13 @@ public class MocapRecorder : MonoBehaviour
         foreach (var jointName in jointRotations.Keys.ToList())
         {
             Transform transform = animator.GetBoneTransform(jointName);
-            Vector3 rot = UnityEditor.TransformUtils.GetInspectorRotation(transform);
-            //jointRotations[jointName] = /*_jointPositionReferenceFrame.InverseTransformPoint*/(transform.eulerAngles);
-            jointRotations[jointName] = rot;
+            jointRotations[jointName] = /*_jointPositionReferenceFrame.InverseTransformPoint*/(transform.eulerAngles);
         }
     }
 
     private IEnumerator UpdateMocapOptions()
     {
+        suitApi.Start();
         yield return new WaitUntil(() => suitApi.Mocap is { isStarted: true });
 
         suitApi.Mocap.Updated += OnMocapUpdate;
@@ -146,9 +147,11 @@ public class MocapRecorder : MonoBehaviour
         TSMocapData[] data = skeleton.mocapData;
         TSMocapData[] slicedData = new TSMocapData[10];
         Array.Copy(data, slicedData, 10);
-        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointRotations);
+        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointNames, jointRotations.Values.ToArray());
 
-        if (recording) recordedMocapData.Add(suitData);
+        if (recording) {
+           recordedMocapData.Add(suitData);
+        }
     }
 
     public void StartStopRecording()

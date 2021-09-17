@@ -11,12 +11,14 @@ public class MocapData
     private TSMocapData[] data;
     private string label;
     private double timestamp;
-    private Dictionary<HumanBodyBones, Vector3> eulerJointAngles; // Contains euler angles for each joint
+    private Vector3[] eulerJointAngles;
+    private List<string> jointNames;
 
-    public MocapData(double timestamp, TSMocapData[] data, Dictionary<HumanBodyBones, Vector3> eulerJointAngles)
-    {
+    public MocapData(double timestamp, TSMocapData[] data, List<string> jointNames, Vector3[] eulerJointAngles)
+    { 
         this.timestamp = timestamp;
         this.data = data;
+        this.jointNames = jointNames;
         this.eulerJointAngles = eulerJointAngles;
     }
 
@@ -25,9 +27,15 @@ public class MocapData
         return data;
     }
 
-    public Dictionary<HumanBodyBones, Vector3> GetJointRotations()
+    public Dictionary<string, Vector3> GetJointRotations()
     {
-        return eulerJointAngles;
+        Dictionary<string, Vector3> joints = new Dictionary<string, Vector3>();
+        for (int i = 0; i < eulerJointAngles.Length; i++)
+        {
+            joints.Add(jointNames[i], eulerJointAngles[i]);
+        }
+
+        return joints;
     }
 
     public double GetTimestamp()
@@ -71,11 +79,9 @@ public class MocapData
                 sb.Append(tsMocapData.temperature.ToString()).Append(seperator);
         }
 
-        int count = 0;
-        foreach (var joint in eulerJointAngles.Values)
+        for (int i = 0; i < eulerJointAngles.Length; i++)
         {
-            sb.Append(Vector3ToString(joint, seperator, endLine: count == eulerJointAngles.Count - 1));
-            count++;
+            sb.Append(Vector3ToString(eulerJointAngles[i], seperator, endLine: i == eulerJointAngles.Length - 1));
         }
 
         return sb.ToString();
@@ -153,7 +159,7 @@ public class MocapData
             }
         }
 
-        foreach (var boneName in eulerJointAngles.Keys)
+        foreach (string boneName in jointNames)
         {
             sb.Append(boneName + "_x").Append(seperator);
             sb.Append(boneName + "_y").Append(seperator);

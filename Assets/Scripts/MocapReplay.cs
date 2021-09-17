@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TeslasuitAPI;
-using TeslasuitAPI.Utils;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -12,8 +11,6 @@ public class MocapReplay : MonoBehaviour
     private List<MocapData> replayData;
     private int replayIndex;
     private bool replaying;
-
-    private SuitAPIObject suitApi;
 
     private double nextReplayTime;
     private double firstReplayPointOffset;
@@ -33,8 +30,6 @@ public class MocapReplay : MonoBehaviour
     {
         replaying = false;
         stopwatch.Start();
-
-        suitApi = this.GetComponent<SuitAPIObject>();
 
         animator = this.GetComponent<Animator>();
         root = GameObject.Find("Maniken_skeletool:root").transform;
@@ -79,7 +74,6 @@ public class MocapReplay : MonoBehaviour
 
                 // Spine (Maniken_skeletool:spine_01)
                 ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Spine]);
-
             }
         }
 
@@ -88,24 +82,18 @@ public class MocapReplay : MonoBehaviour
     private void ApplyRotationForBone(MocapData replayData, HumanBodyBones bone)
     {
         Vector3 eulerAngles = Vector3.one;
-        Dictionary<HumanBodyBones, Vector3> joints = replayData.GetJointRotations();
-        if (joints.ContainsKey(bone))
-            eulerAngles = joints[bone].Vector3f().Vector3();
-
-        animator.GetBoneTransform(bone).localEulerAngles = eulerAngles;
-
-        /*if (mocapBone == MocapBone.Spine)
+        Dictionary<string, Vector3> joints = replayData.GetJointRotations();
+        if (joints.ContainsKey(bone.ToString()))
         {
-            Quaternion test = animator.GetBoneTransform(bone).localRotation;
-            Debug.Log(bone.ToString() + " quaternion " + rawRotation + " euler " + rawRotation.eulerAngles + " eulerangle " + test);
+            joints.TryGetValue(bone.ToString(), out eulerAngles);
+        }
 
-        }*/
-
+        animator.GetBoneTransform(bone).eulerAngles = eulerAngles;
     }
 
-    public void Load()
+    public void Load(string filename)
     {
-        replayData = fileManager.Load();
+        replayData = fileManager.Load(filename);
     }
 
     public void StartStopReplay()
@@ -119,12 +107,10 @@ public class MocapReplay : MonoBehaviour
         if (replaying)
         {
             stopwatch.Start();
-            suitApi.Mocap.Stop();
         }
         else
         {
             stopwatch.Stop();
-            suitApi.Mocap.Start();
         }
     }
 
