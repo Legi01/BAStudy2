@@ -105,9 +105,9 @@ public class FileManager
         formatter.Serialize(stream, data);
         stream.Close();
     }
-    public List<MocapData> Load()
+    public List<MocapData> Load(string filename)
     {
-        string path = Application.dataPath + "/MoCap.mocap";
+        string path = Application.dataPath + "/" + filename + ".mocap"; //"/MoCap.mocap";
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter()
@@ -123,7 +123,7 @@ public class FileManager
         }
         else
         {
-            Debug.Log("Mocap fIle not found");
+            Debug.Log("Mocap fIle not found: " + filename);
             return null;
         }
     }
