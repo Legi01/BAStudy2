@@ -76,3 +76,4 @@
 /Assets/suitData.csv filter=lfs diff=lfs merge=lfs -text
 /Assets/MoCap.mocap filter=lfs diff=lfs merge=lfs -text
 /Assets/mocap.csv filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/SampleScene.unity filter=lfs diff=lfs merge=lfs -text

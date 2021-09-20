@@ -131,7 +131,7 @@ public class FileManager
         }
         else
         {
-            Debug.Log("Mocap fIle not found: " + filename);
+            Debug.Log("Mocap file not found: " + path);
             return null;
         }
     }
