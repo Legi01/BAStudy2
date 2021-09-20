@@ -5,6 +5,7 @@ using UnityEngine;
 using TeslasuitAPI;
 using Debug = UnityEngine.Debug;
 using System.Linq;
+using System.Diagnostics;
 
 public class BiometricRecorder : MonoBehaviour
 {
@@ -12,8 +13,7 @@ public class BiometricRecorder : MonoBehaviour
     private List<ECGData> recordedECGData;
     private List<GSRData> recordedGSRData;
 
-    float timestampECG;
-    float timestampGSR;
+    private Stopwatch stopwatch;
 
     private FileManager fileManager;
 
@@ -31,8 +31,8 @@ public class BiometricRecorder : MonoBehaviour
         recordedGSRData = new List<GSRData>();
         fileManager = new FileManager();
 
-        timestampECG = 0;
-        timestampGSR = 0;
+        stopwatch = new Stopwatch();
+        stopwatch.Start();
 
         suitApi = this.GetComponent<SuitAPIObject>();
         StartCoroutine(UpdateECGBiometriyOptions());
@@ -75,8 +75,7 @@ public class BiometricRecorder : MonoBehaviour
     private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
     {
         // TODO: do we need to save only the last value? ECGBuffer.data.Last()
-        timestampECG += Time.deltaTime;
-        ECGData ecgData = new ECGData(timestampECG, ECGBuffer.data);
+        ECGData ecgData = new ECGData(stopwatch.Elapsed.TotalMilliseconds, ECGBuffer.data);
         if (recording) recordedECGData.Add(ecgData);
 
         Debug.Log($"deltaTime: {ECGBuffer.data.Last().deltaTime}, amplitude[mV]: {ECGBuffer.data.Last().mv}");
@@ -84,8 +83,7 @@ public class BiometricRecorder : MonoBehaviour
 
     private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        timestampGSR += Time.deltaTime;
-        GSRData gsrData = new GSRData(timestampGSR, GSRBuffer.data);
+        GSRData gsrData = new GSRData(stopwatch.Elapsed.TotalMilliseconds, GSRBuffer.data);
         if (recording) recordedGSRData.Add(gsrData);
 
         // TODO
@@ -95,8 +93,9 @@ public class BiometricRecorder : MonoBehaviour
     public void StartStopRecording()
     {
         recording = !recording;
-        timestampECG = 0;
-        timestampGSR = 0;
+        if (recording) {
+            stopwatch.Restart();
+        }
     }
 
     public void Save()

@@ -28,6 +28,9 @@ public class FileManager
 
     public void SaveToCSV(List<MocapData> data)
     {
+
+        Debug.Log($"Try to svae {data.Count} mocap entries.");
+
         StringBuilder sb = new StringBuilder();
 
         // To let Excel know

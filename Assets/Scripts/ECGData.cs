@@ -37,6 +37,7 @@ public class ECGData
         {
             ECG_MV ecgData = data[i];
             sb.Append(ecgData.deltaTime);
+            sb.Append(seperator);
             sb.Append(ecgData.mv);
         }
 

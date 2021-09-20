@@ -5,13 +5,14 @@ using UnityEngine;
 using TeslasuitAPI;
 using Debug = UnityEngine.Debug;
 using System.Linq;
+using System.Diagnostics;
 
 public class MocapRecorder : MonoBehaviour
 {
     private bool recording;
     private List<MocapData> recordedMocapData;
 
-    private double timestamp;
+    private Stopwatch stopwatch;
     
     private FileManager fileManager;
 
@@ -50,7 +51,8 @@ public class MocapRecorder : MonoBehaviour
         recordedMocapData = new List<MocapData>();
         fileManager = new FileManager();
 
-        timestamp = 0;
+        stopwatch = new Stopwatch();
+        stopwatch.Start();
 
         suitApi = this.GetComponent<SuitAPIObject>();
         StartCoroutine(UpdateMocapOptions());
@@ -143,25 +145,29 @@ public class MocapRecorder : MonoBehaviour
     }
 
     private void OnMocapUpdate()
-    {   
+    {
         TSMocapData[] data = skeleton.mocapData;
         TSMocapData[] slicedData = new TSMocapData[10];
         Array.Copy(data, slicedData, 10);
-        timestamp += Time.deltaTime;
-        MocapData suitData = new MocapData(timestamp, slicedData, jointNames, jointRotations.Values.ToArray());
+        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointNames, jointRotations.Values.ToArray());
 
         if (recording) {
-           recordedMocapData.Add(suitData);
+;           recordedMocapData.Add(suitData);
         }
     }
 
     public void StartStopRecording()
     {
-        timestamp = 0;
         recording = !recording;
+
+        if (recording) {
+            stopwatch.Restart();
+            if (suitApi.Mocap != null)
+                suitApi.Mocap.Start();
+        }
     }
 
-    public void Save()
+        public void Save()
     {
         fileManager.SaveToCSV(recordedMocapData);
         fileManager.Save(recordedMocapData);
