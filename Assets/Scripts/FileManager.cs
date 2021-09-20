@@ -28,8 +28,7 @@ public class FileManager
 
     public void SaveToCSV(List<MocapData> data)
     {
-
-        Debug.Log($"Try to svae {data.Count} mocap entries.");
+        if (data == null || data.Count == 0) return;
 
         StringBuilder sb = new StringBuilder();
 
@@ -53,6 +52,8 @@ public class FileManager
 
     public void SaveToCSV(List<ECGData> data)
     {
+        if (data == null || data.Count == 0) return;
+
         StringBuilder sb = new StringBuilder();
 
         // To let Excel know
@@ -70,11 +71,13 @@ public class FileManager
             writer.Write(sb.ToString());
         }
 
-        Debug.Log($"Saved {data.Count} entries.");
+        Debug.Log($"Saved {data.Count} ECG entries.");
     }
 
     public void SaveToCSV(List<GSRData> data)
     {
+        if (data == null || data.Count == 0) return;
+
         StringBuilder sb = new StringBuilder();
 
         // To let Excel know
@@ -92,11 +95,13 @@ public class FileManager
             writer.Write(sb.ToString());
         }
 
-        Debug.Log($"Saved {data.Count} entries.");
+        Debug.Log($"Saved {data.Count} GSR entries.");
     }
 
     public void Save(List<MocapData> data)
     {
+        if (data == null) return;
+
         BinaryFormatter formatter = new BinaryFormatter
         {
             SurrogateSelector = _surrogateSelector

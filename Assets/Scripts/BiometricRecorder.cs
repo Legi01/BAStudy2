@@ -19,13 +19,11 @@ public class BiometricRecorder : MonoBehaviour
 
     private SuitAPIObject suitApi;
 
+    public static OnECGUpdated test;
+
     // Start is called before the first frame update
     void Start()
     {
-        /*IBiometry biometry = suitApi.Biometry;
-        biometry.StartECG();
-        biometry.StartGSR();*/
-
         recording = false;
         recordedECGData = new List<ECGData>();
         recordedGSRData = new List<GSRData>();
@@ -35,6 +33,8 @@ public class BiometricRecorder : MonoBehaviour
         stopwatch.Start();
 
         suitApi = this.GetComponent<SuitAPIObject>();
+        suitApi.Biometry.StartECG();
+        suitApi.Biometry.StartGSR();
         StartCoroutine(UpdateECGBiometriyOptions());
         StartCoroutine(UpdateGSRBiometriyOptions());
     }
@@ -57,9 +57,6 @@ public class BiometricRecorder : MonoBehaviour
         Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
     }
 
-    void OnECGUpdated(ECGBuffer ECGBuffer, IntPtr opaque, ResultCallback resultCallback) {
-    }
-
     private IEnumerator UpdateGSRBiometriyOptions()
     {
         yield return new WaitUntil(() => suitApi.Biometry is { GSRStarted: true });
@@ -74,20 +71,40 @@ public class BiometricRecorder : MonoBehaviour
 
     private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        // TODO: do we need to save only the last value? ECGBuffer.data.Last()
-        ECGData ecgData = new ECGData(stopwatch.Elapsed.TotalMilliseconds, ECGBuffer.data);
-        if (recording) recordedECGData.Add(ecgData);
+        double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
+        uint[] deltaTime = new uint[ECGBuffer.data.Length];
+        float[] amplitude = new float[ECGBuffer.data.Length];
 
-        Debug.Log($"deltaTime: {ECGBuffer.data.Last().deltaTime}, amplitude[mV]: {ECGBuffer.data.Last().mv}");
+        for (int i = 0; i < ECGBuffer.data.Length; i++)
+        {
+            deltaTime[i] = ECGBuffer.data[i].deltaTime;
+            amplitude[i] = ECGBuffer.data[i].mv;
+            //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {ECGBuffer.data[i].mv.ToString()}");
+        }
+
+        ECGData ecgData = new ECGData(elapsedTime, deltaTime, amplitude);
+        if (recording) recordedECGData.Add(ecgData);
     }
 
     private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        GSRData gsrData = new GSRData(stopwatch.Elapsed.TotalMilliseconds, GSRBuffer.data);
-        if (recording) recordedGSRData.Add(gsrData);
+        double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
 
-        // TODO
-        Debug.Log($"count: {GSRBuffer.data.Last().count}, data: {GSRBuffer.data.Last().data}");
+        for (int i = 0; i < GSRBuffer.data.Length; i++)
+        {
+            uint count = GSRBuffer.data[i].count;
+            int[] data = GSRBuffer.data[i].data;
+
+            GSRData gsrData = new GSRData(elapsedTime, count, data);
+            if (recording) recordedGSRData.Add(gsrData);
+
+            for (int j = 0; j < data.Length; j++)
+            {
+                //Debug.Log($" Index (i,j): {i}, {j}, elapsedTime {elapsedTime}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
+            }
+        }
+
+       
     }
 
     public void StartStopRecording()

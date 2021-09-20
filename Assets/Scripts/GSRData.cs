@@ -8,18 +8,25 @@ using UnityEngine;
 [Serializable]
 public class GSRData
 {
-    private GSRBufferedData[] data;
     private double timestamp;
+    private uint count;
+    private int[] data;
 
-    public GSRData(double timestamp, GSRBufferedData[] data)
+    public GSRData(double timestamp, uint count, int[] data)
     {
         this.timestamp = timestamp;
+        this.count = count;
         this.data = data;
     }
 
-    public GSRBufferedData[] GetData()
+    public int[] GetData()
     {
         return data;
+    }
+
+    public uint GetCount()
+    {
+        return count;
     }
 
     public double GetTimestamp()
@@ -32,10 +39,12 @@ public class GSRData
         StringBuilder sb = new StringBuilder();
         sb.Append(timestamp.ToString(CultureInfo.InvariantCulture)).Append(seperator);
 
+        sb.Append(count).Append(seperator);
+
         for (int i = 0; i < data.Length; i++)
         {
-            GSRBufferedData gsrData = data[i];
-            sb.Append(gsrData.data.GetValue(i));
+            sb.Append(data[i]);
+            sb.Append(seperator);
         }
 
         return sb.ToString();
@@ -45,6 +54,14 @@ public class GSRData
     {
         StringBuilder sb = new StringBuilder();
         sb.Append("timestemp").Append(seperator).Append("value").Append(seperator);
+
+        sb.Append("count").Append(seperator);
+
+        for (int i = 0; i < data.Length; i++)
+        {
+            sb.Append("data_" + i);
+            sb.Append(seperator);
+        }
 
         sb.Append("\n");
         return sb.ToString();
