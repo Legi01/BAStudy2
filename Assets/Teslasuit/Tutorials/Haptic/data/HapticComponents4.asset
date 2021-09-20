@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: HapticComponents4
   m_EditorClassIdentifier: 
   title: 1.4 HapticComponents - HapticCollider
-  popupPrefab: {fileID: 114081036601972582, guid: d3d30f4895aae01448302eec395e7ac0, type: 3}
+  popupPrefab: {fileID: 114081036601972582, guid: d3d30f4895aae01448302eec395e7ac0,
+    type: 3}

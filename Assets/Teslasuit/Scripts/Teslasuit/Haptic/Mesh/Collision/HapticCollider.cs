@@ -22,7 +22,7 @@ namespace TeslasuitAPI
 
         public event Action<HapticCollisionSolverBase> SolverCreated = delegate { };
 
-        private void OnStart()
+        private void Awake()
         {
             HapticMesh = GetComponent<HapticMesh>();
             CollisionEventsSource = HapticMesh.MeshObjectInfo.Root.gameObject.AddComponent<HapticCollisionEventsSource>();

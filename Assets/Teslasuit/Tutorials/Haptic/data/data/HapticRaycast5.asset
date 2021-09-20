@@ -4,8 +4,7 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,4 +12,5 @@ MonoBehaviour:
   m_Name: HapticRaycast5
   m_EditorClassIdentifier: 
   title: '2.5 Haptic Raycasts - '
-  popupPrefab: {fileID: 114090066203516090, guid: 9ed0c9e14c436f447a8f2b9e078d08aa, type: 3}
+  popupPrefab: {fileID: 114090066203516090, guid: 9ed0c9e14c436f447a8f2b9e078d08aa,
+    type: 2}

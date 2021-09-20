@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: HapticObjectsAndAssets2
   m_EditorClassIdentifier: 
   title: '3.2 Haptic Objects and Assets - '
-  popupPrefab: {fileID: 114559468563366342, guid: dbefe0cdbe385074a83f8998c5886291, type: 3}
+  popupPrefab: {fileID: 114559468563366342, guid: dbefe0cdbe385074a83f8998c5886291,
+    type: 3}
