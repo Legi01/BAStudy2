@@ -44,7 +44,7 @@ public class GSRData
     public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append("value").Append(seperator);
+        sb.Append("timestemp").Append(seperator).Append("value").Append(seperator);
 
         sb.Append("\n");
         return sb.ToString();

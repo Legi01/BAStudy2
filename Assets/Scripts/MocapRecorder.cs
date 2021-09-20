@@ -113,7 +113,7 @@ public class MocapRecorder : MonoBehaviour
 
 
         //Quaternion heading = TransformExtensions.HeadingOffset(Quaternion.identity, root.transform.rotation);
-        indicator.rotation = root.transform.rotation;
+        indicator.rotation = root.transform.localRotation;
 
         // Setting reference frame and calculating relative joint position
         /*_jointPositionReferenceFrame.position = _rightWrist.position;

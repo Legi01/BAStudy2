@@ -57,6 +57,9 @@ public class BiometricRecorder : MonoBehaviour
         Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
     }
 
+    void OnECGUpdated(ECGBuffer ECGBuffer, IntPtr opaque, ResultCallback resultCallback) {
+    }
+
     private IEnumerator UpdateGSRBiometriyOptions()
     {
         yield return new WaitUntil(() => suitApi.Biometry is { GSRStarted: true });

@@ -46,7 +46,7 @@ public class ECGData
     public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append("deltaTime").Append(seperator).Append("mv").Append(seperator);
+        sb.Append("timestemp").Append(seperator).Append("deltaTime").Append(seperator).Append("mv").Append(seperator);
 
         sb.Append("\n");
         return sb.ToString();
