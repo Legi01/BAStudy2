@@ -126,7 +126,7 @@ public class MocapData
     public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append("index").Append(seperator).Append("label").Append(seperator);
+        sb.Append("timestamp").Append("label").Append(seperator).Append(seperator);
 
         foreach (var tsMocapData in data)
         {

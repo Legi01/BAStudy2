@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using TeslasuitAPI;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -12,6 +11,7 @@ public class MocapReplay : MonoBehaviour
     private int replayIndex;
     private bool replaying;
 
+    private double currentTimestamp;
     private double nextReplayTime;
     private double firstReplayPointOffset;
     private double repReplayStartTime;
@@ -21,15 +21,12 @@ public class MocapReplay : MonoBehaviour
 
     private FileManager fileManager = new FileManager();
 
-    private Stopwatch stopwatch = new Stopwatch();
-
     private Animator animator;
     private Transform root;
 
     private void Start()
     {
         replaying = false;
-        stopwatch.Start();
 
         animator = this.GetComponent<Animator>();
         root = GameObject.Find("Maniken_skeletool:root").transform;
@@ -39,11 +36,11 @@ public class MocapReplay : MonoBehaviour
     {
         if (replaying)
         {
-            double elapsedTime = stopwatch.Elapsed.TotalMilliseconds - repReplayStartTime;
-            //Debug.Log($"Elapsed {elapsedTime} next {nextReplayTime}");
+            currentTimestamp += Time.deltaTime;
+            //Debug.Log($"Elapsed {currentTimestamp} next {nextReplayTime}");
 
-            if (elapsedTime >= nextReplayTime)
-            {
+            //if (currentTimestamp >= nextReplayTime)
+            //{
                 MocapData currentReplayData = GetCurrentReplayData();
 
                 // TODO: Doesnt work
@@ -74,7 +71,7 @@ public class MocapReplay : MonoBehaviour
 
                 // Spine (Maniken_skeletool:spine_01)
                 ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Spine]);
-            }
+            //}
         }
 
     }
@@ -98,20 +95,11 @@ public class MocapReplay : MonoBehaviour
 
     public void StartStopReplay()
     {
-        replayIndex = 0;
         replaying = !replaying;
+        currentTimestamp = 0;
+        replayIndex = 0;
         firstReplayPointOffset = replayData[0].GetTimestamp();
         nextReplayTime = replayData[replayIndex + 1].GetTimestamp() - firstReplayPointOffset;
-        repReplayStartTime = 0;
-
-        if (replaying)
-        {
-            stopwatch.Start();
-        }
-        else
-        {
-            stopwatch.Stop();
-        }
     }
 
     private Quat4f GetCurrentReplayRotation(ulong boneIndex)

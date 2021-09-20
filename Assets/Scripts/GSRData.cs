@@ -11,10 +11,10 @@ public class GSRData
     private GSRBufferedData[] data;
     private double timestamp;
 
-    public GSRData(GSRBufferedData[] data, double timestamp)
+    public GSRData(double timestamp, GSRBufferedData[] data)
     {
-        this.data = data;
         this.timestamp = timestamp;
+        this.data = data;
     }
 
     public GSRBufferedData[] GetData()

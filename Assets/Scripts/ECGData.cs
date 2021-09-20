@@ -12,10 +12,10 @@ public class ECGData
     private ECG_MV[] data;
     private double timestamp;
 
-    public ECGData(ECG_MV[] data, double timestamp)
+    public ECGData(double timestamp, ECG_MV[] data)
     {
-        this.data = data;
         this.timestamp = timestamp;
+        this.data = data;
     }
 
     public ECG_MV[] GetData()

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Diagnostics;
 using TeslasuitAPI;
 using Debug = UnityEngine.Debug;
 using System.Linq;
@@ -11,13 +10,13 @@ public class MocapRecorder : MonoBehaviour
 {
     private bool recording;
     private List<MocapData> recordedMocapData;
+
+    private double timestamp;
     
     private FileManager fileManager;
 
     private SuitAPIObject suitApi;
     private MocapSkeleton skeleton;
-
-    private readonly Stopwatch stopwatch = new Stopwatch();
 
     //private Transform _teslasuitMan;
 
@@ -50,7 +49,8 @@ public class MocapRecorder : MonoBehaviour
         recording = false;
         recordedMocapData = new List<MocapData>();
         fileManager = new FileManager();
-        stopwatch.Start();
+
+        timestamp = 0;
 
         suitApi = this.GetComponent<SuitAPIObject>();
         StartCoroutine(UpdateMocapOptions());
@@ -147,7 +147,8 @@ public class MocapRecorder : MonoBehaviour
         TSMocapData[] data = skeleton.mocapData;
         TSMocapData[] slicedData = new TSMocapData[10];
         Array.Copy(data, slicedData, 10);
-        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointNames, jointRotations.Values.ToArray());
+        timestamp += Time.deltaTime;
+        MocapData suitData = new MocapData(timestamp, slicedData, jointNames, jointRotations.Values.ToArray());
 
         if (recording) {
            recordedMocapData.Add(suitData);
@@ -156,6 +157,7 @@ public class MocapRecorder : MonoBehaviour
 
     public void StartStopRecording()
     {
+        timestamp = 0;
         recording = !recording;
     }
 

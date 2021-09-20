@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Diagnostics;
 using TeslasuitAPI;
 using Debug = UnityEngine.Debug;
 using System.Linq;
@@ -13,11 +12,12 @@ public class BiometricRecorder : MonoBehaviour
     private List<ECGData> recordedECGData;
     private List<GSRData> recordedGSRData;
 
+    float timestampECG;
+    float timestampGSR;
+
     private FileManager fileManager;
 
     private SuitAPIObject suitApi;
-
-    private readonly Stopwatch stopwatch = new Stopwatch();
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +30,9 @@ public class BiometricRecorder : MonoBehaviour
         recordedECGData = new List<ECGData>();
         recordedGSRData = new List<GSRData>();
         fileManager = new FileManager();
-        stopwatch.Start();
+
+        timestampECG = 0;
+        timestampGSR = 0;
 
         suitApi = this.GetComponent<SuitAPIObject>();
         StartCoroutine(UpdateECGBiometriyOptions());
@@ -70,7 +72,8 @@ public class BiometricRecorder : MonoBehaviour
     private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
     {
         // TODO: do we need to save only the last value? ECGBuffer.data.Last()
-        ECGData ecgData = new ECGData(ECGBuffer.data, stopwatch.Elapsed.TotalMilliseconds);
+        timestampECG += Time.deltaTime;
+        ECGData ecgData = new ECGData(timestampECG, ECGBuffer.data);
         if (recording) recordedECGData.Add(ecgData);
 
         Debug.Log($"deltaTime: {ECGBuffer.data.Last().deltaTime}, amplitude[mV]: {ECGBuffer.data.Last().mv}");
@@ -78,7 +81,8 @@ public class BiometricRecorder : MonoBehaviour
 
     private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        GSRData gsrData = new GSRData(GSRBuffer.data, stopwatch.Elapsed.TotalMilliseconds);
+        timestampGSR += Time.deltaTime;
+        GSRData gsrData = new GSRData(timestampGSR, GSRBuffer.data);
         if (recording) recordedGSRData.Add(gsrData);
 
         // TODO
@@ -88,6 +92,8 @@ public class BiometricRecorder : MonoBehaviour
     public void StartStopRecording()
     {
         recording = !recording;
+        timestampECG = 0;
+        timestampGSR = 0;
     }
 
     public void Save()
