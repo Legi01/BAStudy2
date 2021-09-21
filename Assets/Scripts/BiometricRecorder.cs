@@ -32,10 +32,13 @@ public class BiometricRecorder : MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        suitApi.Biometry.StartECG();
-        suitApi.Biometry.StartGSR();
-        StartCoroutine(UpdateECGBiometriyOptions());
-        StartCoroutine(UpdateGSRBiometriyOptions());
+        if (suitApi.Biometry != null)
+        {
+            suitApi.Biometry.StartECG();
+            suitApi.Biometry.StartGSR();
+            StartCoroutine(UpdateECGBiometriyOptions());
+            StartCoroutine(UpdateGSRBiometriyOptions());
+        }
     }
 
     // Update is called once per frame
