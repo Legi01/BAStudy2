@@ -16,7 +16,7 @@ public class MocapRecorder : MonoBehaviour
     
     private FileManager fileManager;
 
-    private SuitAPIObject suitApi;
+    public SuitAPIObject suitApi;
     private MocapSkeleton skeleton;
 
     //private Transform _teslasuitMan;
@@ -54,7 +54,6 @@ public class MocapRecorder : MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        suitApi = this.GetComponent<SuitAPIObject>();
         StartCoroutine(UpdateMocapOptions());
 
         animator = this.GetComponent<Animator>();

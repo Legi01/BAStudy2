@@ -21,9 +21,9 @@ public class Config
             {"quat9x", true},
             {"quat6x", false},
             {"gyroscope", true},
-            {"magnetometer", false},
+            {"magnetometer", true},
             {"accelerometer", true},
-            {"linearAccel", false},
+            {"linearAccel", true},
             {"temperature", false},
         };
 

@@ -12,7 +12,7 @@ public class MocapReplay : MonoBehaviour
     private int replayIndex;
     private bool replaying;
 
-    private SuitAPIObject suitApi;
+    public SuitAPIObject suitApi;
 
     private Stopwatch stopwatch;
     private double nextReplayTime;
@@ -30,8 +30,6 @@ public class MocapReplay : MonoBehaviour
     private void Start()
     {
         replaying = false;
-
-        suitApi = this.GetComponent<SuitAPIObject>();
 
         stopwatch = new Stopwatch();
         stopwatch.Start();

@@ -17,7 +17,7 @@ public class BiometricRecorder : MonoBehaviour
 
     private FileManager fileManager;
 
-    private SuitAPIObject suitApi;
+    public SuitAPIObject suitApi;
 
     public static OnECGUpdated test;
 
@@ -32,7 +32,6 @@ public class BiometricRecorder : MonoBehaviour
         stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        suitApi = this.GetComponent<SuitAPIObject>();
         suitApi.Biometry.StartECG();
         suitApi.Biometry.StartGSR();
         StartCoroutine(UpdateECGBiometriyOptions());
