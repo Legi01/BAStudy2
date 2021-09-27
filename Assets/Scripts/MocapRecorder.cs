@@ -36,7 +36,7 @@ public class MocapRecorder : MonoBehaviour
 
     //private SkinnedMeshRenderer _meshRenderer;
 
-    private Transform indicator;
+    //private Transform indicator;
 
     //private Transform _jointPositionReferenceFrame;
 
@@ -68,7 +68,7 @@ public class MocapRecorder : MonoBehaviour
 
         //_meshRenderer = _teslasuitMan.GetComponentInChildren<SkinnedMeshRenderer>();
 
-        indicator = GameObject.Find("Indicator").transform;
+        //indicator = GameObject.Find("Indicator").transform;
 
         //_jointPositionReferenceFrame = GameObject.Find("ReferenceFrame").transform;
 
@@ -114,7 +114,7 @@ public class MocapRecorder : MonoBehaviour
 
 
         //Quaternion heading = TransformExtensions.HeadingOffset(Quaternion.identity, root.transform.rotation);
-        indicator.rotation = root.transform.localRotation;
+        //indicator.rotation = root.transform.localRotation;
 
         // Setting reference frame and calculating relative joint position
         /*_jointPositionReferenceFrame.position = _rightWrist.position;
