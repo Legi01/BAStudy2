@@ -28,8 +28,6 @@ public class PaintbrushHaptics : MonoBehaviour
         {
             Debug.Log(string.Format("Plugin error : {0} message: {1}", o.ToString(), ex.Message));
         };
-
-        camera = GetComponent<Camera>();
     }
 
     private void Logger_OnLogMessage(string obj)
