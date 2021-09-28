@@ -74,3 +74,6 @@ crashlytics-build.properties
 .DS_store
 *.mocap.meta
 *.csv.meta
+
+log.txt
+unityProject.vrmanifest
