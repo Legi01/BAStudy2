@@ -135,7 +135,7 @@ public class MocapRecorder : MonoBehaviour
         suitApi.Mocap.Updated += OnMocapUpdate;
 
         TSMocapOptions options = new TSMocapOptions();
-        options.frequency = TSMocapFrequency.TS_MOCAP_FPS_100;
+        options.frequency = TSMocapFrequency.TS_MOCAP_FPS_200;
         options.sensors_mask = Config.TsMocapSensorMask();
 
         suitApi.Mocap.UpdateOptions(options);
@@ -177,9 +177,11 @@ public class MocapRecorder : MonoBehaviour
         return recording;
     }
 
-    /*void OnApplicationQuit()
+    void OnDisable()
     {
         Debug.Log("Stopping MoCap");
+
         suitApi.Mocap.Stop();
-    }*/
+        suitApi.Mocap.Updated -= OnMocapUpdate;
+    }
 }

@@ -19,8 +19,6 @@ public class BiometricRecorder : MonoBehaviour
 
     public SuitAPIObject suitApi;
 
-    public static OnECGUpdated test;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -52,8 +50,8 @@ public class BiometricRecorder : MonoBehaviour
         yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
 
         suitApi.Biometry.ECGUpdated += OnECGUpdate;
-
-        ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_20;
+        
+        ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_10; // TS_ECG_FPS_20 -> 100 ms
         suitApi.Biometry.UpdateECGFrequency(ecgFrequency);
 
         Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
@@ -73,40 +71,46 @@ public class BiometricRecorder : MonoBehaviour
 
     private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
-        uint[] deltaTime = new uint[ECGBuffer.data.Length];
-        float[] amplitude = new float[ECGBuffer.data.Length];
-
-        for (int i = 0; i < ECGBuffer.data.Length; i++)
+        if (resultCode == ResultCode.TS_SUCCESS)
         {
-            deltaTime[i] = ECGBuffer.data[i].deltaTime;
-            amplitude[i] = ECGBuffer.data[i].mv;
-            //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {ECGBuffer.data[i].mv.ToString()}");
-        }
+            double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
+            uint[] deltaTime = new uint[ECGBuffer.data.Length];
+            float[] amplitude = new float[ECGBuffer.data.Length];
 
-        ECGData ecgData = new ECGData(elapsedTime, deltaTime, amplitude);
-        if (recording) recordedECGData.Add(ecgData);
+            for (int i = 0; i < ECGBuffer.data.Length; i++)
+            {
+                deltaTime[i] = ECGBuffer.data[i].deltaTime;
+                amplitude[i] = ECGBuffer.data[i].mv;
+                //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {ECGBuffer.data[i].mv.ToString()}");
+            }
+
+            ECGData ecgData = new ECGData(elapsedTime, deltaTime, amplitude);
+            if (recording) recordedECGData.Add(ecgData);
+        }
     }
 
     private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
+        Debug.Log("OnGSRUpdate");
 
-        for (int i = 0; i < GSRBuffer.data.Length; i++)
+        if (resultCode == ResultCode.TS_SUCCESS)
         {
-            uint count = GSRBuffer.data[i].count;
-            int[] data = GSRBuffer.data[i].data;
+            double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
 
-            GSRData gsrData = new GSRData(elapsedTime, count, data);
-            if (recording) recordedGSRData.Add(gsrData);
-
-            for (int j = 0; j < data.Length; j++)
+            for (int i = 0; i < GSRBuffer.data.Length; i++)
             {
-                //Debug.Log($" Index (i,j): {i}, {j}, elapsedTime {elapsedTime}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
+                uint count = GSRBuffer.data[i].count;
+                int[] data = GSRBuffer.data[i].data;
+
+                GSRData gsrData = new GSRData(elapsedTime, count, data);
+                if (recording) recordedGSRData.Add(gsrData);
+
+                for (int j = 0; j < data.Length; j++)
+                {
+                    Debug.Log($" Index (i,j): {i}, {j}, elapsedTime {elapsedTime}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
+                }
             }
         }
-
-       
     }
 
     public void StartStopRecording()
@@ -128,10 +132,14 @@ public class BiometricRecorder : MonoBehaviour
         return recording;
     }
 
-    /*void OnApplicationQuit()
+    void OnDisable()
     {
         Debug.Log("Stopping ECG and GSR");
+
         suitApi.Biometry.StopECG();
         suitApi.Biometry.StopGSR();
-    }*/
+
+        suitApi.Biometry.ECGUpdated -= OnECGUpdate;
+        suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
+    }
 }

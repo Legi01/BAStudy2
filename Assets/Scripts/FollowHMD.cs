@@ -4,25 +4,19 @@ using UnityEngine;
 
 public class FollowHMD : MonoBehaviour
 {
-
-    private GameObject camera;
-    public GameObject root;
+    private Transform root;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        root = GameObject.Find("Maniken_skeletool:root").transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        camera = GameObject.Find("/[CameraRig]/Camera");
+        if (Camera.main == null) return;
 
-        if (camera != null)
-        {
-            root.transform.position = new Vector3(camera.transform.position.x, 0, camera.transform.position.z);
-        }
-
+        //root.transform.position = new Vector3(Camera.main.transform.position.x, 0, Camera.main.transform.position.z);
     }
 }

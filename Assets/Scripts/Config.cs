@@ -3,10 +3,6 @@ using System.Collections.Generic;
 
 public class Config
 {
-    public static bool FEEDBACK_ENABLED = true;
-
-    public static float FEEDBACK_THRESHOLD = 1.73f;
-
     public static List<String> propertyNames = new List<string>
         {
             "quat9x", "quat6x", "gyroscope", "magnetometer",
