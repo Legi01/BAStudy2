@@ -49,9 +49,10 @@ public class BiometricRecorder : MonoBehaviour
     {
         yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
 
+        // Call the delegate that is used to track changes of ECG data.
         suitApi.Biometry.ECGUpdated += OnECGUpdate;
-        
-        ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_10; // TS_ECG_FPS_20 -> 100 ms
+
+        ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_20;
         suitApi.Biometry.UpdateECGFrequency(ecgFrequency);
 
         Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
@@ -79,9 +80,13 @@ public class BiometricRecorder : MonoBehaviour
 
             for (int i = 0; i < ECGBuffer.data.Length; i++)
             {
+                // Interval between measurement, measured in nanoseconds
                 deltaTime[i] = ECGBuffer.data[i].deltaTime;
-                amplitude[i] = ECGBuffer.data[i].mv;
-                //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {ECGBuffer.data[i].mv.ToString()}");
+
+                // Amplitude, measured in millivolts
+                float mv = (ECGBuffer.data[i].mv - 2048.0f) / (4096.0f) * 80.0f;
+                amplitude[i] = mv;
+                //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {mv}");
             }
 
             ECGData ecgData = new ECGData(elapsedTime, deltaTime, amplitude);
