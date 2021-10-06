@@ -32,8 +32,6 @@ public class BiometricRecorder : MonoBehaviour
 
         if (suitApi.Biometry != null)
         {
-            suitApi.Biometry.StartECG();
-            suitApi.Biometry.StartGSR();
             StartCoroutine(UpdateECGBiometriyOptions());
             StartCoroutine(UpdateGSRBiometriyOptions());
         }
@@ -47,6 +45,7 @@ public class BiometricRecorder : MonoBehaviour
 
     private IEnumerator UpdateECGBiometriyOptions()
     {
+        suitApi.Biometry.StartECG();
         yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
 
         // Call the delegate that is used to track changes of ECG data.
@@ -60,6 +59,7 @@ public class BiometricRecorder : MonoBehaviour
 
     private IEnumerator UpdateGSRBiometriyOptions()
     {
+        suitApi.Biometry.StartGSR();
         yield return new WaitUntil(() => suitApi.Biometry is { GSRStarted: true });
 
         suitApi.Biometry.GSRUpdated += OnGSRUpdate;
@@ -139,12 +139,15 @@ public class BiometricRecorder : MonoBehaviour
 
     void OnDisable()
     {
-        Debug.Log("Stopping ECG and GSR");
+        if (suitApi.Biometry != null)
+        {
+            Debug.Log("Stopping ECG and GSR");
 
-        suitApi.Biometry.StopECG();
-        suitApi.Biometry.StopGSR();
+            suitApi.Biometry.StopECG();
+            suitApi.Biometry.StopGSR();
 
-        suitApi.Biometry.ECGUpdated -= OnECGUpdate;
-        suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
+            suitApi.Biometry.ECGUpdated -= OnECGUpdate;
+            suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
+        }
     }
 }

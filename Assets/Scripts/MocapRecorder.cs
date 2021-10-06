@@ -179,9 +179,12 @@ public class MocapRecorder : MonoBehaviour
 
     void OnDisable()
     {
-        Debug.Log("Stopping MoCap");
+        if (suitApi.Mocap != null)
+        {
+            Debug.Log("Stopping MoCap");
 
-        suitApi.Mocap.Stop();
-        suitApi.Mocap.Updated -= OnMocapUpdate;
+            suitApi.Mocap.Stop();
+            suitApi.Mocap.Updated -= OnMocapUpdate;
+        }
     }
 }
