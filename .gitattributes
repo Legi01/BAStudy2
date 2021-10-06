@@ -816,3 +816,8 @@
 /Assets/Tanto/material/textures/tanto_Metallic.png filter=lfs diff=lfs merge=lfs -text
 /Assets/Tanto/material/textures/tanto_Normal.png filter=lfs diff=lfs merge=lfs -text
 /Assets/Tanto/model/tracker.fbx filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Knife/material/textures/tanto_AO.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Knife/material/textures/tanto_Albedo.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Knife/material/textures/tanto_Metallic.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Knife/material/textures/tanto_Normal.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Knife/model/tracker.fbx filter=lfs diff=lfs merge=lfs -text

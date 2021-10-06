@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 16610492939428148}
   - component: {fileID: 16610492938429428}
   m_Layer: 0
-  m_Name: tanto
+  m_Name: Knife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
