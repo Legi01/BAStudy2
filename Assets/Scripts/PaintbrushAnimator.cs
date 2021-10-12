@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PaintbrushAnimator : MonoBehaviour
 {
+    public bool reverse;
     public GameObject[] pathNode;
+
     private const float moveSpeed = 0.5f;
     private int currentNode;
     private int step;
@@ -16,22 +18,48 @@ public class PaintbrushAnimator : MonoBehaviour
     private Vector3 finalPosition;
     private Quaternion finalRotation;
 
+    void Awake()
+    {
+        if (Config.synchronousHapticFeedback && reverse)
+        {
+            this.gameObject.active = false;
+        }
+        else if (!Config.synchronousHapticFeedback && !reverse)
+        {
+            this.GetComponentInChildren<Renderer>().enabled = false;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         timer = 0;
-        currentNode = 0;
-        step = 1;
+
+        if (!reverse)
+        {
+            currentNode = 0;
+            step = 1;
+        }
+        else
+        {
+            currentNode = pathNode.Length - 1;
+            step = -1;
+        }
 
         startPosition = pathNode[currentNode].transform.position;
         startRotation = pathNode[currentNode].transform.rotation;
 
-        finalPosition = pathNode[currentNode++].transform.position;
-        finalRotation = pathNode[currentNode++].transform.rotation;
+        finalPosition = pathNode[currentNode + step].transform.position;
+        finalRotation = pathNode[currentNode + step].transform.rotation;
     }
 
     // Update is called once per frame
     void Update()
+    {
+        AnimatePaintbrush();
+    }
+
+    private void AnimatePaintbrush()
     {
         finalPosition = pathNode[currentNode].transform.position;
         finalRotation = pathNode[currentNode].transform.rotation;
@@ -65,7 +93,7 @@ public class PaintbrushAnimator : MonoBehaviour
 
             currentNode += step;
             timer = 0;
-            
+
             startPosition = transform.position;
             startRotation = transform.rotation;
         }
