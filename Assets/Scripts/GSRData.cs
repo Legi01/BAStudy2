@@ -8,11 +8,11 @@ using UnityEngine;
 [Serializable]
 public class GSRData
 {
-    private double timestamp;
+    private DateTime timestamp;
     private uint count;
     private int[] data;
 
-    public GSRData(double timestamp, uint count, int[] data)
+    public GSRData(DateTime timestamp, uint count, int[] data)
     {
         this.timestamp = timestamp;
         this.count = count;
@@ -29,9 +29,10 @@ public class GSRData
         return count;
     }
 
-    public double GetTimestamp()
+    public long GetTimestamp()
     {
-        return timestamp;
+        long time = new DateTimeOffset(timestamp).ToUnixTimeMilliseconds();
+        return time;
     }
 
     public string ToCSV(string seperator)
@@ -53,7 +54,7 @@ public class GSRData
     public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append("timestemp").Append(seperator).Append("value").Append(seperator);
+        sb.Append("timestamp").Append(seperator).Append("value").Append(seperator);
 
         sb.Append("count").Append(seperator);
 

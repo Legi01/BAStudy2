@@ -10,11 +10,11 @@ public class MocapData
 {
     private TSMocapData[] data;
     private string label;
-    private double timestamp;
+    private DateTime timestamp;
     private Vector3[] eulerJointAngles;
     private List<string> jointNames;
 
-    public MocapData(double timestamp, TSMocapData[] data, List<string> jointNames, Vector3[] eulerJointAngles)
+    public MocapData(DateTime timestamp, TSMocapData[] data, List<string> jointNames, Vector3[] eulerJointAngles)
     { 
         this.timestamp = timestamp;
         this.data = data;
@@ -38,9 +38,10 @@ public class MocapData
         return joints;
     }
 
-    public double GetTimestamp()
+    public long GetTimestamp()
     {
-        return timestamp;
+        long time = new DateTimeOffset(timestamp).ToUnixTimeMilliseconds();
+        return time;
     }
 
     public string GetLabel()
@@ -51,7 +52,7 @@ public class MocapData
     public string ToCSV(string seperator, bool filtered = false)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append(timestamp.ToString(CultureInfo.InvariantCulture)).Append(seperator);
+        sb.Append(timestamp.ToString(Config.timestampFormat)).Append(seperator);
         if (!filtered) sb.Append(label).Append(seperator);
 
         for (int i = 0; i < data.Length; i++)

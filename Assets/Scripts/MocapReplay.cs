@@ -15,9 +15,8 @@ public class MocapReplay : MonoBehaviour
     public SuitAPIObject suitApi;
 
     private Stopwatch stopwatch;
-    private double nextReplayTime;
-    private double firstReplayPointOffset;
-    private double repReplayStartTime;
+    private long nextReplayTime;
+    private long replayStartTime;
 
     private int labelStartIndex = -1;
     private string _label;
@@ -43,7 +42,8 @@ public class MocapReplay : MonoBehaviour
         if (replaying)
         {
             double currentTimestamp = stopwatch.Elapsed.TotalMilliseconds;
-            //Debug.Log($"Elapsed {currentTimestamp} next {nextReplayTime}");
+            //long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+            Debug.Log($"Elapsed {currentTimestamp} next {nextReplayTime}");
 
             if (currentTimestamp >= nextReplayTime)
             {
@@ -106,12 +106,14 @@ public class MocapReplay : MonoBehaviour
         if (replaying)
         {
             if (suitApi.Mocap != null)
+            {
                 suitApi.Mocap.Stop();
+            }
 
             stopwatch.Restart();
             replayIndex = 0;
-            firstReplayPointOffset = replayData[0].GetTimestamp();
-            nextReplayTime = replayData[replayIndex + 1].GetTimestamp() - firstReplayPointOffset;
+            replayStartTime = replayData[0].GetTimestamp();
+            nextReplayTime = replayData[replayIndex + 1].GetTimestamp() - replayStartTime;
         }
     }
 
@@ -127,8 +129,10 @@ public class MocapReplay : MonoBehaviour
         MocapData data = replayData[replayIndex];
         replayIndex = (replayIndex + 1) % replayData.Count;
         if (replayIndex == 0)
+        {
             stopwatch.Restart();
-        nextReplayTime = replayData[replayIndex].GetTimestamp() - firstReplayPointOffset;
+        }
+        nextReplayTime = replayData[replayIndex].GetTimestamp() - replayStartTime;
         return data;
     }
 

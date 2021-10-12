@@ -13,8 +13,6 @@ public class BiometricRecorder : MonoBehaviour
     private List<ECGData> recordedECGData;
     private List<GSRData> recordedGSRData;
 
-    private Stopwatch stopwatch;
-
     private FileManager fileManager;
 
     public SuitAPIObject suitApi;
@@ -26,9 +24,6 @@ public class BiometricRecorder : MonoBehaviour
         recordedECGData = new List<ECGData>();
         recordedGSRData = new List<GSRData>();
         fileManager = new FileManager();
-
-        stopwatch = new Stopwatch();
-        stopwatch.Start();
 
         if (suitApi.Biometry != null)
         {
@@ -74,7 +69,6 @@ public class BiometricRecorder : MonoBehaviour
     {
         if (resultCode == ResultCode.TS_SUCCESS)
         {
-            double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
             uint[] deltaTime = new uint[ECGBuffer.data.Length];
             float[] amplitude = new float[ECGBuffer.data.Length];
 
@@ -89,7 +83,7 @@ public class BiometricRecorder : MonoBehaviour
                 //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {mv}");
             }
 
-            ECGData ecgData = new ECGData(elapsedTime, deltaTime, amplitude);
+            ECGData ecgData = new ECGData(DateTime.Now, deltaTime, amplitude);
             if (recording) recordedECGData.Add(ecgData);
         }
     }
@@ -100,19 +94,18 @@ public class BiometricRecorder : MonoBehaviour
 
         if (resultCode == ResultCode.TS_SUCCESS)
         {
-            double elapsedTime = stopwatch.Elapsed.TotalMilliseconds;
 
             for (int i = 0; i < GSRBuffer.data.Length; i++)
             {
                 uint count = GSRBuffer.data[i].count;
                 int[] data = GSRBuffer.data[i].data;
 
-                GSRData gsrData = new GSRData(elapsedTime, count, data);
+                GSRData gsrData = new GSRData(DateTime.Now, count, data);
                 if (recording) recordedGSRData.Add(gsrData);
 
                 for (int j = 0; j < data.Length; j++)
                 {
-                    Debug.Log($" Index (i,j): {i}, {j}, elapsedTime {elapsedTime}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
+                    Debug.Log($" Index (i,j): {i}, {j}, elapsedTime {DateTime.Now}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
                 }
             }
         }
@@ -121,9 +114,6 @@ public class BiometricRecorder : MonoBehaviour
     public void StartStopRecording()
     {
         recording = !recording;
-        if (recording) {
-            stopwatch.Restart();
-        }
     }
 
     public void Save()

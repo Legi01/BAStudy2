@@ -49,4 +49,6 @@ public class Config
 
         return sensorMask;
     }
+
+    public const string timestampFormat = "yyyy-MM-ddTHH:mm:ss.fff";
 }

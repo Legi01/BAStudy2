@@ -11,8 +11,6 @@ public class MocapRecorder : MonoBehaviour
 {
     private bool recording;
     private List<MocapData> recordedMocapData;
-
-    private Stopwatch stopwatch;
     
     private FileManager fileManager;
 
@@ -50,9 +48,6 @@ public class MocapRecorder : MonoBehaviour
         recording = false;
         recordedMocapData = new List<MocapData>();
         fileManager = new FileManager();
-
-        stopwatch = new Stopwatch();
-        stopwatch.Start();
 
         StartCoroutine(UpdateMocapOptions());
 
@@ -148,7 +143,7 @@ public class MocapRecorder : MonoBehaviour
         TSMocapData[] data = skeleton.mocapData;
         TSMocapData[] slicedData = new TSMocapData[10];
         Array.Copy(data, slicedData, 10);
-        MocapData suitData = new MocapData(stopwatch.Elapsed.TotalMilliseconds, slicedData, jointNames, jointRotations.Values.ToArray());
+        MocapData suitData = new MocapData(DateTime.Now, slicedData, jointNames, jointRotations.Values.ToArray());
 
         if (recording) {
 ;           recordedMocapData.Add(suitData);
@@ -160,9 +155,10 @@ public class MocapRecorder : MonoBehaviour
         recording = !recording;
 
         if (recording) {
-            stopwatch.Restart();
             if (suitApi.Mocap != null)
+            {
                 suitApi.Mocap.Start();
+            }
         }
     }
 

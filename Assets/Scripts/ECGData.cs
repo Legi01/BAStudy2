@@ -9,13 +9,13 @@ using UnityEngine;
 public class ECGData
 {
     // Data consists of a delta timestamp and amplitude, measured in millivolts [mV]
-    private double timestamp;
+    private DateTime timestamp;
     private float[] amplitude;
     private uint[] deltaTime;
 
     private float[] amplitudes;
 
-    public ECGData(double timestamp, uint[] deltaTime, float[] amplitude)
+    public ECGData(DateTime timestamp, uint[] deltaTime, float[] amplitude)
     {
         this.timestamp = timestamp;
         this.deltaTime = deltaTime;
@@ -33,15 +33,16 @@ public class ECGData
         return deltaTime;
     }
 
-    public double GetTimestamp()
+    public long GetTimestamp()
     {
-        return timestamp;
+        long time = new DateTimeOffset(timestamp).ToUnixTimeMilliseconds();
+        return time;
     }
 
     public string ToCSV(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append(timestamp.ToString(CultureInfo.InvariantCulture)).Append(seperator);
+        sb.Append(timestamp.ToString(Config.timestampFormat)).Append(seperator);
 
         for (int i = 0; i < amplitude.Length; i++)
         {
@@ -57,7 +58,7 @@ public class ECGData
     public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append("timestemp").Append(seperator);
+        sb.Append("timestamp").Append(seperator);
 
         for (int i = 0; i < amplitude.Length; i++) {
             sb.Append("deltaTime_" + i);
