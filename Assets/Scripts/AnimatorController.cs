@@ -19,10 +19,15 @@ public class AnimatorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Standing Idle") && Input.GetKeyDown(KeyCode.Space))
+        /*if (anim.GetCurrentAnimatorStateInfo(0).IsName("Standing Idle") && Input.GetKeyDown(KeyCode.Space))
         {
-            knife.SetActive(true);
-            anim.SetTrigger("Stab");
-        }
+            OnStab();
+        }*/
+    }
+
+    public void OnStab()
+    {
+        knife.SetActive(true);
+        anim.SetTrigger("Stab");
     }
 }

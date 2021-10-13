@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class PaintbrushAnimator : MonoBehaviour
 {
@@ -12,6 +14,12 @@ public class PaintbrushAnimator : MonoBehaviour
     private int step;
     private float timer;
 
+    private bool animatePaintbrush;
+
+    private GameObject attacker;
+
+    private Stopwatch stopwatch;
+
     private Vector3 startPosition;
     private Quaternion startRotation;
 
@@ -20,6 +28,10 @@ public class PaintbrushAnimator : MonoBehaviour
 
     void Awake()
     {
+        attacker = GameObject.FindGameObjectWithTag("Attacker");
+
+        animatePaintbrush = false;
+
         if (Config.synchronousHapticFeedback && reverse)
         {
             this.gameObject.active = false;
@@ -34,6 +46,7 @@ public class PaintbrushAnimator : MonoBehaviour
     void Start()
     {
         timer = 0;
+        stopwatch = new Stopwatch();
 
         if (!reverse)
         {
@@ -56,7 +69,27 @@ public class PaintbrushAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AnimatePaintbrush();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animatePaintbrush = true;
+        }
+
+        if (animatePaintbrush)
+		{
+            stopwatch.Start();
+            AnimatePaintbrush();
+
+            if (stopwatch.ElapsedMilliseconds > 180000)
+            {
+                // Attack the player after 3 minutes
+                attacker.SendMessage("OnStab");
+
+                animatePaintbrush = false;
+
+                stopwatch.Stop();
+                stopwatch.Reset();
+            }
+        }
     }
 
     private void AnimatePaintbrush()
