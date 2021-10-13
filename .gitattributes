@@ -844,3 +844,6 @@
 /Assets/Animations/Stabbing-4.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/Animations/Stand[[:space:]]To[[:space:]]Sit.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/Animations/Standing[[:space:]]Idle.fbx filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/SampleScene/Lightmap-0_comp_dir.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/SampleScene/Lightmap-0_comp_light.exr filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/SampleScene/ReflectionProbe-3.exr filter=lfs diff=lfs merge=lfs -text
