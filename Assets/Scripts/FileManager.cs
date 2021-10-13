@@ -9,7 +9,6 @@ using System.IO;
 
 public class FileManager
 {
-
     private SurrogateSelector _surrogateSelector;
     private string seperator = ";";
 
@@ -48,6 +47,22 @@ public class FileManager
         }
 
         Debug.Log($"Saved {data.Count} mocap entries.");
+    }
+
+    public void Save(List<MocapData> data)
+    {
+        if (data == null) return;
+
+        BinaryFormatter formatter = new BinaryFormatter
+        {
+            SurrogateSelector = _surrogateSelector
+        };
+        string path = Application.dataPath + "/MoCap.mocap";
+        FileStream stream = new FileStream(path, FileMode.Create);
+
+        // Serialize to a file
+        formatter.Serialize(stream, data);
+        stream.Close();
     }
 
     public void SaveToCSV(List<ECGData> data)
@@ -98,21 +113,30 @@ public class FileManager
         Debug.Log($"Saved {data.Count} GSR entries.");
     }
 
-    public void Save(List<MocapData> data)
+    public void SaveToCSV(List<Label> labels)
     {
-        if (data == null) return;
+        if (labels == null || labels.Count == 0) return;
 
-        BinaryFormatter formatter = new BinaryFormatter
+        StringBuilder sb = new StringBuilder();
+
+        // To let Excel know
+        sb.Append("SEP=").Append(seperator).Append("\n");
+        sb.Append(labels[0].GetCSVHeader(seperator));
+        foreach (var label in labels)
         {
-            SurrogateSelector = _surrogateSelector
-        };
-        string path = Application.dataPath + "/MoCap.mocap";
-        FileStream stream = new FileStream(path, FileMode.Create);
+            sb.Append(label.ToCSV(seperator)).Append("\n");
+        }
 
-        // Serialize to a file
-        formatter.Serialize(stream, data);
-        stream.Close();
+        string path = Application.dataPath + "/labels.csv";
+
+        using (var writer = new StreamWriter(path, false))
+        {
+            writer.Write(sb.ToString());
+        }
+
+        Debug.Log($"Saved {labels.Count} labels.");
     }
+
     public List<MocapData> Load(string filename)
     {
         string path = Application.dataPath + "/" + filename + ".mocap"; //"/MoCap.mocap";
