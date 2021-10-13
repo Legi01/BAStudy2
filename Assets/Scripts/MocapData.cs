@@ -9,7 +9,6 @@ using UnityEngine;
 public class MocapData
 {
     private TSMocapData[] data;
-    private string label;
     private DateTime timestamp;
     private Vector3[] eulerJointAngles;
     private List<string> jointNames;
@@ -44,16 +43,10 @@ public class MocapData
         return time;
     }
 
-    public string GetLabel()
-    {
-        return label;
-    }
-
     public string ToCSV(string seperator, bool filtered = false)
     {
         StringBuilder sb = new StringBuilder();
         sb.Append(timestamp.ToString(Config.timestampFormat)).Append(seperator);
-        if (!filtered) sb.Append(label).Append(seperator);
 
         for (int i = 0; i < data.Length; i++)
         {
@@ -127,7 +120,7 @@ public class MocapData
     public string GetCSVHeader(string seperator)
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append("timestamp").Append("label").Append(seperator).Append(seperator);
+        sb.Append("timestamp").Append(seperator);
 
         foreach (var tsMocapData in data)
         {

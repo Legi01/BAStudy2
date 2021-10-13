@@ -42,8 +42,7 @@ public class MocapReplay : MonoBehaviour
         if (replaying)
         {
             double currentTimestamp = stopwatch.Elapsed.TotalMilliseconds;
-            //long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-            Debug.Log($"Elapsed {currentTimestamp} next {nextReplayTime}");
+            //Debug.Log($"Elapsed {currentTimestamp} next {nextReplayTime}");
 
             if (currentTimestamp >= nextReplayTime)
             {
