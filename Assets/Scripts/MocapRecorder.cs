@@ -12,7 +12,7 @@ public class MocapRecorder : MonoBehaviour
     private bool recording;
     private List<MocapData> recordedMocapData;
 
-    public SuitAPIObject suitApi;
+    private SuitAPIObject suitApi;
     private MocapSkeleton skeleton;
 
     //private Transform _teslasuitMan;
@@ -46,6 +46,7 @@ public class MocapRecorder : MonoBehaviour
         recording = false;
         recordedMocapData = new List<MocapData>();
 
+        suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
         StartCoroutine(UpdateMocapOptions());
 
         animator = this.GetComponent<Animator>();
@@ -172,7 +173,7 @@ public class MocapRecorder : MonoBehaviour
 
     void OnDisable()
     {
-        if (suitApi.Mocap != null)
+        if (suitApi != null && suitApi.Mocap != null)
         {
             Debug.Log("Stopping MoCap");
 

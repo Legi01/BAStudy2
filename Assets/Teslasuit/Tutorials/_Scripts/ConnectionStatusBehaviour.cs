@@ -9,11 +9,12 @@ namespace TeslasuitAPI.Tutorials
     public class ConnectionStatusBehaviour : MonoBehaviour
     {
         public Text text;
-        public SuitAPIObject aPIObject;
+        private SuitAPIObject aPIObject;
 
         // Use this for initialization
         void Start()
         {
+            aPIObject = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
             aPIObject.BecameAvailable += delegate { text.text = "Connected"; };
             aPIObject.BecameUnavailable += delegate { text.text = "Not Connected"; };
         }

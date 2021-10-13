@@ -853,3 +853,4 @@
 /Assets/Prefabs/RawWoodenFurnitureFree/Textures/Stool01_albedoV1.png filter=lfs diff=lfs merge=lfs -text
 /Assets/Prefabs/RawWoodenFurnitureFree/Textures/Table01_albedoV2.png filter=lfs diff=lfs merge=lfs -text
 /Assets/Prefabs/RawWoodenFurnitureFree/Textures/Table02_albedoV1.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Teslasuit_Man_Haptics[[:space:]]Variant.prefab filter=lfs diff=lfs merge=lfs -text

@@ -14,14 +14,17 @@ public class UI : MonoBehaviour
 
     public TextMeshProUGUI applicationStatus;
 
-    public MocapRecorder mocapRecorder;
-    public MocapReplay motionReplay;
-
-    public BiometricRecorder biometricRecorder;
+    private MocapRecorder mocapRecorder;
+    private MocapReplay motionReplay;
+    private BiometricRecorder biometricRecorder;
 
     // Start is called before the first frame update
     void Start()
     {
+        mocapRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<MocapRecorder>();
+        motionReplay = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<MocapReplay>();
+        biometricRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<BiometricRecorder>();
+
         Button btn_record_start = recordButton.GetComponent<Button>();
         btn_record_start.onClick.AddListener(OnStartStopRecording);
 

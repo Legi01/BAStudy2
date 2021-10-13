@@ -13,7 +13,7 @@ public class BiometricRecorder : MonoBehaviour
     private List<ECGData> recordedECGData;
     private List<GSRData> recordedGSRData;
 
-    public SuitAPIObject suitApi;
+    private SuitAPIObject suitApi;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +22,7 @@ public class BiometricRecorder : MonoBehaviour
         recordedECGData = new List<ECGData>();
         recordedGSRData = new List<GSRData>();
 
+        suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
         if (suitApi.Biometry != null)
         {
             StartCoroutine(UpdateECGBiometriyOptions());
@@ -124,7 +125,7 @@ public class BiometricRecorder : MonoBehaviour
 
     void OnDisable()
     {
-        if (suitApi.Biometry != null)
+        if (suitApi != null && suitApi.Biometry != null)
         {
             Debug.Log("Stopping ECG and GSR");
 

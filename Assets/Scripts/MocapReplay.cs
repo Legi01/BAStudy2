@@ -12,7 +12,7 @@ public class MocapReplay : MonoBehaviour
     private int replayIndex;
     private bool replaying;
 
-    public SuitAPIObject suitApi;
+    private SuitAPIObject suitApi;
 
     private Stopwatch stopwatch;
     private long nextReplayTime;
@@ -33,6 +33,8 @@ public class MocapReplay : MonoBehaviour
 
         animator = this.GetComponent<Animator>();
         root = GameObject.Find("Maniken_skeletool:root").transform;
+
+        suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
     }
 
     private void Update()
