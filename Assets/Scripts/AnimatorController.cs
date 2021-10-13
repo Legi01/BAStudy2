@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
 {
-
     private Animator anim;
     private GameObject knife;
+
+    private bool stab;
 
     // Start is called before the first frame update
     void Start()
@@ -14,20 +16,31 @@ public class AnimatorController : MonoBehaviour
         anim = GetComponent<Animator>();
         knife = GameObject.FindGameObjectWithTag("Knife");
         knife.SetActive(false);
+
+        stab = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if (anim.GetCurrentAnimatorStateInfo(0).IsName("Standing Idle") && Input.GetKeyDown(KeyCode.Space))
+        if (stab && anim.GetCurrentAnimatorStateInfo(0).IsName("Knife Stabbing"))
         {
-            OnStab();
-        }*/
+            Label label = new Label(DateTime.Now, "Stab");
+            FileManager.Instance().SaveToCSV(label);
+            Debug.Log("Stab");
+
+            stab = false;
+        }
     }
 
     public void OnStab()
     {
+        stab = true;
         knife.SetActive(true);
         anim.SetTrigger("Stab");
+
+        Label label = new Label(DateTime.Now, "Knife appears");
+        FileManager.Instance().SaveToCSV(label);
+        Debug.Log("Knife appears");
     }
 }

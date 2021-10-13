@@ -11,8 +11,6 @@ public class MocapRecorder : MonoBehaviour
 {
     private bool recording;
     private List<MocapData> recordedMocapData;
-    
-    private FileManager fileManager;
 
     public SuitAPIObject suitApi;
     private MocapSkeleton skeleton;
@@ -47,7 +45,6 @@ public class MocapRecorder : MonoBehaviour
     {
         recording = false;
         recordedMocapData = new List<MocapData>();
-        fileManager = new FileManager();
 
         StartCoroutine(UpdateMocapOptions());
 
@@ -162,10 +159,10 @@ public class MocapRecorder : MonoBehaviour
         }
     }
 
-        public void Save()
+    public void Save()
     {
-        fileManager.SaveToCSV(recordedMocapData);
-        fileManager.Save(recordedMocapData);
+        FileManager.Instance().SaveToCSV(recordedMocapData);
+        FileManager.Instance().Save(recordedMocapData);
     }
 
     public bool IsRecording()

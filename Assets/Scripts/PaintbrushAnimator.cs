@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -72,6 +73,18 @@ public class PaintbrushAnimator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             animatePaintbrush = true;
+
+            string strokeLabel = "Start_stroking_";
+            if (Config.synchronousHapticFeedback)
+            {
+                strokeLabel += "synchronous";
+            }
+            else
+            {
+                strokeLabel += "asynchronous";
+            }
+            Label label = new Label(DateTime.Now, strokeLabel);
+            FileManager.Instance().SaveToCSV(label);
         }
 
         if (animatePaintbrush)
@@ -79,10 +92,13 @@ public class PaintbrushAnimator : MonoBehaviour
             stopwatch.Start();
             AnimatePaintbrush();
 
-            if (stopwatch.ElapsedMilliseconds > 180000)
+            if (stopwatch.ElapsedMilliseconds > 10000) //180000
             {
                 // Attack the player after 3 minutes
                 attacker.SendMessage("OnStab");
+
+                Label label = new Label(DateTime.Now, "Stop_stroking");
+                FileManager.Instance().SaveToCSV(label);
 
                 animatePaintbrush = false;
 

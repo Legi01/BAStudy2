@@ -21,8 +21,6 @@ public class MocapReplay : MonoBehaviour
     private int labelStartIndex = -1;
     private string _label;
 
-    private FileManager fileManager = new FileManager();
-
     private Animator animator;
     private Transform root;
 
@@ -95,7 +93,7 @@ public class MocapReplay : MonoBehaviour
 
     public void Load(string filename)
     {
-        replayData = fileManager.Load(filename);
+        replayData = FileManager.Instance().Load(filename);
     }
 
     public void StartStopReplay()

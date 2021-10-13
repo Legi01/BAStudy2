@@ -13,8 +13,6 @@ public class BiometricRecorder : MonoBehaviour
     private List<ECGData> recordedECGData;
     private List<GSRData> recordedGSRData;
 
-    private FileManager fileManager;
-
     public SuitAPIObject suitApi;
 
     // Start is called before the first frame update
@@ -23,7 +21,6 @@ public class BiometricRecorder : MonoBehaviour
         recording = false;
         recordedECGData = new List<ECGData>();
         recordedGSRData = new List<GSRData>();
-        fileManager = new FileManager();
 
         if (suitApi.Biometry != null)
         {
@@ -116,8 +113,8 @@ public class BiometricRecorder : MonoBehaviour
 
     public void Save()
     {
-        fileManager.SaveToCSV(recordedECGData);
-        fileManager.SaveToCSV(recordedGSRData);
+        FileManager.Instance().SaveToCSV(recordedECGData);
+        FileManager.Instance().SaveToCSV(recordedGSRData);
     }
 
     public bool IsRecording()

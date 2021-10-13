@@ -9,10 +9,24 @@ using System.IO;
 
 public class FileManager
 {
-    private SurrogateSelector _surrogateSelector;
-    private string seperator = ";";
 
-    public FileManager()
+    public static FileManager _instance = null;
+
+    private SurrogateSelector _surrogateSelector;
+    private const string seperator = ";";
+
+    /* singleton */
+    public static FileManager Instance()
+    { 
+        if (_instance == null)
+        {
+            _instance = new FileManager();
+
+        }
+        return _instance;
+    }
+
+    private FileManager()
     {
         _surrogateSelector = new SurrogateSelector();
         _surrogateSelector.AddSurrogate(typeof(TSMocapData), new StreamingContext(StreamingContextStates.All),
@@ -113,28 +127,28 @@ public class FileManager
         Debug.Log($"Saved {data.Count} GSR entries.");
     }
 
-    public void SaveToCSV(List<Label> labels)
+    public void SaveToCSV(Label label)
     {
-        if (labels == null || labels.Count == 0) return;
-
         StringBuilder sb = new StringBuilder();
-
-        // To let Excel know
-        sb.Append("SEP=").Append(seperator).Append("\n");
-        sb.Append(labels[0].GetCSVHeader(seperator));
-        foreach (var label in labels)
+        
+        string path = Application.dataPath + "/labels.csv";
+        if (!File.Exists(path))
         {
-            sb.Append(label.ToCSV(seperator)).Append("\n");
+            // Create a header
+            sb.Append("SEP=").Append(seperator).Append("\n");
+            sb.Append(label.GetCSVHeader(seperator));
         }
 
-        string path = Application.dataPath + "/labels.csv";
+        // Append
+        sb.Append(label.ToCSV(seperator)).Append("\n");
 
-        using (var writer = new StreamWriter(path, false))
+        using (var writer = new StreamWriter(path, true))
         {
             writer.Write(sb.ToString());
+            writer.Flush();
         }
 
-        Debug.Log($"Saved {labels.Count} labels.");
+        //Debug.Log($"Saved: {label.GetTimestamp()} ; {label.GetLabel()}");
     }
 
     public List<MocapData> Load(string filename)
