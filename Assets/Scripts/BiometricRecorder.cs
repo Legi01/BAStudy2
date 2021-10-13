@@ -78,9 +78,9 @@ public class BiometricRecorder : MonoBehaviour
                 deltaTime[i] = ECGBuffer.data[i].deltaTime;
 
                 // Amplitude, measured in millivolts
-                float mv = (ECGBuffer.data[i].mv - 2048.0f) / (4096.0f) * 80.0f;
-                amplitude[i] = mv;
-                //Debug.Log($"Index: {i}, elapsedTime {elapsedTime}, deltaTime: {ECGBuffer.data[i].deltaTime.ToString()}, amplitude [mV]: {mv}");
+                //float mv = (ECGBuffer.data[i].mv - 2048.0f) / (4096.0f) * 80.0f;
+                amplitude[i] = ECGBuffer.data[i].mv;
+                //Debug.Log($"Index: {i}, deltaTime: {ECGBuffer.data[i].deltaTime}, amplitude [mV]: {ECGBuffer.data[i].mv}");
             }
 
             ECGData ecgData = new ECGData(DateTime.Now, deltaTime, amplitude);
@@ -90,8 +90,6 @@ public class BiometricRecorder : MonoBehaviour
 
     private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
     {
-        Debug.Log("OnGSRUpdate");
-
         if (resultCode == ResultCode.TS_SUCCESS)
         {
 
@@ -105,7 +103,7 @@ public class BiometricRecorder : MonoBehaviour
 
                 for (int j = 0; j < data.Length; j++)
                 {
-                    Debug.Log($" Index (i,j): {i}, {j}, elapsedTime {DateTime.Now}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
+                    Debug.Log($" Index (i,j): {i}, {j}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
                 }
             }
         }
