@@ -92,7 +92,7 @@ public class PaintbrushAnimator : MonoBehaviour
             stopwatch.Start();
             AnimatePaintbrush();
 
-            if (stopwatch.ElapsedMilliseconds > 10000) //180000
+            if (stopwatch.ElapsedMilliseconds > 180000)
             {
                 // Attack the player after 3 minutes
                 attacker.SendMessage("OnStab");

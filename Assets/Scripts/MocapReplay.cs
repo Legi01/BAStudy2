@@ -74,6 +74,18 @@ public class MocapReplay : MonoBehaviour
 
                 // Spine (Maniken_skeletool:spine_01)
                 ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Spine]);
+
+                // RightUpperLeg (Maniken_skeletool:hip_r)
+                ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightUpperLeg]);
+
+                // LeftUpperLeg (Maniken_skeletool:hip_l)
+                ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftUpperLeg]);
+
+                // RightLowerLeg (Maniken_skeletool:foot_l)
+                ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightLowerLeg]);
+
+                // LeftLowerLeg (Maniken_skeletool:foot_l)
+                ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftLowerLeg]);
             }
         }
 
