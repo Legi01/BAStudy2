@@ -843,3 +843,4 @@
 /Assets/Animations/Sitting[[:space:]]Idle.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/Animations/Stabbing-4.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/Animations/Stand[[:space:]]To[[:space:]]Sit.fbx filter=lfs diff=lfs merge=lfs -text
+/Assets/Animations/Standing[[:space:]]Idle.fbx filter=lfs diff=lfs merge=lfs -text
