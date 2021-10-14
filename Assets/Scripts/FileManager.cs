@@ -53,7 +53,7 @@ public class FileManager
             sb.Append(mocapData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/MoCap.csv";
+        string path = Application.dataPath + "/MoCap_" + data[0].GetTimestamp() + ".csv";
 
         using (var writer = new StreamWriter(path, false))
         {
@@ -71,7 +71,7 @@ public class FileManager
         {
             SurrogateSelector = _surrogateSelector
         };
-        string path = Application.dataPath + "/MoCap.mocap";
+        string path = Application.dataPath + "/MoCap_" + data[0].GetTimestamp() + ".mocap";
         FileStream stream = new FileStream(path, FileMode.Create);
 
         // Serialize to a file
@@ -93,7 +93,7 @@ public class FileManager
             sb.Append(ecgData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/ECG.csv";
+        string path = Application.dataPath + "/ECG_" + data[0].GetTimestamp() + ".csv";
 
         using (var writer = new StreamWriter(path, false))
         {
@@ -117,7 +117,7 @@ public class FileManager
             sb.Append(gsrData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/GSR.csv";
+        string path = Application.dataPath + "/GSR_" + data[0].GetTimestamp() + ".csv";
 
         using (var writer = new StreamWriter(path, false))
         {

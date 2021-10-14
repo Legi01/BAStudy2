@@ -164,6 +164,8 @@ public class MocapRecorder : MonoBehaviour
     {
         FileManager.Instance().SaveToCSV(recordedMocapData);
         FileManager.Instance().Save(recordedMocapData);
+
+        recordedMocapData.Clear();
     }
 
     public bool IsRecording()

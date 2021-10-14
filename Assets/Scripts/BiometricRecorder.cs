@@ -116,6 +116,9 @@ public class BiometricRecorder : MonoBehaviour
     {
         FileManager.Instance().SaveToCSV(recordedECGData);
         FileManager.Instance().SaveToCSV(recordedGSRData);
+
+        recordedECGData.Clear();
+        recordedGSRData.Clear();
     }
 
     public bool IsRecording()
