@@ -31,6 +31,11 @@ public class AnimatorController : MonoBehaviour
 
             stab = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            OnStab();
+        }
     }
 
     public void OnStab()
