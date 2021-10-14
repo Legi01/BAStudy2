@@ -17,8 +17,6 @@ public class PaintbrushAnimator : MonoBehaviour
 
     private bool animatePaintbrush;
 
-    private GameObject attacker;
-
     private Stopwatch stopwatch;
 
     private Vector3 startPosition;
@@ -29,8 +27,6 @@ public class PaintbrushAnimator : MonoBehaviour
 
     void Awake()
     {
-        attacker = GameObject.FindGameObjectWithTag("Attacker");
-
         animatePaintbrush = false;
     }
 
@@ -66,18 +62,31 @@ public class PaintbrushAnimator : MonoBehaviour
             stopwatch.Start();
             AnimatePaintbrush();
 
-            if (stopwatch.ElapsedMilliseconds > 180000)
+            // Introduce a threat after 3 minutes
+            if (stopwatch.ElapsedMilliseconds > 500) // 180000
             {
-                // Attack the player after 3 minutes
-                attacker.GetComponent<AnimatorController>().OnStab();
-
-                Label label = new Label(DateTime.Now, "Stop_stroking");
+                Label label = new Label(DateTime.Now, "Stop stroking");
                 FileManager.Instance().SaveToCSV(label);
+                Debug.Log(label.GetLabel());
 
                 animatePaintbrush = false;
 
                 stopwatch.Stop();
                 stopwatch.Reset();
+
+                switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatToggle.value)
+                {
+                    case 0:
+                        // Attack the player
+                        GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab();
+                        break;
+                    case 1:
+                        // Break the hand
+                        GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -124,9 +133,6 @@ public class PaintbrushAnimator : MonoBehaviour
 
     public void OnAnimatePaintbrush(bool synchronous)
     {
-        if (synchronous) Debug.Log("Start stroking synchronously");
-        else Debug.Log("Start stroking asynchronously");
-
         animatePaintbrush = true;
 
         if (synchronous && reverse)
@@ -138,7 +144,8 @@ public class PaintbrushAnimator : MonoBehaviour
             GetComponentInChildren<Renderer>().enabled = false;
         }
 
-        string strokeLabel = synchronous ? "Start_stroking_synchronous" : "Start_stroking_asynchronous";
+        string strokeLabel = synchronous ? "Start stroking synchronously" : "Start stroking asynchronously";
+        Debug.Log(strokeLabel);
         Label label = new Label(DateTime.Now, strokeLabel);
         FileManager.Instance().SaveToCSV(label);
     }

@@ -1191,6 +1191,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4036166148477097047, guid: 573d08b96bd92414caa316846235d4a6,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036166148477097047, guid: 573d08b96bd92414caa316846235d4a6,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: Break a bone
+      objectReference: {fileID: 0}
     - target: {fileID: 6207125482363641191, guid: 573d08b96bd92414caa316846235d4a6,
         type: 3}
       propertyPath: m_Pivot.x

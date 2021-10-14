@@ -27,15 +27,9 @@ public class AnimatorController : MonoBehaviour
         {
             Label label = new Label(DateTime.Now, "Stab");
             FileManager.Instance().SaveToCSV(label);
-            Debug.Log("Stab");
+            Debug.Log(label.GetLabel());
 
             stab = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            // Only for debugging
-            OnStab();
         }
     }
 
@@ -47,6 +41,6 @@ public class AnimatorController : MonoBehaviour
 
         Label label = new Label(DateTime.Now, "Knife appears");
         FileManager.Instance().SaveToCSV(label);
-        Debug.Log("Knife appears");
+        Debug.Log(label.GetLabel());
     }
 }
