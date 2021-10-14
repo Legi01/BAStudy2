@@ -32,15 +32,6 @@ public class PaintbrushAnimator : MonoBehaviour
         attacker = GameObject.FindGameObjectWithTag("Attacker");
 
         animatePaintbrush = false;
-
-        if (Config.synchronousHapticFeedback && reverse)
-        {
-            this.gameObject.active = false;
-        }
-        else if (!Config.synchronousHapticFeedback && !reverse)
-        {
-            this.GetComponentInChildren<Renderer>().enabled = false;
-        }
     }
 
     // Start is called before the first frame update
@@ -70,23 +61,6 @@ public class PaintbrushAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            animatePaintbrush = true;
-
-            string strokeLabel = "Start_stroking_";
-            if (Config.synchronousHapticFeedback)
-            {
-                strokeLabel += "synchronous";
-            }
-            else
-            {
-                strokeLabel += "asynchronous";
-            }
-            Label label = new Label(DateTime.Now, strokeLabel);
-            FileManager.Instance().SaveToCSV(label);
-        }
-
         if (animatePaintbrush)
 		{
             stopwatch.Start();
@@ -95,7 +69,7 @@ public class PaintbrushAnimator : MonoBehaviour
             if (stopwatch.ElapsedMilliseconds > 180000)
             {
                 // Attack the player after 3 minutes
-                attacker.SendMessage("OnStab");
+                attacker.GetComponent<AnimatorController>().OnStab();
 
                 Label label = new Label(DateTime.Now, "Stop_stroking");
                 FileManager.Instance().SaveToCSV(label);
@@ -146,6 +120,27 @@ public class PaintbrushAnimator : MonoBehaviour
             startPosition = transform.position;
             startRotation = transform.rotation;
         }
+    }
+
+    public void OnAnimatePaintbrush(bool synchronous)
+    {
+        if (synchronous) Debug.Log("Start stroking synchronously");
+        else Debug.Log("Start stroking asynchronously");
+
+        animatePaintbrush = true;
+
+        if (synchronous && reverse)
+        {
+            gameObject.SetActive(false);
+        }
+        else if (!synchronous && !reverse)
+        {
+            GetComponentInChildren<Renderer>().enabled = false;
+        }
+
+        string strokeLabel = synchronous ? "Start_stroking_synchronous" : "Start_stroking_asynchronous";
+        Label label = new Label(DateTime.Now, strokeLabel);
+        FileManager.Instance().SaveToCSV(label);
     }
 
 }

@@ -34,6 +34,7 @@ public class AnimatorController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F1))
         {
+            // Only for debugging
             OnStab();
         }
     }

@@ -1411,6 +1411,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PaintbrushNoHaptics
       objectReference: {fileID: 0}
+    - target: {fileID: 2625295180756409089, guid: 818f0602aad74463aa3e9d0b34af2a7f,
+        type: 3}
+      propertyPath: m_TagString
+      value: Paintbrush
+      objectReference: {fileID: 0}
     - target: {fileID: 2625295180756409102, guid: 818f0602aad74463aa3e9d0b34af2a7f,
         type: 3}
       propertyPath: m_RootOrder

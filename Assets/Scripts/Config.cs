@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class Config
 {
-    public const bool synchronousHapticFeedback = true;
-
     public static List<String> propertyNames = new List<string>
         {
             "quat9x", "quat6x", "gyroscope", "magnetometer",

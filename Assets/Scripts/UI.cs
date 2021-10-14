@@ -9,6 +9,7 @@ public class UI : MonoBehaviour
     public Button recordButton;
     public Button replayButton;
     public Button quitButton;
+    public Toggle toggle;
 
     public TMP_InputField inputField;
 
@@ -53,6 +54,14 @@ public class UI : MonoBehaviour
             inputField.gameObject.SetActive(false);
             quitButton.gameObject.SetActive(false);
 
+            GameObject[] paintbrushes = GameObject.FindGameObjectsWithTag("Paintbrush");
+            bool async = toggle.isOn;
+            foreach (GameObject paintbrush in paintbrushes)
+            {
+                paintbrush.GetComponent<PaintbrushAnimator>().OnAnimatePaintbrush(!async);
+            }
+            toggle.gameObject.SetActive(false);
+
             mocapRecorder.StartStopRecording();
             biometricRecorder.StartStopRecording();
         }
@@ -62,6 +71,7 @@ public class UI : MonoBehaviour
             replayButton.gameObject.SetActive(true);
             inputField.gameObject.SetActive(true);
             quitButton.gameObject.SetActive(true);
+            toggle.gameObject.SetActive(true);
 
             mocapRecorder.StartStopRecording();
             biometricRecorder.StartStopRecording();
@@ -78,6 +88,7 @@ public class UI : MonoBehaviour
             replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop replaying";
             recordButton.gameObject.SetActive(false);
             quitButton.gameObject.SetActive(false);
+            toggle.gameObject.SetActive(false);
 
             motionReplay.Load(inputField.text);
             motionReplay.StartStopReplay();
@@ -88,6 +99,7 @@ public class UI : MonoBehaviour
             replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start replaying";
             recordButton.gameObject.SetActive(true);
             quitButton.gameObject.SetActive(true);
+            toggle.gameObject.SetActive(true);
             motionReplay.StartStopReplay();
         }
     }
