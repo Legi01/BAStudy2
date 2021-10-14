@@ -53,7 +53,7 @@ public class FileManager
             sb.Append(mocapData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/mocap.csv";
+        string path = Application.dataPath + "/MoCap.csv";
 
         using (var writer = new StreamWriter(path, false))
         {
@@ -93,7 +93,7 @@ public class FileManager
             sb.Append(ecgData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/ecg.csv";
+        string path = Application.dataPath + "/ECG.csv";
 
         using (var writer = new StreamWriter(path, false))
         {
@@ -117,7 +117,7 @@ public class FileManager
             sb.Append(gsrData.ToCSV(seperator)).Append("\n");
         }
 
-        string path = Application.dataPath + "/gsr.csv";
+        string path = Application.dataPath + "/GSR.csv";
 
         using (var writer = new StreamWriter(path, false))
         {
@@ -153,7 +153,7 @@ public class FileManager
 
     public List<MocapData> Load(string filename)
     {
-        string path = Application.dataPath + "/" + filename + ".mocap"; //"/MoCap.mocap";
+        string path = Application.dataPath + "/" + filename + ".mocap";
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter()

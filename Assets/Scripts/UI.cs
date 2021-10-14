@@ -51,6 +51,7 @@ public class UI : MonoBehaviour
             recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop recording";
             replayButton.gameObject.SetActive(false);
             inputField.gameObject.SetActive(false);
+            quitButton.gameObject.SetActive(false);
 
             mocapRecorder.StartStopRecording();
             biometricRecorder.StartStopRecording();
@@ -60,6 +61,7 @@ public class UI : MonoBehaviour
             recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start recording";
             replayButton.gameObject.SetActive(true);
             inputField.gameObject.SetActive(true);
+            quitButton.gameObject.SetActive(true);
 
             mocapRecorder.StartStopRecording();
             biometricRecorder.StartStopRecording();
@@ -75,6 +77,7 @@ public class UI : MonoBehaviour
             applicationStatus.text = "Replaying...";
             replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop replaying";
             recordButton.gameObject.SetActive(false);
+            quitButton.gameObject.SetActive(false);
 
             motionReplay.Load(inputField.text);
             motionReplay.StartStopReplay();
@@ -82,8 +85,9 @@ public class UI : MonoBehaviour
         else
         {
             applicationStatus.text = "";
-            recordButton.gameObject.SetActive(true);
             replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start replaying";
+            recordButton.gameObject.SetActive(true);
+            quitButton.gameObject.SetActive(true);
             motionReplay.StartStopReplay();
         }
     }
