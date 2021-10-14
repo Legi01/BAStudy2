@@ -8,6 +8,8 @@ TagManager:
   - Attacker
   - Teslasuit
   - Paintbrush
+  - Hand
+  - UI
   layers:
   - Default
   - TransparentFX
