@@ -63,7 +63,7 @@ public class PaintbrushAnimator : MonoBehaviour
             AnimatePaintbrush();
 
             // Introduce a threat after 3 minutes (180000 ms)
-            if (stopwatch.ElapsedMilliseconds > 5000)
+            if (stopwatch.ElapsedMilliseconds > 180000)
             {
                 Label label = new Label(DateTime.Now, "Stop stroking");
                 FileManager.Instance().SaveLabels(label);
