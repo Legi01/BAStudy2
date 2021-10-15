@@ -33,8 +33,10 @@ public class AnimatorController : MonoBehaviour
         }
     }
 
-    public void OnStab()
+    public IEnumerator OnStab()
     {
+        yield return new WaitForSeconds(5);
+
         stab = true;
         knife.SetActive(true);
         anim.SetTrigger("Stab");

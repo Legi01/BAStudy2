@@ -63,7 +63,7 @@ public class PaintbrushAnimator : MonoBehaviour
             AnimatePaintbrush();
 
             // Introduce a threat after 3 minutes (180000 ms)
-            if (stopwatch.ElapsedMilliseconds > 180000)
+            if (stopwatch.ElapsedMilliseconds > 5000)
             {
                 Label label = new Label(DateTime.Now, "Stop stroking");
                 FileManager.Instance().SaveLabels(label);
@@ -80,11 +80,11 @@ public class PaintbrushAnimator : MonoBehaviour
                 {
                     case 0:
                         // Attack the player
-                        GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab();
+                        StartCoroutine(GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab());
                         break;
                     case 1:
                         // Break the hand
-                        GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone();
+                        StartCoroutine(GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone());
                         break;
                     default:
                         break;

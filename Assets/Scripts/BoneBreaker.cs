@@ -34,8 +34,10 @@ public class BoneBreaker : MonoBehaviour
         }
     }
 
-    public void BreakBone()
+    public IEnumerator BreakBone()
     {
+        yield return new WaitForSeconds(5);
+
         breakBone = true;
 
         Label label = new Label(DateTime.Now, "Start rotating hand");
