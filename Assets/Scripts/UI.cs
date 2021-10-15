@@ -45,8 +45,6 @@ public class UI : MonoBehaviour
     {
         if (FileManager.Instance().savingData)
         {
-            applicationStatus.text = "Saving...";
-
             recordButton.interactable = false;
             replayButton.interactable = false;
             quitButton.interactable = false;

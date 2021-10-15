@@ -62,7 +62,7 @@ public class PaintbrushAnimator : MonoBehaviour
             stopwatch.Start();
             AnimatePaintbrush();
 
-            // Introduce a threat after 3 minutes
+            // Introduce a threat after 3 minutes (180000 ms)
             if (stopwatch.ElapsedMilliseconds > 180000)
             {
                 Label label = new Label(DateTime.Now, "Stop stroking");
@@ -73,6 +73,8 @@ public class PaintbrushAnimator : MonoBehaviour
 
                 stopwatch.Stop();
                 stopwatch.Reset();
+
+                GetComponentInChildren<Renderer>().enabled = false;
 
                 switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatToggle.value)
                 {
@@ -135,11 +137,9 @@ public class PaintbrushAnimator : MonoBehaviour
     {
         animatePaintbrush = true;
 
-        if (synchronous && reverse)
-        {
-            gameObject.SetActive(false);
-        }
-        else if (!synchronous && !reverse)
+        GetComponentInChildren<Renderer>().enabled = true;
+
+        if ((synchronous && reverse) || (!synchronous && !reverse))
         {
             GetComponentInChildren<Renderer>().enabled = false;
         }
