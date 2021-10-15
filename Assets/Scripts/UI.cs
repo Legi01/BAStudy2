@@ -43,7 +43,27 @@ public class UI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (FileManager.Instance().savingData)
+        {
+            applicationStatus.text = "Saving...";
 
+            recordButton.interactable = false;
+            replayButton.interactable = false;
+            quitButton.interactable = false;
+            stimulieToggle.interactable = false;
+            threatToggle.interactable = false;
+            inputField.interactable = false;
+        }
+        else
+        {
+            recordButton.interactable = true;
+            replayButton.interactable = true;
+            quitButton.interactable = true;
+            stimulieToggle.interactable = true;
+            threatToggle.interactable = true;
+            inputField.interactable = true;
+        }
+        
     }
 
     void OnStartStopRecording()

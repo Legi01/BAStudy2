@@ -110,15 +110,18 @@ public class BiometricRecorder : MonoBehaviour
     public void StartStopRecording()
     {
         recording = !recording;
+
+        if (recording)
+        {
+            recordedECGData.Clear();
+            recordedGSRData.Clear();
+        }
     }
 
     public void Save()
     {
-        FileManager.Instance().SaveToCSV(recordedECGData);
-        FileManager.Instance().SaveToCSV(recordedGSRData);
-
-        recordedECGData.Clear();
-        recordedGSRData.Clear();
+        FileManager.Instance().SaveECGData(recordedECGData);
+        FileManager.Instance().SaveGSRData(recordedGSRData);
     }
 
     public bool IsRecording()

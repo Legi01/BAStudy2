@@ -13,8 +13,6 @@ public class ECGData
     private float[] amplitude;
     private uint[] deltaTime;
 
-    private float[] amplitudes;
-
     public ECGData(DateTime timestamp, uint[] deltaTime, float[] amplitude)
     {
         this.timestamp = timestamp;

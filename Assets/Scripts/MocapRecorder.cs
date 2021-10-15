@@ -153,6 +153,8 @@ public class MocapRecorder : MonoBehaviour
         recording = !recording;
 
         if (recording) {
+            recordedMocapData.Clear();
+
             if (suitApi.Mocap != null)
             {
                 suitApi.Mocap.Start();
@@ -162,10 +164,7 @@ public class MocapRecorder : MonoBehaviour
 
     public void Save()
     {
-        FileManager.Instance().SaveToCSV(recordedMocapData);
-        FileManager.Instance().Save(recordedMocapData);
-
-        recordedMocapData.Clear();
+        FileManager.Instance().SaveMoCapData(recordedMocapData);
     }
 
     public bool IsRecording()

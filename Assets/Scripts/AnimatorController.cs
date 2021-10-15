@@ -26,7 +26,7 @@ public class AnimatorController : MonoBehaviour
         if (stab && anim.GetCurrentAnimatorStateInfo(0).IsName("Knife Stabbing"))
         {
             Label label = new Label(DateTime.Now, "Stab");
-            FileManager.Instance().SaveToCSV(label);
+            FileManager.Instance().SaveLabels(label);
             Debug.Log(label.GetLabel());
 
             stab = false;
@@ -40,7 +40,7 @@ public class AnimatorController : MonoBehaviour
         anim.SetTrigger("Stab");
 
         Label label = new Label(DateTime.Now, "Knife appears");
-        FileManager.Instance().SaveToCSV(label);
+        FileManager.Instance().SaveLabels(label);
         Debug.Log(label.GetLabel());
     }
 }

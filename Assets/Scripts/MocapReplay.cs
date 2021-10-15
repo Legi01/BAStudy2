@@ -107,7 +107,7 @@ public class MocapReplay : MonoBehaviour
 
     public void Load(string filename)
     {
-        replayData = FileManager.Instance().Load(filename);
+        replayData = FileManager.Instance().LoadMoCapData(filename);
     }
 
     public void StartStopReplay()

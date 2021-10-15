@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using TeslasuitAPI;
 using System.IO;
+using System.Threading;
 
 public class FileManager
 {
@@ -14,6 +15,8 @@ public class FileManager
 
     private SurrogateSelector _surrogateSelector;
     private const string seperator = ";";
+
+    public bool savingData;
 
     /* singleton */
     public static FileManager Instance()
@@ -37,98 +40,112 @@ public class FileManager
             new Vector3sSurrogate());
         _surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
             new Vector3Surrogate());
+
+        savingData = false;
     }
 
-    public void SaveToCSV(List<MocapData> data)
+    public void SaveMoCapData(List<MocapData> data)
     {
         if (data == null || data.Count == 0) return;
 
-        StringBuilder sb = new StringBuilder();
+        string path = Application.dataPath;
 
-        // To let Excel know
-        sb.Append("SEP=").Append(seperator).Append("\n");
-        sb.Append(data[0].GetCSVHeader(seperator));
-        foreach (var mocapData in data)
+        savingData = true;
+        
+        Thread thread = new Thread(() =>
         {
-            sb.Append(mocapData.ToCSV(seperator)).Append("\n");
-        }
+            // Save to a CSV
+            StringBuilder sb = new StringBuilder();
 
-        string path = Application.dataPath + "/MoCap_" + data[0].GetTimestamp() + ".csv";
+            // To let Excel know
+            sb.Append("SEP=").Append(seperator).Append("\n");
+            sb.Append(data[0].GetCSVHeader(seperator));
+            foreach (var mocapData in data)
+            {
+                sb.Append(mocapData.ToCSV(seperator)).Append("\n");
+            }
 
-        using (var writer = new StreamWriter(path, false))
-        {
-            writer.Write(sb.ToString());
-        }
+            using (var writer = new StreamWriter(path + "/MoCap_" + data[0].GetTimestamp() + ".csv", false))
+            {
+                writer.Write(sb.ToString());
+            }
 
-        Debug.Log($"Saved {data.Count} mocap entries.");
+            // Serialize to a file
+            BinaryFormatter formatter = new BinaryFormatter
+            {
+                SurrogateSelector = _surrogateSelector
+            };
+
+            FileStream stream = new FileStream(path + "/MoCap_" + data[0].GetTimestamp() + ".mocap", FileMode.Create);
+            formatter.Serialize(stream, data);
+            stream.Close();
+
+            savingData = false;
+            Debug.Log($"Saved {data.Count} MoCap entries.");
+        });
+        thread.Start();
     }
 
-    public void Save(List<MocapData> data)
-    {
-        if (data == null) return;
-
-        BinaryFormatter formatter = new BinaryFormatter
-        {
-            SurrogateSelector = _surrogateSelector
-        };
-        string path = Application.dataPath + "/MoCap_" + data[0].GetTimestamp() + ".mocap";
-        FileStream stream = new FileStream(path, FileMode.Create);
-
-        // Serialize to a file
-        formatter.Serialize(stream, data);
-        stream.Close();
-    }
-
-    public void SaveToCSV(List<ECGData> data)
+    public void SaveECGData(List<ECGData> data)
     {
         if (data == null || data.Count == 0) return;
-
-        StringBuilder sb = new StringBuilder();
-
-        // To let Excel know
-        sb.Append("SEP=").Append(seperator).Append("\n");
-        sb.Append(data[0].GetCSVHeader(seperator));
-        foreach (var ecgData in data)
-        {
-            sb.Append(ecgData.ToCSV(seperator)).Append("\n");
-        }
 
         string path = Application.dataPath + "/ECG_" + data[0].GetTimestamp() + ".csv";
 
-        using (var writer = new StreamWriter(path, false))
+        Thread thread = new Thread(() =>
         {
-            writer.Write(sb.ToString());
-        }
+            StringBuilder sb = new StringBuilder();
 
-        Debug.Log($"Saved {data.Count} ECG entries.");
+            // To let Excel know
+            sb.Append("SEP=").Append(seperator).Append("\n");
+            sb.Append(data[0].GetCSVHeader(seperator));
+            foreach (var ecgData in data)
+            {
+                sb.Append(ecgData.ToCSV(seperator)).Append("\n");
+            }
+
+            using (var writer = new StreamWriter(path, false))
+            {
+                writer.Write(sb.ToString());
+            }
+
+            Debug.Log($"Saved {data.Count} ECG entries.");
+        });
+        thread.Start();
     }
 
-    public void SaveToCSV(List<GSRData> data)
+    public void SaveGSRData(List<GSRData> data)
     {
         if (data == null || data.Count == 0) return;
 
-        StringBuilder sb = new StringBuilder();
-
-        // To let Excel know
-        sb.Append("SEP=").Append(seperator).Append("\n");
-        sb.Append(data[0].GetCSVHeader(seperator));
-        foreach (var gsrData in data)
-        {
-            sb.Append(gsrData.ToCSV(seperator)).Append("\n");
-        }
-
         string path = Application.dataPath + "/GSR_" + data[0].GetTimestamp() + ".csv";
 
-        using (var writer = new StreamWriter(path, false))
+        Thread thread = new Thread(() =>
         {
-            writer.Write(sb.ToString());
-        }
+            StringBuilder sb = new StringBuilder();
 
-        Debug.Log($"Saved {data.Count} GSR entries.");
+            // To let Excel know
+            sb.Append("SEP=").Append(seperator).Append("\n");
+            sb.Append(data[0].GetCSVHeader(seperator));
+            foreach (var gsrData in data)
+            {
+                sb.Append(gsrData.ToCSV(seperator)).Append("\n");
+            }
+
+            using (var writer = new StreamWriter(path, false))
+            {
+                writer.Write(sb.ToString());
+            }
+
+            Debug.Log($"Saved {data.Count} GSR entries.");
+        });
+        thread.Start();
     }
 
-    public void SaveToCSV(Label label)
+    public void SaveLabels(Label label)
     {
+        if (label == null) return;
+
         StringBuilder sb = new StringBuilder();
         
         string path = Application.dataPath + "/labels.csv";
@@ -151,7 +168,7 @@ public class FileManager
         //Debug.Log($"Saved: {label.GetTimestamp()} ; {label.GetLabel()}");
     }
 
-    public List<MocapData> Load(string filename)
+    public List<MocapData> LoadMoCapData(string filename)
     {
         string path = Application.dataPath + "/" + filename + ".mocap";
         if (File.Exists(path))

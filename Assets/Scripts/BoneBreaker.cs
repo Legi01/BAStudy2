@@ -28,7 +28,7 @@ public class BoneBreaker : MonoBehaviour
                 breakBone = false;
 
                 Label label = new Label(DateTime.Now, "Stop rotating hand");
-                FileManager.Instance().SaveToCSV(label);
+                FileManager.Instance().SaveLabels(label);
                 Debug.Log(label.GetLabel());
             }
         }
@@ -39,7 +39,7 @@ public class BoneBreaker : MonoBehaviour
         breakBone = true;
 
         Label label = new Label(DateTime.Now, "Start rotating hand");
-        FileManager.Instance().SaveToCSV(label);
+        FileManager.Instance().SaveLabels(label);
         Debug.Log(label.GetLabel());
     }
 

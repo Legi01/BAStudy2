@@ -66,7 +66,7 @@ public class PaintbrushAnimator : MonoBehaviour
             if (stopwatch.ElapsedMilliseconds > 180000)
             {
                 Label label = new Label(DateTime.Now, "Stop stroking");
-                FileManager.Instance().SaveToCSV(label);
+                FileManager.Instance().SaveLabels(label);
                 Debug.Log(label.GetLabel());
 
                 animatePaintbrush = false;
@@ -147,7 +147,7 @@ public class PaintbrushAnimator : MonoBehaviour
         string strokeLabel = synchronous ? "Start stroking synchronously" : "Start stroking asynchronously";
         Debug.Log(strokeLabel);
         Label label = new Label(DateTime.Now, strokeLabel);
-        FileManager.Instance().SaveToCSV(label);
+        FileManager.Instance().SaveLabels(label);
     }
 
 }
