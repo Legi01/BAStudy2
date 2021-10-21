@@ -180,6 +180,8 @@ public class MocapRecorder : MonoBehaviour
 
             suitApi.Mocap.Stop();
             suitApi.Mocap.Updated -= OnMocapUpdate;
+
+            Save();
         }
     }
 }

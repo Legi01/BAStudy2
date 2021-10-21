@@ -140,6 +140,8 @@ public class BiometricRecorder : MonoBehaviour
 
             suitApi.Biometry.ECGUpdated -= OnECGUpdate;
             suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
+
+            Save();
         }
     }
 }
