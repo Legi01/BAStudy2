@@ -22,7 +22,9 @@ public class MocapReplay : MonoBehaviour
     private string _label;
 
     private Animator animator;
-    private Transform root;
+    //private Transform root;
+
+    private GetHeading getHeading;
 
     private void Start()
     {
@@ -32,9 +34,11 @@ public class MocapReplay : MonoBehaviour
         stopwatch.Start();
 
         animator = this.GetComponent<Animator>();
-        root = GameObject.Find("Maniken_skeletool:root").transform;
+        //root = GameObject.Find("Maniken_skeletool:root").transform;
 
         suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
+
+        getHeading = GameObject.Find("Maniken_skeletool:pelvis").GetComponent<GetHeading>();
     }
 
     private void Update()
@@ -73,6 +77,7 @@ public class MocapReplay : MonoBehaviour
 
                 // Chest (Maniken_skeletool:spine_02)
                 ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Chest]);
+                getHeading.UpdateEuler();
 
                 // Spine (Maniken_skeletool:spine_01)
                 ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Spine]);
@@ -95,7 +100,7 @@ public class MocapReplay : MonoBehaviour
 
     private void ApplyRotationForBone(MocapData replayData, HumanBodyBones bone)
     {
-        Vector3 eulerAngles = Vector3.one;
+        Vector3 eulerAngles = Vector3.zero;
         Dictionary<string, Vector3> joints = replayData.GetJointRotations();
         if (joints.ContainsKey(bone.ToString()))
         {
