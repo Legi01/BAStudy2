@@ -48,7 +48,10 @@ public class FileManager
     {
         if (data == null || data.Count == 0) return;
 
-        string path = Application.dataPath;
+        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+        string path = Application.dataPath + "/" + subjectID;
+
+        CreateDirectory(path);
 
         savingData = true;
         
@@ -90,7 +93,10 @@ public class FileManager
     {
         if (data == null || data.Count == 0) return;
 
-        string path = Application.dataPath + "/ECG_" + data[0].GetTimestamp() + ".csv";
+        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+        string path = Application.dataPath + "/" + subjectID;
+
+        CreateDirectory(path);
 
         Thread thread = new Thread(() =>
         {
@@ -104,7 +110,7 @@ public class FileManager
                 sb.Append(ecgData.ToCSV(seperator)).Append("\n");
             }
 
-            using (var writer = new StreamWriter(path, false))
+            using (var writer = new StreamWriter(path + "/ECG_" + data[0].GetTimestamp() + ".csv", false))
             {
                 writer.Write(sb.ToString());
             }
@@ -118,7 +124,10 @@ public class FileManager
     {
         if (data == null || data.Count == 0) return;
 
-        string path = Application.dataPath + "/GSR_" + data[0].GetTimestamp() + ".csv";
+        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+        string path = Application.dataPath + "/" + subjectID;
+
+        CreateDirectory(path);
 
         Thread thread = new Thread(() =>
         {
@@ -132,7 +141,7 @@ public class FileManager
                 sb.Append(gsrData.ToCSV(seperator)).Append("\n");
             }
 
-            using (var writer = new StreamWriter(path, false))
+            using (var writer = new StreamWriter(path + "/GSR_" + data[0].GetTimestamp() + ".csv", false))
             {
                 writer.Write(sb.ToString());
             }
@@ -147,9 +156,14 @@ public class FileManager
         if (label == null) return;
 
         StringBuilder sb = new StringBuilder();
-        
-        string path = Application.dataPath + "/labels.csv";
-        if (!File.Exists(path))
+
+        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+        string path = Application.dataPath + "/" + subjectID;
+
+        CreateDirectory(path);
+
+        string fileName = path + "/labels.csv";
+        if (!File.Exists(fileName))
         {
             // Create a header
             sb.Append("SEP=").Append(seperator).Append("\n");
@@ -159,7 +173,7 @@ public class FileManager
         // Append
         sb.Append(label.ToCSV(seperator)).Append("\n");
 
-        using (var writer = new StreamWriter(path, true))
+        using (var writer = new StreamWriter(fileName, true))
         {
             writer.Write(sb.ToString());
             writer.Flush();
@@ -189,5 +203,12 @@ public class FileManager
             Debug.Log("Mocap file not found: " + path);
             return null;
         }
+    }
+
+    private void CreateDirectory(string path)
+    {
+        bool exists = Directory.Exists(path);
+        if (!exists)
+            Directory.CreateDirectory(path);
     }
 }

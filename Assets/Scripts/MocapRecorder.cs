@@ -84,7 +84,7 @@ public class MocapRecorder : MonoBehaviour
         MocapData suitData = new MocapData(DateTime.Now, slicedData, jointNames, jointRotations.Values.ToArray());
 
         if (recording) {
-;           recordedMocapData.Add(suitData);
+            recordedMocapData.Add(suitData);
         }
     }
 

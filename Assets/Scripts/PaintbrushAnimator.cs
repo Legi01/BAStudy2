@@ -65,9 +65,12 @@ public class PaintbrushAnimator : MonoBehaviour
             // Introduce a threat after 3 minutes (180000 ms)
             if (stopwatch.ElapsedMilliseconds > 180000)
             {
-                Label label = new Label(DateTime.Now, "Stop stroking");
-                FileManager.Instance().SaveLabels(label);
-                Debug.Log(label.GetLabel());
+                if (!reverse)
+                {
+                    Label label = new Label(DateTime.Now, "Stop stroking");
+                    FileManager.Instance().SaveLabels(label);
+                    Debug.Log(label.GetLabel());
+                }
 
                 animatePaintbrush = false;
 
@@ -144,10 +147,13 @@ public class PaintbrushAnimator : MonoBehaviour
             GetComponentInChildren<Renderer>().enabled = false;
         }
 
-        string strokeLabel = synchronous ? "Start stroking synchronously" : "Start stroking asynchronously";
-        Debug.Log(strokeLabel);
-        Label label = new Label(DateTime.Now, strokeLabel);
-        FileManager.Instance().SaveLabels(label);
+        if (!reverse)
+        {
+            string strokeLabel = synchronous ? "Start stroking synchronously" : "Start stroking asynchronously";
+            Debug.Log(strokeLabel);
+            Label label = new Label(DateTime.Now, strokeLabel);
+            FileManager.Instance().SaveLabels(label);
+        }
     }
 
 }

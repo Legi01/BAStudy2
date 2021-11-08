@@ -13,7 +13,8 @@ public class UI : MonoBehaviour
     public TMP_Dropdown stimulieToggle; // Synchronous or asynchronous stroking
     public TMP_Dropdown threatToggle;  // Attack or break a bone
 
-    public TMP_InputField inputField;
+    public TMP_InputField replayFilename;
+    public TMP_InputField subjectID;
 
     public TextMeshProUGUI applicationStatus;
 
@@ -37,7 +38,7 @@ public class UI : MonoBehaviour
         Button btn_quit = quitButton.GetComponent<Button>();
         btn_quit.onClick.AddListener(OnQuitApplication);
 
-        inputField.text = "MoCap";
+        replayFilename.text = "MoCap";
     }
 
     // Update is called once per frame
@@ -50,7 +51,7 @@ public class UI : MonoBehaviour
             quitButton.interactable = false;
             stimulieToggle.interactable = false;
             threatToggle.interactable = false;
-            inputField.interactable = false;
+            replayFilename.interactable = false;
         }
         else
         {
@@ -59,7 +60,7 @@ public class UI : MonoBehaviour
             quitButton.interactable = true;
             stimulieToggle.interactable = true;
             threatToggle.interactable = true;
-            inputField.interactable = true;
+            replayFilename.interactable = true;
         }
         
     }
@@ -71,7 +72,7 @@ public class UI : MonoBehaviour
             applicationStatus.text = "Recording...";
             recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop recording";
             replayButton.gameObject.SetActive(false);
-            inputField.gameObject.SetActive(false);
+            replayFilename.gameObject.SetActive(false);
             quitButton.gameObject.SetActive(false);
 
             GameObject[] paintbrushes = GameObject.FindGameObjectsWithTag("Paintbrush");
@@ -90,7 +91,7 @@ public class UI : MonoBehaviour
             applicationStatus.text = "";
             recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start recording";
             replayButton.gameObject.SetActive(true);
-            inputField.gameObject.SetActive(true);
+            replayFilename.gameObject.SetActive(true);
             quitButton.gameObject.SetActive(true);
             stimulieToggle.gameObject.SetActive(true);
             threatToggle.gameObject.SetActive(true);
@@ -113,7 +114,7 @@ public class UI : MonoBehaviour
             stimulieToggle.gameObject.SetActive(false);
             threatToggle.gameObject.SetActive(false);
 
-            motionReplay.Load(inputField.text);
+            motionReplay.Load(replayFilename.text);
             motionReplay.StartStopReplay();
         }
         else
@@ -138,5 +139,13 @@ public class UI : MonoBehaviour
 #endif
 
         Debug.Log("Quit Application");
+    }
+
+    public string GetSubjectID()
+    {
+        if (subjectID.text == "")
+            return "TestSubject";
+        else
+            return subjectID.text;
     }
 }
