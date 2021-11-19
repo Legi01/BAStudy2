@@ -10,8 +10,9 @@ public class UI : MonoBehaviour
 	public Button replayButton;
 	public Button quitButton;
 
-	public TMP_Dropdown stimulieToggle; // Synchronous or asynchronous stroking
-	public TMP_Dropdown threatToggle;  // Attack or break a bone
+	public TMP_Dropdown stimulieDropbown;	// Synchronous or asynchronous stroking
+	public TMP_Dropdown threatDropdown;		// Attack or break a bone
+	public Toggle hapticsToggle;			// With or without haptic feedback
 
 	public TMP_InputField replayFilename;
 	public TMP_InputField subjectID;
@@ -49,8 +50,9 @@ public class UI : MonoBehaviour
 			recordButton.interactable = false;
 			replayButton.interactable = false;
 			quitButton.interactable = false;
-			stimulieToggle.interactable = false;
-			threatToggle.interactable = false;
+			stimulieDropbown.interactable = false;
+			threatDropdown.interactable = false;
+			hapticsToggle.interactable = false;
 			replayFilename.interactable = false;
 		}
 		else
@@ -58,8 +60,9 @@ public class UI : MonoBehaviour
 			recordButton.interactable = true;
 			replayButton.interactable = true;
 			quitButton.interactable = true;
-			stimulieToggle.interactable = true;
-			threatToggle.interactable = true;
+			stimulieDropbown.interactable = true;
+			threatDropdown.interactable = true;
+			hapticsToggle.interactable = true;
 			replayFilename.interactable = true;
 		}
 
@@ -76,13 +79,15 @@ public class UI : MonoBehaviour
 			quitButton.gameObject.SetActive(false);
 
 			GameObject[] paintbrushes = GameObject.FindGameObjectsWithTag("Paintbrush");
-			bool sync = stimulieToggle.value == 0 ? true : false;
+			bool sync = stimulieDropbown.value == 0 ? true : false;
+			bool haptics = hapticsToggle.isOn;
 			foreach (GameObject paintbrush in paintbrushes)
 			{
-				paintbrush.GetComponent<PaintbrushAnimator>().OnAnimatePaintbrush(sync);
+				paintbrush.GetComponent<PaintbrushAnimator>().OnAnimatePaintbrush(sync, haptics);
 			}
-			stimulieToggle.gameObject.SetActive(false);
-			threatToggle.gameObject.SetActive(false);
+			stimulieDropbown.gameObject.SetActive(false);
+			threatDropdown.gameObject.SetActive(false);
+			hapticsToggle.gameObject.SetActive(false);
 
 			mocapRecorder.StartStopRecording();
 			biometricRecorder.StartStopRecording();
@@ -94,8 +99,9 @@ public class UI : MonoBehaviour
 			replayButton.gameObject.SetActive(true);
 			replayFilename.gameObject.SetActive(true);
 			quitButton.gameObject.SetActive(true);
-			stimulieToggle.gameObject.SetActive(true);
-			threatToggle.gameObject.SetActive(true);
+			stimulieDropbown.gameObject.SetActive(true);
+			threatDropdown.gameObject.SetActive(true);
+			hapticsToggle.gameObject.SetActive(true);
 
 			mocapRecorder.StartStopRecording();
 			biometricRecorder.StartStopRecording();
@@ -112,8 +118,9 @@ public class UI : MonoBehaviour
 			replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop replaying";
 			recordButton.gameObject.SetActive(false);
 			quitButton.gameObject.SetActive(false);
-			stimulieToggle.gameObject.SetActive(false);
-			threatToggle.gameObject.SetActive(false);
+			stimulieDropbown.gameObject.SetActive(false);
+			threatDropdown.gameObject.SetActive(false);
+			hapticsToggle.gameObject.SetActive(false);
 
 			motionReplay.Load(replayFilename.text);
 			motionReplay.StartStopReplay();
@@ -124,8 +131,9 @@ public class UI : MonoBehaviour
 			replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start replaying";
 			recordButton.gameObject.SetActive(true);
 			quitButton.gameObject.SetActive(true);
-			stimulieToggle.gameObject.SetActive(true);
-			threatToggle.gameObject.SetActive(true);
+			stimulieDropbown.gameObject.SetActive(true);
+			threatDropdown.gameObject.SetActive(true);
+			hapticsToggle.gameObject.SetActive(true);
 
 			motionReplay.StartStopReplay();
 		}

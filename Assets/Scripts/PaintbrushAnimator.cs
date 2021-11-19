@@ -17,6 +17,7 @@ public class PaintbrushAnimator : MonoBehaviour
 
 	private bool animatePaintbrush;
 	private bool synchronous;
+	private bool haptics;
 
 	private Stopwatch stopwatch;
 
@@ -30,6 +31,7 @@ public class PaintbrushAnimator : MonoBehaviour
 	{
 		animatePaintbrush = false;
 		synchronous = false;
+		haptics = false;
 	}
 
 	// Start is called before the first frame update
@@ -76,11 +78,27 @@ public class PaintbrushAnimator : MonoBehaviour
 
 				if (!reverse)
 				{
-					Label label = new Label(DateTime.Now, synchronous ? "Stop stroking synchronously" : "Stop stroking asynchronously");
+					string str = "";
+					if (!haptics)
+					{
+						str = "Stop stroking without haptics";
+					}
+					else
+					{
+						if (synchronous)
+						{
+							str = "Stop stroking synchronously";
+						}
+						else
+						{
+							str = "Stop stroking asynchronously⁄";
+						}
+					}
+					Label label = new Label(DateTime.Now, str);
 					Debug.Log(label.GetLabel());
 					FileManager.Instance().SaveLabels(label);
 
-					switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatToggle.value)
+					switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatDropdown.value)
 					{
 						case 0:
 							// Attack the player
@@ -138,21 +156,40 @@ public class PaintbrushAnimator : MonoBehaviour
 		}
 	}
 
-	public void OnAnimatePaintbrush(bool synchronous)
+	public void OnAnimatePaintbrush(bool synchronous, bool haptics)
 	{
 		animatePaintbrush = true;
 		this.synchronous = synchronous;
+		this.haptics = haptics;
 
-		GetComponentInChildren<Renderer>().enabled = true;
-
-		if ((synchronous && reverse) || (!synchronous && !reverse))
+		if ((synchronous && reverse && haptics) || (!synchronous && !reverse && haptics) || (!haptics && !reverse))
 		{
 			GetComponentInChildren<Renderer>().enabled = false;
+		}
+		else
+		{
+			GetComponentInChildren<Renderer>().enabled = true;
 		}
 
 		if (!reverse)
 		{
-			Label label = new Label(DateTime.Now, synchronous ? "Start stroking synchronously" : "Start stroking asynchronously");
+			string str = "";
+			if (!haptics)
+			{
+                str = "Start stroking without haptics";
+			}
+			else
+			{
+				if (synchronous)
+				{
+					str = "Start stroking synchronously";
+				}
+				else
+				{
+					str = "Start stroking asynchronously⁄";
+				}
+			}
+			Label label = new Label(DateTime.Now, str);
 			Debug.Log(label.GetLabel());
 			FileManager.Instance().SaveLabels(label);
 		}
