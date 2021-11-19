@@ -16,6 +16,7 @@ public class PaintbrushAnimator : MonoBehaviour
     private float timer;
 
     private bool animatePaintbrush;
+    private bool synchronous;
 
     private Stopwatch stopwatch;
 
@@ -28,6 +29,7 @@ public class PaintbrushAnimator : MonoBehaviour
     void Awake()
     {
         animatePaintbrush = false;
+        synchronous = false;
     }
 
     // Start is called before the first frame update
@@ -65,13 +67,6 @@ public class PaintbrushAnimator : MonoBehaviour
             // Introduce a threat after 3 minutes (180000 ms)
             if (stopwatch.ElapsedMilliseconds > 180000)
             {
-                if (!reverse)
-                {
-                    Label label = new Label(DateTime.Now, "Stop stroking");
-                    FileManager.Instance().SaveLabels(label);
-                    Debug.Log(label.GetLabel());
-                }
-
                 animatePaintbrush = false;
 
                 stopwatch.Stop();
@@ -79,18 +74,24 @@ public class PaintbrushAnimator : MonoBehaviour
 
                 GetComponentInChildren<Renderer>().enabled = false;
 
-                switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatToggle.value)
-                {
-                    case 0:
-                        // Attack the player
-                        StartCoroutine(GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab());
-                        break;
-                    case 1:
-                        // Break the hand
-                        StartCoroutine(GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone());
-                        break;
-                    default:
-                        break;
+                if (!reverse) {
+                    Label label = new Label(DateTime.Now, synchronous ? "Stop stroking synchronously" : "Stop stroking asynchronously");
+                    Debug.Log(label.GetLabel());
+                    FileManager.Instance().SaveLabels(label);
+
+                    switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatToggle.value)
+                    {
+                        case 0:
+                            // Attack the player
+                            StartCoroutine(GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab());
+                            break;
+                        case 1:
+                            // Break the hand
+                            StartCoroutine(GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone());
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -139,6 +140,7 @@ public class PaintbrushAnimator : MonoBehaviour
     public void OnAnimatePaintbrush(bool synchronous)
     {
         animatePaintbrush = true;
+        this.synchronous = synchronous;
 
         GetComponentInChildren<Renderer>().enabled = true;
 
@@ -149,9 +151,8 @@ public class PaintbrushAnimator : MonoBehaviour
 
         if (!reverse)
         {
-            string strokeLabel = synchronous ? "Start stroking synchronously" : "Start stroking asynchronously";
-            Debug.Log(strokeLabel);
-            Label label = new Label(DateTime.Now, strokeLabel);
+            Label label = new Label(DateTime.Now, synchronous ? "Start stroking synchronously" : "Start stroking asynchronously");
+            Debug.Log(label.GetLabel());
             FileManager.Instance().SaveLabels(label);
         }
     }
