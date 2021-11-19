@@ -11,204 +11,204 @@ using System.Threading;
 public class FileManager
 {
 
-    public static FileManager _instance = null;
+	public static FileManager _instance = null;
 
-    private SurrogateSelector _surrogateSelector;
-    private const string seperator = ";";
+	private SurrogateSelector _surrogateSelector;
+	private const string seperator = ";";
 
-    public bool savingData;
+	public bool savingData;
 
-    /* singleton */
-    public static FileManager Instance()
-    { 
-        if (_instance == null)
-        {
-            _instance = new FileManager();
+	/* singleton */
+	public static FileManager Instance()
+	{
+		if (_instance == null)
+		{
+			_instance = new FileManager();
 
-        }
-        return _instance;
-    }
+		}
+		return _instance;
+	}
 
-    private FileManager()
-    {
-        _surrogateSelector = new SurrogateSelector();
-        _surrogateSelector.AddSurrogate(typeof(TSMocapData), new StreamingContext(StreamingContextStates.All),
-            new TSMocapDataSurrogate());
-        _surrogateSelector.AddSurrogate(typeof(Quat4f), new StreamingContext(StreamingContextStates.All),
-            new Quat4fSurrogate());
-        _surrogateSelector.AddSurrogate(typeof(Vector3s), new StreamingContext(StreamingContextStates.All),
-            new Vector3sSurrogate());
-        _surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
-            new Vector3Surrogate());
+	private FileManager()
+	{
+		_surrogateSelector = new SurrogateSelector();
+		_surrogateSelector.AddSurrogate(typeof(TSMocapData), new StreamingContext(StreamingContextStates.All),
+			new TSMocapDataSurrogate());
+		_surrogateSelector.AddSurrogate(typeof(Quat4f), new StreamingContext(StreamingContextStates.All),
+			new Quat4fSurrogate());
+		_surrogateSelector.AddSurrogate(typeof(Vector3s), new StreamingContext(StreamingContextStates.All),
+			new Vector3sSurrogate());
+		_surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
+			new Vector3Surrogate());
 
-        savingData = false;
-    }
+		savingData = false;
+	}
 
-    public void SaveMoCapData(List<MocapData> data)
-    {
-        if (data == null || data.Count == 0) return;
+	public void SaveMoCapData(List<MocapData> data)
+	{
+		if (data == null || data.Count == 0) return;
 
-        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-        string path = Application.dataPath + "/" + subjectID;
+		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+		string path = Application.dataPath + "/" + subjectID;
 
-        CreateDirectory(path);
+		CreateDirectory(path);
 
-        savingData = true;
-        
-        Thread thread = new Thread(() =>
-        {
-            // Save to a CSV
-            StringBuilder sb = new StringBuilder();
+		savingData = true;
 
-            // To let Excel know
-            sb.Append("SEP=").Append(seperator).Append("\n");
-            sb.Append(data[0].GetCSVHeader(seperator));
-            foreach (var mocapData in data)
-            {
-                sb.Append(mocapData.ToCSV(seperator)).Append("\n");
-            }
+		Thread thread = new Thread(() =>
+		{
+			// Save to a CSV
+			StringBuilder sb = new StringBuilder();
 
-            using (var writer = new StreamWriter(path + "/MoCap_" + data[0].GetTimestamp() + ".csv", false))
-            {
-                writer.Write(sb.ToString());
-            }
+			// To let Excel know
+			sb.Append("SEP=").Append(seperator).Append("\n");
+			sb.Append(data[0].GetCSVHeader(seperator));
+			foreach (var mocapData in data)
+			{
+				sb.Append(mocapData.ToCSV(seperator)).Append("\n");
+			}
 
-            // Serialize to a file
-            BinaryFormatter formatter = new BinaryFormatter
-            {
-                SurrogateSelector = _surrogateSelector
-            };
+			using (var writer = new StreamWriter(path + "/MoCap_" + data[0].GetTimestamp() + ".csv", false))
+			{
+				writer.Write(sb.ToString());
+			}
 
-            FileStream stream = new FileStream(path + "/MoCap_" + data[0].GetTimestamp() + ".mocap", FileMode.Create);
-            formatter.Serialize(stream, data);
-            stream.Close();
+			// Serialize to a file
+			BinaryFormatter formatter = new BinaryFormatter
+			{
+				SurrogateSelector = _surrogateSelector
+			};
 
-            savingData = false;
-            Debug.Log($"Saved {data.Count} MoCap entries.");
-        });
-        thread.Start();
-    }
+			FileStream stream = new FileStream(path + "/MoCap_" + data[0].GetTimestamp() + ".mocap", FileMode.Create);
+			formatter.Serialize(stream, data);
+			stream.Close();
 
-    public void SaveECGData(List<ECGData> data)
-    {
-        if (data == null || data.Count == 0) return;
+			savingData = false;
+			Debug.Log($"Saved {data.Count} MoCap entries.");
+		});
+		thread.Start();
+	}
 
-        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-        string path = Application.dataPath + "/" + subjectID;
+	public void SaveECGData(List<ECGData> data)
+	{
+		if (data == null || data.Count == 0) return;
 
-        CreateDirectory(path);
+		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+		string path = Application.dataPath + "/" + subjectID;
 
-        Thread thread = new Thread(() =>
-        {
-            StringBuilder sb = new StringBuilder();
+		CreateDirectory(path);
 
-            // To let Excel know
-            sb.Append("SEP=").Append(seperator).Append("\n");
-            sb.Append(data[0].GetCSVHeader(seperator));
-            foreach (var ecgData in data)
-            {
-                sb.Append(ecgData.ToCSV(seperator)).Append("\n");
-            }
+		Thread thread = new Thread(() =>
+		{
+			StringBuilder sb = new StringBuilder();
 
-            using (var writer = new StreamWriter(path + "/ECG_" + data[0].GetTimestamp() + ".csv", false))
-            {
-                writer.Write(sb.ToString());
-            }
+			// To let Excel know
+			sb.Append("SEP=").Append(seperator).Append("\n");
+			sb.Append(data[0].GetCSVHeader(seperator));
+			foreach (var ecgData in data)
+			{
+				sb.Append(ecgData.ToCSV(seperator)).Append("\n");
+			}
 
-            Debug.Log($"Saved {data.Count} ECG entries.");
-        });
-        thread.Start();
-    }
+			using (var writer = new StreamWriter(path + "/ECG_" + data[0].GetTimestamp() + ".csv", false))
+			{
+				writer.Write(sb.ToString());
+			}
 
-    public void SaveGSRData(List<GSRData> data)
-    {
-        if (data == null || data.Count == 0) return;
+			Debug.Log($"Saved {data.Count} ECG entries.");
+		});
+		thread.Start();
+	}
 
-        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-        string path = Application.dataPath + "/" + subjectID;
+	public void SaveGSRData(List<GSRData> data)
+	{
+		if (data == null || data.Count == 0) return;
 
-        CreateDirectory(path);
+		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+		string path = Application.dataPath + "/" + subjectID;
 
-        Thread thread = new Thread(() =>
-        {
-            StringBuilder sb = new StringBuilder();
+		CreateDirectory(path);
 
-            // To let Excel know
-            sb.Append("SEP=").Append(seperator).Append("\n");
-            sb.Append(data[0].GetCSVHeader(seperator));
-            foreach (var gsrData in data)
-            {
-                sb.Append(gsrData.ToCSV(seperator)).Append("\n");
-            }
+		Thread thread = new Thread(() =>
+		{
+			StringBuilder sb = new StringBuilder();
 
-            using (var writer = new StreamWriter(path + "/GSR_" + data[0].GetTimestamp() + ".csv", false))
-            {
-                writer.Write(sb.ToString());
-            }
+			// To let Excel know
+			sb.Append("SEP=").Append(seperator).Append("\n");
+			sb.Append(data[0].GetCSVHeader(seperator));
+			foreach (var gsrData in data)
+			{
+				sb.Append(gsrData.ToCSV(seperator)).Append("\n");
+			}
 
-            Debug.Log($"Saved {data.Count} GSR entries.");
-        });
-        thread.Start();
-    }
+			using (var writer = new StreamWriter(path + "/GSR_" + data[0].GetTimestamp() + ".csv", false))
+			{
+				writer.Write(sb.ToString());
+			}
 
-    public void SaveLabels(Label label)
-    {
-        if (label == null) return;
+			Debug.Log($"Saved {data.Count} GSR entries.");
+		});
+		thread.Start();
+	}
 
-        StringBuilder sb = new StringBuilder();
+	public void SaveLabels(Label label)
+	{
+		if (label == null) return;
 
-        string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-        string path = Application.dataPath + "/" + subjectID;
+		StringBuilder sb = new StringBuilder();
 
-        CreateDirectory(path);
+		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
+		string path = Application.dataPath + "/" + subjectID;
 
-        string fileName = path + "/labels.csv";
-        if (!File.Exists(fileName))
-        {
-            // Create a header
-            sb.Append("SEP=").Append(seperator).Append("\n");
-            sb.Append(label.GetCSVHeader(seperator));
-        }
+		CreateDirectory(path);
 
-        // Append
-        sb.Append(label.ToCSV(seperator)).Append("\n");
+		string fileName = path + "/labels.csv";
+		if (!File.Exists(fileName))
+		{
+			// Create a header
+			sb.Append("SEP=").Append(seperator).Append("\n");
+			sb.Append(label.GetCSVHeader(seperator));
+		}
 
-        using (var writer = new StreamWriter(fileName, true))
-        {
-            writer.Write(sb.ToString());
-            writer.Flush();
-        }
+		// Append
+		sb.Append(label.ToCSV(seperator)).Append("\n");
 
-        //Debug.Log($"Saved: {label.GetTimestamp()} ; {label.GetLabel()}");
-    }
+		using (var writer = new StreamWriter(fileName, true))
+		{
+			writer.Write(sb.ToString());
+			writer.Flush();
+		}
 
-    public List<MocapData> LoadMoCapData(string filename)
-    {
-        string path = Application.dataPath + "/" + filename + ".mocap";
-        if (File.Exists(path))
-        {
-            BinaryFormatter formatter = new BinaryFormatter()
-            {
-                SurrogateSelector = _surrogateSelector
-            };
-            FileStream stream = new FileStream(path, FileMode.Open);
+		//Debug.Log($"Saved: {label.GetTimestamp()} ; {label.GetLabel()}");
+	}
 
-            List<MocapData> data = (List<MocapData>)formatter.Deserialize(stream);
-            stream.Close();
+	public List<MocapData> LoadMoCapData(string filename)
+	{
+		string path = Application.dataPath + "/" + filename + ".mocap";
+		if (File.Exists(path))
+		{
+			BinaryFormatter formatter = new BinaryFormatter()
+			{
+				SurrogateSelector = _surrogateSelector
+			};
+			FileStream stream = new FileStream(path, FileMode.Open);
 
-            return data;
-        }
-        else
-        {
-            Debug.Log("Mocap file not found: " + path);
-            return null;
-        }
-    }
+			List<MocapData> data = (List<MocapData>)formatter.Deserialize(stream);
+			stream.Close();
 
-    private void CreateDirectory(string path)
-    {
-        bool exists = Directory.Exists(path);
-        if (!exists)
-            Directory.CreateDirectory(path);
-    }
+			return data;
+		}
+		else
+		{
+			Debug.Log("Mocap file not found: " + path);
+			return null;
+		}
+	}
+
+	private void CreateDirectory(string path)
+	{
+		bool exists = Directory.Exists(path);
+		if (!exists)
+			Directory.CreateDirectory(path);
+	}
 }

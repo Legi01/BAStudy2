@@ -5,44 +5,44 @@ using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
 {
-    private Animator anim;
-    private GameObject knife;
+	private Animator anim;
+	private GameObject knife;
 
-    private bool stab;
+	private bool stab;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        anim = GetComponent<Animator>();
-        knife = GameObject.FindGameObjectWithTag("Knife");
-        knife.SetActive(false);
+	// Start is called before the first frame update
+	void Start()
+	{
+		anim = GetComponent<Animator>();
+		knife = GameObject.FindGameObjectWithTag("Knife");
+		knife.SetActive(false);
 
-        stab = false;
-    }
+		stab = false;
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (stab && anim.GetCurrentAnimatorStateInfo(0).IsName("Knife Stabbing"))
-        {
-            Label label = new Label(DateTime.Now, "Stab");
-            FileManager.Instance().SaveLabels(label);
-            Debug.Log(label.GetLabel());
+	// Update is called once per frame
+	void Update()
+	{
+		if (stab && anim.GetCurrentAnimatorStateInfo(0).IsName("Knife Stabbing"))
+		{
+			Label label = new Label(DateTime.Now, "Stab");
+			FileManager.Instance().SaveLabels(label);
+			Debug.Log(label.GetLabel());
 
-            stab = false;
-        }
-    }
+			stab = false;
+		}
+	}
 
-    public IEnumerator OnStab()
-    {
-        yield return new WaitForSeconds(5);
+	public IEnumerator OnStab()
+	{
+		yield return new WaitForSeconds(5);
 
-        stab = true;
-        knife.SetActive(true);
-        anim.SetTrigger("Stab");
+		stab = true;
+		knife.SetActive(true);
+		anim.SetTrigger("Stab");
 
-        Label label = new Label(DateTime.Now, "Knife appears");
-        FileManager.Instance().SaveLabels(label);
-        Debug.Log(label.GetLabel());
-    }
+		Label label = new Label(DateTime.Now, "Knife appears");
+		FileManager.Instance().SaveLabels(label);
+		Debug.Log(label.GetLabel());
+	}
 }

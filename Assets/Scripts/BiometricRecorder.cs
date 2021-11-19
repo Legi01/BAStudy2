@@ -9,139 +9,139 @@ using System.Diagnostics;
 
 public class BiometricRecorder : MonoBehaviour
 {
-    private bool recording;
-    private List<ECGData> recordedECGData;
-    private List<GSRData> recordedGSRData;
+	private bool recording;
+	private List<ECGData> recordedECGData;
+	private List<GSRData> recordedGSRData;
 
-    private SuitAPIObject suitApi;
+	private SuitAPIObject suitApi;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        recording = false;
-        recordedECGData = new List<ECGData>();
-        recordedGSRData = new List<GSRData>();
+	// Start is called before the first frame update
+	void Start()
+	{
+		recording = false;
+		recordedECGData = new List<ECGData>();
+		recordedGSRData = new List<GSRData>();
 
-        suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
-        if (suitApi.Biometry != null)
-        {
-            StartCoroutine(UpdateECGBiometriyOptions());
-            StartCoroutine(UpdateGSRBiometriyOptions());
-        }
-    }
+		suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
+		if (suitApi.Biometry != null)
+		{
+			StartCoroutine(UpdateECGBiometriyOptions());
+			StartCoroutine(UpdateGSRBiometriyOptions());
+		}
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-     
-    }
+	// Update is called once per frame
+	void Update()
+	{
 
-    private IEnumerator UpdateECGBiometriyOptions()
-    {
-        suitApi.Biometry.StartECG();
-        yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
+	}
 
-        // Call the delegate that is used to track changes of ECG data.
-        suitApi.Biometry.ECGUpdated += OnECGUpdate;
+	private IEnumerator UpdateECGBiometriyOptions()
+	{
+		suitApi.Biometry.StartECG();
+		yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
 
-        ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_20;
-        suitApi.Biometry.UpdateECGFrequency(ecgFrequency);
+		// Call the delegate that is used to track changes of ECG data.
+		suitApi.Biometry.ECGUpdated += OnECGUpdate;
 
-        Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
-    }
+		ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_20;
+		suitApi.Biometry.UpdateECGFrequency(ecgFrequency);
 
-    private IEnumerator UpdateGSRBiometriyOptions()
-    {
-        suitApi.Biometry.StartGSR();
-        yield return new WaitUntil(() => suitApi.Biometry is { GSRStarted: true });
+		Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
+	}
 
-        suitApi.Biometry.GSRUpdated += OnGSRUpdate;
+	private IEnumerator UpdateGSRBiometriyOptions()
+	{
+		suitApi.Biometry.StartGSR();
+		yield return new WaitUntil(() => suitApi.Biometry is { GSRStarted: true });
 
-        GSRFrequency gsrFrequency = GSRFrequency.TS_GSR_FPS_60;
-        suitApi.Biometry.UpdateGSRFrequency(gsrFrequency);
+		suitApi.Biometry.GSRUpdated += OnGSRUpdate;
 
-        Debug.Log($"Updated biometry options: GSR frequency is {gsrFrequency}.");
-    }
+		GSRFrequency gsrFrequency = GSRFrequency.TS_GSR_FPS_60;
+		suitApi.Biometry.UpdateGSRFrequency(gsrFrequency);
 
-    private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
-    {
-        if (resultCode == ResultCode.TS_SUCCESS)
-        {
-            uint[] deltaTime = new uint[ECGBuffer.data.Length];
-            float[] amplitude = new float[ECGBuffer.data.Length];
+		Debug.Log($"Updated biometry options: GSR frequency is {gsrFrequency}.");
+	}
 
-            for (int i = 0; i < ECGBuffer.data.Length; i++)
-            {
-                // Interval between measurement, measured in nanoseconds
-                deltaTime[i] = ECGBuffer.data[i].deltaTime;
+	private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
+	{
+		if (resultCode == ResultCode.TS_SUCCESS)
+		{
+			uint[] deltaTime = new uint[ECGBuffer.data.Length];
+			float[] amplitude = new float[ECGBuffer.data.Length];
 
-                // Amplitude, measured in millivolts
-                //float mv = (ECGBuffer.data[i].mv - 2048.0f) / (4096.0f) * 80.0f;
-                amplitude[i] = ECGBuffer.data[i].mv;
-                //Debug.Log($"Index: {i}, deltaTime: {ECGBuffer.data[i].deltaTime}, amplitude [mV]: {ECGBuffer.data[i].mv}");
-            }
+			for (int i = 0; i < ECGBuffer.data.Length; i++)
+			{
+				// Interval between measurement, measured in nanoseconds
+				deltaTime[i] = ECGBuffer.data[i].deltaTime;
 
-            ECGData ecgData = new ECGData(DateTime.Now, deltaTime, amplitude);
-            if (recording) recordedECGData.Add(ecgData);
-        }
-    }
+				// Amplitude, measured in millivolts
+				//float mv = (ECGBuffer.data[i].mv - 2048.0f) / (4096.0f) * 80.0f;
+				amplitude[i] = ECGBuffer.data[i].mv;
+				//Debug.Log($"Index: {i}, deltaTime: {ECGBuffer.data[i].deltaTime}, amplitude [mV]: {ECGBuffer.data[i].mv}");
+			}
 
-    private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
-    {
-        if (resultCode == ResultCode.TS_SUCCESS)
-        {
+			ECGData ecgData = new ECGData(DateTime.Now, deltaTime, amplitude);
+			if (recording) recordedECGData.Add(ecgData);
+		}
+	}
 
-            for (int i = 0; i < GSRBuffer.data.Length; i++)
-            {
-                uint count = GSRBuffer.data[i].count;
-                int[] data = GSRBuffer.data[i].data;
+	private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
+	{
+		if (resultCode == ResultCode.TS_SUCCESS)
+		{
 
-                GSRData gsrData = new GSRData(DateTime.Now, count, data);
-                if (recording) recordedGSRData.Add(gsrData);
+			for (int i = 0; i < GSRBuffer.data.Length; i++)
+			{
+				uint count = GSRBuffer.data[i].count;
+				int[] data = GSRBuffer.data[i].data;
 
-                for (int j = 0; j < data.Length; j++)
-                {
-                    Debug.Log($" Index (i,j): {i}, {j}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
-                }
-            }
-        }
-    }
+				GSRData gsrData = new GSRData(DateTime.Now, count, data);
+				if (recording) recordedGSRData.Add(gsrData);
 
-    public void StartStopRecording()
-    {
-        recording = !recording;
+				for (int j = 0; j < data.Length; j++)
+				{
+					Debug.Log($" Index (i,j): {i}, {j}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
+				}
+			}
+		}
+	}
 
-        if (recording)
-        {
-            recordedECGData.Clear();
-            recordedGSRData.Clear();
-        }
-    }
+	public void StartStopRecording()
+	{
+		recording = !recording;
 
-    public void Save()
-    {
-        FileManager.Instance().SaveECGData(recordedECGData);
-        FileManager.Instance().SaveGSRData(recordedGSRData);
-    }
+		if (recording)
+		{
+			recordedECGData.Clear();
+			recordedGSRData.Clear();
+		}
+	}
 
-    public bool IsRecording()
-    {
-        return recording;
-    }
+	public void Save()
+	{
+		FileManager.Instance().SaveECGData(recordedECGData);
+		FileManager.Instance().SaveGSRData(recordedGSRData);
+	}
 
-    void OnDisable()
-    {
-        if (suitApi != null && suitApi.Biometry != null)
-        {
-            Debug.Log("Stopping ECG and GSR");
+	public bool IsRecording()
+	{
+		return recording;
+	}
 
-            suitApi.Biometry.StopECG();
-            suitApi.Biometry.StopGSR();
+	void OnDisable()
+	{
+		if (suitApi != null && suitApi.Biometry != null)
+		{
+			Debug.Log("Stopping ECG and GSR");
 
-            suitApi.Biometry.ECGUpdated -= OnECGUpdate;
-            suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
+			suitApi.Biometry.StopECG();
+			suitApi.Biometry.StopGSR();
 
-            Save();
-        }
-    }
+			suitApi.Biometry.ECGUpdated -= OnECGUpdate;
+			suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
+
+			Save();
+		}
+	}
 }

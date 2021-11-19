@@ -6,53 +6,53 @@ using UnityEngine;
 public class BoneBreaker : MonoBehaviour
 {
 
-    private bool breakBone;
+	private bool breakBone;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        breakBone = false;
-    }
+	// Start is called before the first frame update
+	void Start()
+	{
+		breakBone = false;
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (breakBone)
-        {
-            if (UnwrapAngle(transform.localEulerAngles.y) > 230)
-            {
-                transform.Rotate(0, -20.0f * Time.deltaTime, 0, Space.Self);
-            }
-            else
-            {
-                breakBone = false;
+	// Update is called once per frame
+	void Update()
+	{
+		if (breakBone)
+		{
+			if (UnwrapAngle(transform.localEulerAngles.y) > 230)
+			{
+				transform.Rotate(0, -20.0f * Time.deltaTime, 0, Space.Self);
+			}
+			else
+			{
+				breakBone = false;
 
-                Label label = new Label(DateTime.Now, "Stop rotating hand");
-                FileManager.Instance().SaveLabels(label);
-                Debug.Log(label.GetLabel());
-            }
-        }
-    }
+				Label label = new Label(DateTime.Now, "Stop rotating hand");
+				FileManager.Instance().SaveLabels(label);
+				Debug.Log(label.GetLabel());
+			}
+		}
+	}
 
-    public IEnumerator BreakBone()
-    {
-        yield return new WaitForSeconds(5);
+	public IEnumerator BreakBone()
+	{
+		yield return new WaitForSeconds(5);
 
-        breakBone = true;
+		breakBone = true;
 
-        Label label = new Label(DateTime.Now, "Start rotating hand");
-        FileManager.Instance().SaveLabels(label);
-        Debug.Log(label.GetLabel());
-    }
+		Label label = new Label(DateTime.Now, "Start rotating hand");
+		FileManager.Instance().SaveLabels(label);
+		Debug.Log(label.GetLabel());
+	}
 
-    private float UnwrapAngle(float angle)
-    {
-        if (angle >= 0)
-            return angle;
+	private float UnwrapAngle(float angle)
+	{
+		if (angle >= 0)
+			return angle;
 
-        angle = -angle % 360;
+		angle = -angle % 360;
 
-        return 360 - angle;
-    }
+		return 360 - angle;
+	}
 
 }
