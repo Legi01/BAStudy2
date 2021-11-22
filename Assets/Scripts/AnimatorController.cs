@@ -25,11 +25,13 @@ public class AnimatorController : MonoBehaviour
 	{
 		if (stab && anim.GetCurrentAnimatorStateInfo(0).IsName("Knife Stabbing"))
 		{
-			Label label = new Label(DateTime.Now, "Stab");
+			Label label = new Label(DateTime.Now, "Start stabbing");
 			FileManager.Instance().SaveLabels(label);
 			Debug.Log(label.GetLabel());
 
 			stab = false;
+
+			StartCoroutine("OnCompleteAttackAnimation");
 		}
 	}
 
@@ -42,6 +44,16 @@ public class AnimatorController : MonoBehaviour
 		anim.SetTrigger("Stab");
 
 		Label label = new Label(DateTime.Now, "Knife appears");
+		FileManager.Instance().SaveLabels(label);
+		Debug.Log(label.GetLabel());
+	}
+
+	IEnumerator OnCompleteAttackAnimation()
+	{
+		while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+			yield return null;
+
+		Label label = new Label(DateTime.Now, "Stop stabbing");
 		FileManager.Instance().SaveLabels(label);
 		Debug.Log(label.GetLabel());
 	}
