@@ -56,7 +56,6 @@ public class MocapReplay : MonoBehaviour
 			{
 				MocapData currentReplayData = GetCurrentReplayData();
 
-				// TODO: Doesnt work
 				for (int i = 0; i < currentReplayData.GetData().Length; i++)
                 {
 					Quaternion rawRotation = GetCurrentReplayRotation(currentReplayData.GetData()[i].mocap_bone_index);
