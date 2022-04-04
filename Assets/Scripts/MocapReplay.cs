@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TeslasuitAPI;
+using TeslasuitAPI.Utils;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -13,6 +14,7 @@ public class MocapReplay : MonoBehaviour
 	private bool replaying;
 
 	private SuitAPIObject suitApi;
+	private SuitMocapSkeleton suitMocapSkeletonComponent;
 
 	private Stopwatch stopwatch;
 	private long nextReplayTime;
@@ -22,7 +24,7 @@ public class MocapReplay : MonoBehaviour
 	private string _label;
 
 	private Animator animator;
-	//private Transform root;
+	private Transform root;
 
 	private GetHeading getHeading;
 
@@ -34,9 +36,11 @@ public class MocapReplay : MonoBehaviour
 		stopwatch.Start();
 
 		animator = this.GetComponent<Animator>();
-		//root = GameObject.Find("Maniken_skeletool:root").transform;
+		
+		root = GameObject.Find("Teslasuit_Man_Haptics").transform;
 
 		suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
+		suitMocapSkeletonComponent = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitMocapSkeleton>();
 
 		getHeading = GameObject.Find("Maniken_skeletool:pelvis").GetComponent<GetHeading>();
 	}
@@ -53,18 +57,34 @@ public class MocapReplay : MonoBehaviour
 				MocapData currentReplayData = GetCurrentReplayData();
 
 				// TODO: Doesnt work
-				/*for (int i = 0; i < replayData.GetData().Length; i++)
+				for (int i = 0; i < currentReplayData.GetData().Length; i++)
                 {
-                    Quaternion rawRotation = GetCurrentReplayRotation(replayData.GetData()[i].mocap_bone_index).Quaternion();
+					Quaternion rawRotation = GetCurrentReplayRotation(currentReplayData.GetData()[i].mocap_bone_index);
 
-                    Quaternion heading = root.transform.rotation;
+					//Quaternion heading = root.transform.rotation;
+					Quaternion heading = TransformExtensions.HeadingOffset(Quaternion.identity, root.transform.rotation);
 
-                    animator.GetBoneTransform(bone).rotation = heading * rawRotation;
-                    Debug.Log(replayData.data[i].mocap_bone_index + " " + replayData.data[i].quat9x);
-                }*/
+					HumanBodyBones boneID = HumanBodyBones.LastBone;
+					MocapBones.TeslasuitToUnityBones.TryGetValue((MocapBone)currentReplayData.GetData()[i].mocap_bone_index, out boneID);
+
+					// Get joint offsets
+					Quaternion userDefinedOffset = Quaternion.identity;
+					Quaternion defaultOffset = Quaternion.identity;
+					foreach (SuitMocapSkeletonNode node in suitMocapSkeletonComponent.mocapNodes)
+					{
+						if ((ulong)node.MocapBoneIndex == currentReplayData.GetData()[i].mocap_bone_index) {
+							userDefinedOffset = node.userDefinedOffset;
+							defaultOffset = node.defaultOffset;
+						}
+					}
+
+					var res = rawRotation * userDefinedOffset.Inversed() * defaultOffset.Inversed();
+					animator.GetBoneTransform(boneID).rotation = heading * res;
+					
+				}
 
 				// RightUpperArm (Maniken_skeletool:shoulder_r)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightUpperArm]);
+				/*ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightUpperArm]);
 
 				// RightLowerArm (Maniken_skeletool:shoulder_r)
 				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightLowerArm]);
@@ -92,7 +112,7 @@ public class MocapReplay : MonoBehaviour
 				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightLowerLeg]);
 
 				// LeftLowerLeg (Maniken_skeletool:foot_l)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftLowerLeg]);
+				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftLowerLeg]);*/
 			}
 		}
 
@@ -133,11 +153,14 @@ public class MocapReplay : MonoBehaviour
 		}
 	}
 
-	private Quat4f GetCurrentReplayRotation(ulong boneIndex)
+	private Quaternion GetCurrentReplayRotation(ulong boneIndex)
 	{
 		int nodeIndex = FindNodeIndex(boneIndex);
-		if (nodeIndex == -1) return Quat4f.Identity;
-		return replayData[replayIndex].GetData()[nodeIndex].quat9x;
+		Quat4f tsQuat;
+		if (nodeIndex == -1) tsQuat = Quat4f.Identity;
+		else tsQuat = replayData[replayIndex].GetData()[nodeIndex].quat9x;
+
+		return tsQuat.Quaternion();
 	}
 
 	private MocapData GetCurrentReplayData()
