@@ -60,8 +60,7 @@ public class MocapReplay : MonoBehaviour
                 {
 					Quaternion rawRotation = GetCurrentReplayRotation(currentReplayData.GetData()[i].mocap_bone_index);
 
-					//Quaternion heading = root.transform.rotation;
-					Quaternion heading = TransformExtensions.HeadingOffset(Quaternion.identity, root.transform.rotation);
+					Quaternion heading = root.transform.rotation;
 
 					HumanBodyBones boneID = HumanBodyBones.LastBone;
 					MocapBones.TeslasuitToUnityBones.TryGetValue((MocapBone)currentReplayData.GetData()[i].mocap_bone_index, out boneID);
@@ -79,7 +78,9 @@ public class MocapReplay : MonoBehaviour
 
 					var res = rawRotation * userDefinedOffset.Inversed() * defaultOffset.Inversed();
 					animator.GetBoneTransform(boneID).rotation = heading * res;
-					
+
+					if (boneID == HumanBodyBones.Chest) getHeading.UpdateEuler();
+
 				}
 
 				// RightUpperArm (Maniken_skeletool:shoulder_r)
