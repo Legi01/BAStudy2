@@ -90,7 +90,7 @@ public class TsHumanAnimator : MonoBehaviour
         m_motionProvider?.Calibrate();
     }
 
-    private void TryDoWithBone(TsHumanBoneIndex boneIndex, Action<Transform> action)
+    public void TryDoWithBone(TsHumanBoneIndex boneIndex, Action<Transform> action)
     {
         if (!m_bonesTransforms.TryGetValue(boneIndex, out var boneTransform))
         {

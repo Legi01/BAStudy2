@@ -6,40 +6,27 @@ using TMPro;
 
 public class UI : MonoBehaviour
 {
-	public Button recordButton;
-	public Button replayButton;
+	public Button startStopButton;
 	public Button quitButton;
 
 	public TMP_Dropdown stimulieDropbown;	// Synchronous or asynchronous stroking
 	public TMP_Dropdown threatDropdown;		// Attack or break a bone
 	public Toggle hapticsToggle;			// With or without haptic feedback
 
-	public TMP_InputField replayFilename;
 	public TMP_InputField subjectID;
 
-	public TextMeshProUGUI applicationStatus;
-
-	private MocapRecorder mocapRecorder;
-	private MocapReplay motionReplay;
-	private BiometricRecorder biometricRecorder;
+	private BiometricRecorder bioRecorder;
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		mocapRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<MocapRecorder>();
-		motionReplay = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<MocapReplay>();
-		biometricRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<BiometricRecorder>();
+		bioRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<BiometricRecorder>();
 
-		Button btn_record_start = recordButton.GetComponent<Button>();
-		btn_record_start.onClick.AddListener(OnStartStopRecording);
-
-		Button btn_replay_start = replayButton.GetComponent<Button>();
-		btn_replay_start.onClick.AddListener(OnStartStopReplaying);
+		Button btn_start_stop = startStopButton.GetComponent<Button>();
+		btn_start_stop.onClick.AddListener(OnStartStop);
 
 		Button btn_quit = quitButton.GetComponent<Button>();
 		btn_quit.onClick.AddListener(OnQuitApplication);
-
-		replayFilename.text = "MoCap";
 	}
 
 	// Update is called once per frame
@@ -47,35 +34,28 @@ public class UI : MonoBehaviour
 	{
 		if (FileManager.Instance().savingData)
 		{
-			recordButton.interactable = false;
-			replayButton.interactable = false;
+			startStopButton.interactable = false;
 			quitButton.interactable = false;
 			stimulieDropbown.interactable = false;
 			threatDropdown.interactable = false;
 			hapticsToggle.interactable = false;
-			replayFilename.interactable = false;
 		}
 		else
 		{
-			recordButton.interactable = true;
-			replayButton.interactable = true;
+			startStopButton.interactable = true;
 			quitButton.interactable = true;
 			stimulieDropbown.interactable = true;
 			threatDropdown.interactable = true;
 			hapticsToggle.interactable = true;
-			replayFilename.interactable = true;
 		}
 
 	}
 
-	void OnStartStopRecording()
+	void OnStartStop()
 	{
-		if (!mocapRecorder.IsRecording())
+		if (!bioRecorder.IsRecording())
 		{
-			applicationStatus.text = "Recording...";
-			recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop recording";
-			replayButton.gameObject.SetActive(false);
-			replayFilename.gameObject.SetActive(false);
+			startStopButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop";
 			quitButton.gameObject.SetActive(false);
 
 			GameObject[] paintbrushes = GameObject.FindGameObjectsWithTag("Paintbrush");
@@ -89,53 +69,18 @@ public class UI : MonoBehaviour
 			threatDropdown.gameObject.SetActive(false);
 			hapticsToggle.gameObject.SetActive(false);
 
-			mocapRecorder.StartStopRecording();
-			biometricRecorder.StartStopRecording();
+			bioRecorder.StartStopRecording();
 		}
 		else
 		{
-			applicationStatus.text = "";
-			recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start recording";
-			replayButton.gameObject.SetActive(true);
-			replayFilename.gameObject.SetActive(true);
+			startStopButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
 			quitButton.gameObject.SetActive(true);
 			stimulieDropbown.gameObject.SetActive(true);
 			threatDropdown.gameObject.SetActive(true);
 			hapticsToggle.gameObject.SetActive(true);
 
-			mocapRecorder.StartStopRecording();
-			biometricRecorder.StartStopRecording();
-			mocapRecorder.Save();
-			biometricRecorder.Save();
-		}
-	}
-
-	void OnStartStopReplaying()
-	{
-		if (!motionReplay.IsReplaying())
-		{
-			applicationStatus.text = "Replaying...";
-			replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop replaying";
-			recordButton.gameObject.SetActive(false);
-			quitButton.gameObject.SetActive(false);
-			stimulieDropbown.gameObject.SetActive(false);
-			threatDropdown.gameObject.SetActive(false);
-			hapticsToggle.gameObject.SetActive(false);
-
-			motionReplay.Load(replayFilename.text);
-			motionReplay.StartStopReplay();
-		}
-		else
-		{
-			applicationStatus.text = "";
-			replayButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start replaying";
-			recordButton.gameObject.SetActive(true);
-			quitButton.gameObject.SetActive(true);
-			stimulieDropbown.gameObject.SetActive(true);
-			threatDropdown.gameObject.SetActive(true);
-			hapticsToggle.gameObject.SetActive(true);
-
-			motionReplay.StartStopReplay();
+			bioRecorder.StartStopRecording();
+			bioRecorder.Save();
 		}
 	}
 

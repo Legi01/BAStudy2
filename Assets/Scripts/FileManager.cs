@@ -10,7 +10,6 @@ using System.Threading;
 
 public class FileManager
 {
-
 	public static FileManager _instance = null;
 
 	private SurrogateSelector _surrogateSelector;
@@ -31,62 +30,7 @@ public class FileManager
 
 	private FileManager()
 	{
-		_surrogateSelector = new SurrogateSelector();
-		/*_surrogateSelector.AddSurrogate(typeof(TSMocapData), new StreamingContext(StreamingContextStates.All),
-			new TSMocapDataSurrogate());
-		_surrogateSelector.AddSurrogate(typeof(Quat4f), new StreamingContext(StreamingContextStates.All),
-			new Quat4fSurrogate());
-		_surrogateSelector.AddSurrogate(typeof(Vector3s), new StreamingContext(StreamingContextStates.All),
-			new Vector3sSurrogate());
-		_surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
-			new Vector3Surrogate());*/
-
 		savingData = false;
-	}
-
-	public void SaveMoCapData(List<MocapData> data)
-	{
-		if (data == null || data.Count == 0) return;
-
-		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-		string path = Application.dataPath + "/" + subjectID;
-
-		CreateDirectory(path);
-
-		savingData = true;
-
-		Thread thread = new Thread(() =>
-		{
-			// Save to a CSV
-			StringBuilder sb = new StringBuilder();
-
-			// To let Excel know
-			sb.Append("SEP=").Append(seperator).Append("\n");
-			sb.Append(data[0].GetCSVHeader(seperator));
-			foreach (var mocapData in data)
-			{
-				sb.Append(mocapData.ToCSV(seperator)).Append("\n");
-			}
-
-			using (var writer = new StreamWriter(path + "/MoCap_" + data[0].GetTimestamp() + ".csv", false))
-			{
-				writer.Write(sb.ToString());
-			}
-
-			// Serialize to a file
-			BinaryFormatter formatter = new BinaryFormatter
-			{
-				SurrogateSelector = _surrogateSelector
-			};
-
-			FileStream stream = new FileStream(path + "/MoCap_" + data[0].GetTimestamp() + ".mocap", FileMode.Create);
-			formatter.Serialize(stream, data);
-			stream.Close();
-
-			savingData = false;
-			Debug.Log($"Saved {data.Count} MoCap entries.");
-		});
-		thread.Start();
 	}
 
 	public void SaveECGData(List<ECGData> data)
@@ -180,29 +124,6 @@ public class FileManager
 		}
 
 		//Debug.Log($"Saved: {label.GetTimestamp()} ; {label.GetLabel()}");
-	}
-
-	public List<MocapData> LoadMoCapData(string filename)
-	{
-		string path = Application.dataPath + "/" + filename + ".mocap";
-		if (File.Exists(path))
-		{
-			BinaryFormatter formatter = new BinaryFormatter()
-			{
-				SurrogateSelector = _surrogateSelector
-			};
-			FileStream stream = new FileStream(path, FileMode.Open);
-
-			List<MocapData> data = (List<MocapData>)formatter.Deserialize(stream);
-			stream.Close();
-
-			return data;
-		}
-		else
-		{
-			Debug.Log("Mocap file not found: " + path);
-			return null;
-		}
 	}
 
 	private void CreateDirectory(string path)
