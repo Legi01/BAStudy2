@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using TeslasuitAPI;
-using TeslasuitAPI.Utils;
+using TsSDK;
+//using TsSDK.Utils;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -13,8 +13,8 @@ public class MocapReplay : MonoBehaviour
 	private int replayIndex;
 	private bool replaying;
 
-	private SuitAPIObject suitApi;
-	private SuitMocapSkeleton suitMocapSkeletonComponent;
+	//private SuitAPIObject suitApi;
+	//private SuitMocapSkeleton suitMocapSkeletonComponent;
 
 	private Stopwatch stopwatch;
 	private long nextReplayTime;
@@ -26,7 +26,7 @@ public class MocapReplay : MonoBehaviour
 	private Animator animator;
 	private Transform root;
 
-	private GetHeading getHeading;
+	//private GetHeading getHeading;
 
 	private void Start()
 	{
@@ -39,10 +39,10 @@ public class MocapReplay : MonoBehaviour
 		
 		root = GameObject.Find("Teslasuit_Man_Haptics").transform;
 
-		suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
-		suitMocapSkeletonComponent = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitMocapSkeleton>();
+		//suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
+		//suitMocapSkeletonComponent = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitMocapSkeleton>();
 
-		getHeading = GameObject.Find("Maniken_skeletool:pelvis").GetComponent<GetHeading>();
+		//getHeading = GameObject.Find("Maniken_skeletool:pelvis").GetComponent<GetHeading>();
 	}
 
 	private void Update()
@@ -52,7 +52,7 @@ public class MocapReplay : MonoBehaviour
 			double currentTimestamp = stopwatch.Elapsed.TotalMilliseconds;
 			//Debug.Log($"Elapsed {currentTimestamp} next {nextReplayTime}");
 
-			if (currentTimestamp >= nextReplayTime)
+			/*if (currentTimestamp >= nextReplayTime)
 			{
 				MocapData currentReplayData = GetCurrentReplayData();
 
@@ -82,38 +82,7 @@ public class MocapReplay : MonoBehaviour
 					if (boneID == HumanBodyBones.Chest) getHeading.UpdateEuler();
 
 				}
-
-				// RightUpperArm (Maniken_skeletool:shoulder_r)
-				/*ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightUpperArm]);
-
-				// RightLowerArm (Maniken_skeletool:shoulder_r)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightLowerArm]);
-
-				// LeftUpperArm (Maniken_skeletool:shoulder_l)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftUpperArm]);
-
-				// LeftLowerArm (Maniken_skeletool:shoulder_l)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftLowerArm]);
-
-				// Chest (Maniken_skeletool:spine_02)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Chest]);
-				getHeading.UpdateEuler();
-
-				// Spine (Maniken_skeletool:spine_01)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.Spine]);
-
-				// RightUpperLeg (Maniken_skeletool:hip_r)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightUpperLeg]);
-
-				// LeftUpperLeg (Maniken_skeletool:hip_l)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftUpperLeg]);
-
-				// RightLowerLeg (Maniken_skeletool:foot_l)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.RightLowerLeg]);
-
-				// LeftLowerLeg (Maniken_skeletool:foot_l)
-				ApplyRotationForBone(currentReplayData, MocapBones.TeslasuitToUnityBones[MocapBone.LeftLowerLeg]);*/
-			}
+			}*/
 		}
 
 	}
@@ -141,10 +110,10 @@ public class MocapReplay : MonoBehaviour
 
 		if (replaying)
 		{
-			if (suitApi.Mocap != null)
+			/*if (suitApi.Mocap != null)
 			{
 				suitApi.Mocap.Stop();
-			}
+			}*/
 
 			stopwatch.Restart();
 			replayIndex = 0;
@@ -153,7 +122,7 @@ public class MocapReplay : MonoBehaviour
 		}
 	}
 
-	private Quaternion GetCurrentReplayRotation(ulong boneIndex)
+	/*private Quaternion GetCurrentReplayRotation(ulong boneIndex)
 	{
 		int nodeIndex = FindNodeIndex(boneIndex);
 		Quat4f tsQuat;
@@ -161,7 +130,7 @@ public class MocapReplay : MonoBehaviour
 		else tsQuat = replayData[replayIndex].GetData()[nodeIndex].quat9x;
 
 		return tsQuat.Quaternion();
-	}
+	}*/
 
 	private MocapData GetCurrentReplayData()
 	{
@@ -177,11 +146,11 @@ public class MocapReplay : MonoBehaviour
 
 	private int FindNodeIndex(ulong boneIndex)
 	{
-		for (int index = 0; index < this.replayData[replayIndex].GetData().Length; ++index)
+		/*for (int index = 0; index < this.replayData[replayIndex].GetData().Length; ++index)
 		{
 			if ((long)this.replayData[replayIndex].GetData()[index].mocap_bone_index == (long)boneIndex)
 				return index;
-		}
+		}*/
 
 		return -1;
 	}

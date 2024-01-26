@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using TeslasuitAPI;
+using TsSDK;
 using System.IO;
 using System.Threading;
 
@@ -32,14 +32,14 @@ public class FileManager
 	private FileManager()
 	{
 		_surrogateSelector = new SurrogateSelector();
-		_surrogateSelector.AddSurrogate(typeof(TSMocapData), new StreamingContext(StreamingContextStates.All),
+		/*_surrogateSelector.AddSurrogate(typeof(TSMocapData), new StreamingContext(StreamingContextStates.All),
 			new TSMocapDataSurrogate());
 		_surrogateSelector.AddSurrogate(typeof(Quat4f), new StreamingContext(StreamingContextStates.All),
 			new Quat4fSurrogate());
 		_surrogateSelector.AddSurrogate(typeof(Vector3s), new StreamingContext(StreamingContextStates.All),
 			new Vector3sSurrogate());
 		_surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
-			new Vector3Surrogate());
+			new Vector3Surrogate());*/
 
 		savingData = false;
 	}

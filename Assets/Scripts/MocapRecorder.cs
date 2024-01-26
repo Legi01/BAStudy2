@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TeslasuitAPI;
+using TsSDK;
 using Debug = UnityEngine.Debug;
 using System.Linq;
 using System.Diagnostics;
@@ -12,8 +12,8 @@ public class MocapRecorder : MonoBehaviour
 	private bool recording;
 	private List<MocapData> recordedMocapData;
 
-	private SuitAPIObject suitApi;
-	private MocapSkeleton skeleton;
+	//private SuitAPIObject suitApi;
+	//private MocapSkeleton skeleton;
 
 	//private Transform root;
 
@@ -27,7 +27,7 @@ public class MocapRecorder : MonoBehaviour
 		recording = false;
 		recordedMocapData = new List<MocapData>();
 
-		suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
+		//suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
 		StartCoroutine(UpdateMocapOptions());
 
 		animator = this.GetComponent<Animator>();
@@ -62,7 +62,7 @@ public class MocapRecorder : MonoBehaviour
 
 	private IEnumerator UpdateMocapOptions()
 	{
-		suitApi.Start();
+		/*suitApi.Start();
 		yield return new WaitUntil(() => suitApi.Mocap is { isStarted: true });
 
 		suitApi.Mocap.Updated += OnMocapUpdate;
@@ -74,11 +74,13 @@ public class MocapRecorder : MonoBehaviour
 		suitApi.Mocap.UpdateOptions(options);
 		skeleton = suitApi.Mocap.Skeleton;
 		Debug.Log($"Updated mocap options: MoCap frequency is {options.frequency}. Sensor mask is {options.sensors_mask}.");
+		*/
+		yield return new WaitForSeconds(0f);
 	}
 
 	private void OnMocapUpdate()
 	{
-		TSMocapData[] data = skeleton.mocapData;
+		/*TSMocapData[] data = skeleton.mocapData;
 		TSMocapData[] slicedData = new TSMocapData[10];
 		Array.Copy(data, slicedData, 10);
 		MocapData suitData = new MocapData(DateTime.Now, slicedData, jointNames, jointRotations.Values.ToArray());
@@ -86,7 +88,7 @@ public class MocapRecorder : MonoBehaviour
 		if (recording)
 		{
 			recordedMocapData.Add(suitData);
-		}
+		}*/
 	}
 
 	public void StartStopRecording()
@@ -97,10 +99,10 @@ public class MocapRecorder : MonoBehaviour
 		{
 			recordedMocapData.Clear();
 
-			if (suitApi.Mocap != null)
+			/*if (suitApi.Mocap != null)
 			{
 				suitApi.Mocap.Start();
-			}
+			}*/
 		}
 	}
 
@@ -116,7 +118,7 @@ public class MocapRecorder : MonoBehaviour
 
 	void OnDisable()
 	{
-		if (suitApi != null && suitApi.Mocap != null)
+		/*if (suitApi != null && suitApi.Mocap != null)
 		{
 			Debug.Log("Stopping MoCap");
 
@@ -124,6 +126,6 @@ public class MocapRecorder : MonoBehaviour
 			suitApi.Mocap.Updated -= OnMocapUpdate;
 
 			Save();
-		}
+		}*/
 	}
 }

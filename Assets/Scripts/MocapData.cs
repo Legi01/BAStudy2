@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using TeslasuitAPI;
+using TsSDK;
 using UnityEngine;
 
 [Serializable]
 public class MocapData
 {
-	private TSMocapData[] data;
+	//private TSMocapData[] data;
 	private DateTime timestamp;
 	private Vector3[] eulerJointAngles;
 	private List<string> jointNames;
 
-	public MocapData(DateTime timestamp, TSMocapData[] data, List<string> jointNames, Vector3[] eulerJointAngles)
+	/*public MocapData(DateTime timestamp, TSMocapData[] data, List<string> jointNames, Vector3[] eulerJointAngles)
 	{
 		this.timestamp = timestamp;
 		this.data = data;
@@ -24,7 +24,7 @@ public class MocapData
 	public TSMocapData[] GetData()
 	{
 		return data;
-	}
+	}*/
 
 	public Dictionary<string, Vector3> GetJointRotations()
 	{
@@ -48,7 +48,7 @@ public class MocapData
 		StringBuilder sb = new StringBuilder();
 		sb.Append(timestamp.ToString(Config.timestampFormat)).Append(seperator);
 
-		for (int i = 0; i < data.Length; i++)
+		/*for (int i = 0; i < data.Length; i++)
 		{
 			TSMocapData tsMocapData = data[i];
 
@@ -76,12 +76,12 @@ public class MocapData
 		for (int i = 0; i < eulerJointAngles.Length; i++)
 		{
 			sb.Append(Vector3ToString(eulerJointAngles[i], seperator, endLine: i == eulerJointAngles.Length - 1));
-		}
+		}*/
 
 		return sb.ToString();
 	}
 
-	private string QuatToString(Quat4f quat4F, string seperator)
+	/*private string QuatToString(Quat4f quat4F, string seperator)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.Append(quat4F.w.ToString(CultureInfo.InvariantCulture)).Append(seperator)
@@ -90,9 +90,9 @@ public class MocapData
 			.Append(quat4F.z.ToString(CultureInfo.InvariantCulture)).Append(seperator);
 
 		return sb.ToString();
-	}
+	}*/
 
-	private string Vector3sToString(Vector3s vector3S, string separator)
+	/*private string Vector3sToString(Vector3s vector3S, string separator)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.Append(vector3S.x.ToString(CultureInfo.InvariantCulture)).Append(separator)
@@ -100,7 +100,7 @@ public class MocapData
 			.Append(vector3S.z.ToString(CultureInfo.InvariantCulture)).Append(separator);
 
 		return sb.ToString();
-	}
+	}*/
 
 	private string Vector3ToString(Vector3 vector, string separator, bool endLine = false)
 	{
@@ -122,7 +122,7 @@ public class MocapData
 		StringBuilder sb = new StringBuilder();
 		sb.Append("timestamp").Append(seperator);
 
-		foreach (var tsMocapData in data)
+		/*foreach (var tsMocapData in data)
 		{
 			string nodeName = Enum.GetName(typeof(MocapBone), tsMocapData.mocap_bone_index);
 			sb.Append(nodeName + "_boneIndex").Append(seperator);
@@ -158,7 +158,7 @@ public class MocapData
 			sb.Append(boneName + "_x").Append(seperator);
 			sb.Append(boneName + "_y").Append(seperator);
 			sb.Append(boneName + "_z").Append(seperator);
-		}
+		}*/
 
 		sb.Append("\n");
 		return sb.ToString();

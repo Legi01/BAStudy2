@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TeslasuitAPI;
+using TsSDK;
 using Debug = UnityEngine.Debug;
 using System.Linq;
 using System.Diagnostics;
@@ -13,7 +13,7 @@ public class BiometricRecorder : MonoBehaviour
 	private List<ECGData> recordedECGData;
 	private List<GSRData> recordedGSRData;
 
-	private SuitAPIObject suitApi;
+	//private SuitAPIObject suitApi;
 
 	// Start is called before the first frame update
 	void Start()
@@ -22,12 +22,12 @@ public class BiometricRecorder : MonoBehaviour
 		recordedECGData = new List<ECGData>();
 		recordedGSRData = new List<GSRData>();
 
-		suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
+		/*suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
 		if (suitApi.Biometry != null)
 		{
 			StartCoroutine(UpdateECGBiometriyOptions());
 			StartCoroutine(UpdateGSRBiometriyOptions());
-		}
+		}*/
 	}
 
 	// Update is called once per frame
@@ -36,7 +36,7 @@ public class BiometricRecorder : MonoBehaviour
 
 	}
 
-	private IEnumerator UpdateECGBiometriyOptions()
+	/*private IEnumerator UpdateECGBiometriyOptions()
 	{
 		suitApi.Biometry.StartECG();
 		yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
@@ -106,7 +106,7 @@ public class BiometricRecorder : MonoBehaviour
 			}
 		}
 	}
-
+*/
 	public void StartStopRecording()
 	{
 		recording = !recording;
@@ -131,7 +131,7 @@ public class BiometricRecorder : MonoBehaviour
 
 	void OnDisable()
 	{
-		if (suitApi != null && suitApi.Biometry != null)
+		/*if (suitApi != null && suitApi.Biometry != null)
 		{
 			Debug.Log("Stopping ECG and GSR");
 
@@ -142,6 +142,6 @@ public class BiometricRecorder : MonoBehaviour
 			suitApi.Biometry.GSRUpdated -= OnGSRUpdate;
 
 			Save();
-		}
+		}*/
 	}
 }

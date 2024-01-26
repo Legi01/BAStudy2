@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using TeslasuitAPI;
+using TsSDK;
 using UnityEngine;
 
 [Serializable]

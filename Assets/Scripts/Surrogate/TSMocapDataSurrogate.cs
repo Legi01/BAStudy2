@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
-using TeslasuitAPI;
+using TsSDK;
 
-public class TSMocapDataSurrogate : ISerializationSurrogate
+public class TSMocapDataSurrogate //: ISerializationSurrogate
 {
-	public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
+	/*public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
 	{
 		TSMocapData data = (TSMocapData)obj;
 		info.AddValue("bone_index", data.mocap_bone_index);
@@ -14,9 +14,9 @@ public class TSMocapDataSurrogate : ISerializationSurrogate
 		info.AddValue("accelerometer", data.accelerometer);
 		info.AddValue("linear_accel", data.linear_accel);
 		info.AddValue("temperature", data.temperature);
-	}
+	}*/
 
-	public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
+	/*public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
 	{
 		TSMocapData data = (TSMocapData)obj;
 		data.mocap_bone_index = info.GetUInt64("bone_index");
@@ -28,5 +28,5 @@ public class TSMocapDataSurrogate : ISerializationSurrogate
 		data.linear_accel = (Vector3s)info.GetValue("linear_accel", typeof(Vector3s));
 		data.temperature = info.GetSByte("temperature");
 		return data;
-	}
+	}*/
 }
