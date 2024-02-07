@@ -27,6 +27,8 @@ EditorBuildSettings:
     path: Assets/Horror FPS KIT/HFPS Assets/Content/Scenes/Example Scenes/ScenePresistency/SavingScene02.unity
     guid: a7bfff2b296037b4eba8867601e57531
   m_configObjects:
+    Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: fb4bf2803c23c98499cdab35ba671ddd,
+      type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: 879dc59d21f31734c95279731f769bef,
       type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: f4687e337c6012f40a487fd66e19f2da,
