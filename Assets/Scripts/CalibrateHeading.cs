@@ -33,7 +33,5 @@ public class CalibrateHeading : MonoBehaviour
 
         r.y = target.eulerAngles.y - offset;
         target.eulerAngles = r;
-
-       // target.rotation *= Quaternion.Euler(x, 0f, 0f);
     }
 }

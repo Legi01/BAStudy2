@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Flesh
-  - Water
-  - Zombie
+  - Teslasuit
+  - Anchor
+  - Head
   layers:
   - Default
   - TransparentFX
@@ -16,18 +16,18 @@ TagManager:
   - UI
   - 
   - 
-  - Zombie
-  - Interact
-  - BodyPart
-  - PlayerBody
-  - PlayerInvisible
-  - PostProcessing Main
-  - PostProcessing Arms
-  - CamExamination
-  - CamWeapon
-  - Ladder
-  - CamSecondExamination
-  - Threat
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
