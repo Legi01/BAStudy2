@@ -31,8 +31,6 @@ public class TsHapticImpulseMaterialObject : MonoBehaviour
             var device = collisionHandler.HapticPlayer.Device;
             var playable = device.HapticPlayer.GetPlayable(m_hapticMaterial.Instance as IHapticAsset) as IHapticMaterialPlayable;
             playable.Play();
-
-            Debug.Log("Play haptics on " + collisionHandler.name);
         }
     }
 
