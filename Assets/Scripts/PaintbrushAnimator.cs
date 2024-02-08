@@ -96,17 +96,17 @@ public class PaintbrushAnimator : MonoBehaviour
 					}
 					Label label = new Label(DateTime.Now, str);
 					Debug.Log(label.GetLabel());
-					FileManager.Instance().SaveLabels(label);
+					//FileManager.Instance().SaveLabels(label);
 
 					switch (GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().threatDropdown.value)
 					{
 						case 0:
 							// Attack the player
-							StartCoroutine(GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab());
+							//StartCoroutine(GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>().OnStab());
 							break;
 						case 1:
 							// Break the hand
-							StartCoroutine(GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone());
+							//StartCoroutine(GameObject.FindGameObjectWithTag("Hand").GetComponent<BoneBreaker>().BreakBone());
 							break;
 						default:
 							break;
@@ -191,7 +191,7 @@ public class PaintbrushAnimator : MonoBehaviour
 			}
 			Label label = new Label(DateTime.Now, str);
 			Debug.Log(label.GetLabel());
-			FileManager.Instance().SaveLabels(label);
+			//FileManager.Instance().SaveLabels(label);
 		}
 	}
 

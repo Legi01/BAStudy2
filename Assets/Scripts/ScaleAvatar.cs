@@ -20,10 +20,10 @@ public class ScaleAvatar : MonoBehaviour
 			if (Camera.main.transform.position.y != 0)
 			{
 				// Computes the scale factor of the avatar based on the height of the player.
-				float avatarHeigth = avatarHead.position.y;
+				float avatarHeight = avatarHead.position.y;
 				float playerHeight = Camera.main.transform.position.y;
-				float scaleFactor = playerHeight / avatarHeigth;
-				Debug.Log("Player height " + playerHeight + "; Avatar height " + avatarHeigth + "; Scale factor " + scaleFactor);
+				float scaleFactor = playerHeight / avatarHeight;
+				Debug.Log("Player height " + playerHeight + "; Avatar height " + avatarHeight + "; Scale factor " + scaleFactor);
 
 				// Adjusts model size to the height of the user
 				this.transform.localScale = Vector3.one * scaleFactor;

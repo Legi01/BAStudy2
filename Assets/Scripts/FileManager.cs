@@ -37,8 +37,8 @@ public class FileManager
 	{
 		if (data == null || data.Count == 0) return;
 
-		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-		string path = Application.dataPath + "/" + subjectID;
+		string subjectID = GameObject.FindGameObjectWithTag("UI").GetComponent<UI>().GetSubjectID();
+		string path = Application.dataPath + "/Data/" + subjectID;
 
 		CreateDirectory(path);
 
@@ -64,38 +64,7 @@ public class FileManager
 		thread.Start();
 	}
 
-	public void SaveGSRData(List<GSRData> data)
-	{
-		if (data == null || data.Count == 0) return;
-
-		string subjectID = GameObject.Find("UI").GetComponent<UI>().GetSubjectID();
-		string path = Application.dataPath + "/" + subjectID;
-
-		CreateDirectory(path);
-
-		Thread thread = new Thread(() =>
-		{
-			StringBuilder sb = new StringBuilder();
-
-			// To let Excel know
-			sb.Append("SEP=").Append(seperator).Append("\n");
-			sb.Append(data[0].GetCSVHeader(seperator));
-			foreach (var gsrData in data)
-			{
-				sb.Append(gsrData.ToCSV(seperator)).Append("\n");
-			}
-
-			using (var writer = new StreamWriter(path + "/GSR_" + data[0].GetTimestamp() + ".csv", false))
-			{
-				writer.Write(sb.ToString());
-			}
-
-			Debug.Log($"Saved {data.Count} GSR entries.");
-		});
-		thread.Start();
-	}
-
-	public void SaveLabels(Label label)
+	/*public void SaveLabels(Label label)
 	{
 		if (label == null) return;
 
@@ -125,7 +94,7 @@ public class FileManager
 
 		//Debug.Log($"Saved: {label.GetTimestamp()} ; {label.GetLabel()}");
 	}
-
+	*/
 	private void CreateDirectory(string path)
 	{
 		bool exists = Directory.Exists(path);

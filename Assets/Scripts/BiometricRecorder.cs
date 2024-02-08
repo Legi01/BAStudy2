@@ -9,9 +9,12 @@ using System.Diagnostics;
 
 public class BiometricRecorder : MonoBehaviour
 {
+	public TsPpgProvider ppgProvider;
+
+	private Dictionary<int, TsProcessedPpgViewItem> viewItems = new Dictionary<int, TsProcessedPpgViewItem>();
+
 	private bool recording;
 	private List<ECGData> recordedECGData;
-	private List<GSRData> recordedGSRData;
 
 	//private SuitAPIObject suitApi;
 
@@ -20,7 +23,6 @@ public class BiometricRecorder : MonoBehaviour
 	{
 		recording = false;
 		recordedECGData = new List<ECGData>();
-		recordedGSRData = new List<GSRData>();
 
 		/*suitApi = GameObject.FindGameObjectWithTag("Teslasuit").GetComponentInChildren<SuitAPIObject>();
 		if (suitApi.Biometry != null)
@@ -33,80 +35,28 @@ public class BiometricRecorder : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
-	}
-
-	/*private IEnumerator UpdateECGBiometriyOptions()
-	{
-		suitApi.Biometry.StartECG();
-		yield return new WaitUntil(() => suitApi.Biometry is { ECGStarted: true });
-
-		// Call the delegate that is used to track changes of ECG data.
-		suitApi.Biometry.ECGUpdated += OnECGUpdate;
-
-		ECGFrequency ecgFrequency = ECGFrequency.TS_ECG_FPS_20;
-		suitApi.Biometry.UpdateECGFrequency(ecgFrequency);
-
-		Debug.Log($"Updated biometry options: ECG frequency is {ecgFrequency}.");
-	}
-
-	private IEnumerator UpdateGSRBiometriyOptions()
-	{
-		suitApi.Biometry.StartGSR();
-		yield return new WaitUntil(() => suitApi.Biometry is { GSRStarted: true });
-
-		suitApi.Biometry.GSRUpdated += OnGSRUpdate;
-
-		GSRFrequency gsrFrequency = GSRFrequency.TS_GSR_FPS_60;
-		suitApi.Biometry.UpdateGSRFrequency(gsrFrequency);
-
-		Debug.Log($"Updated biometry options: GSR frequency is {gsrFrequency}.");
-	}
-
-	private void OnECGUpdate(ref ECGBuffer_MV ECGBuffer, IntPtr opaque, ResultCode resultCode)
-	{
-		if (resultCode == ResultCode.TS_SUCCESS)
+		if (ppgProvider.IsRunning)
 		{
-			uint[] deltaTime = new uint[ECGBuffer.data.Length];
-			float[] amplitude = new float[ECGBuffer.data.Length];
-
-			for (int i = 0; i < ECGBuffer.data.Length; i++)
+			var data = ppgProvider.GetData();
+			if (data == null)
 			{
-				// Interval between measurement, measured in nanoseconds
-				deltaTime[i] = ECGBuffer.data[i].deltaTime;
-
-				// Amplitude, measured in millivolts
-				//float mv = (ECGBuffer.data[i].mv - 2048.0f) / (4096.0f) * 80.0f;
-				amplitude[i] = ECGBuffer.data[i].mv;
-				//Debug.Log($"Index: {i}, deltaTime: {ECGBuffer.data[i].deltaTime}, amplitude [mV]: {ECGBuffer.data[i].mv}");
+				return;
 			}
 
-			ECGData ecgData = new ECGData(DateTime.Now, deltaTime, amplitude);
-			if (recording) recordedECGData.Add(ecgData);
-		}
-	}
-
-	private void OnGSRUpdate(ref GSRBuffer GSRBuffer, IntPtr opaque, ResultCode resultCode)
-	{
-		if (resultCode == ResultCode.TS_SUCCESS)
-		{
-
-			for (int i = 0; i < GSRBuffer.data.Length; i++)
+			foreach (var nodeData in data.NodesData)
 			{
-				uint count = GSRBuffer.data[i].count;
-				int[] data = GSRBuffer.data[i].data;
-
-				GSRData gsrData = new GSRData(DateTime.Now, count, data);
-				if (recording) recordedGSRData.Add(gsrData);
-
-				for (int j = 0; j < data.Length; j++)
-				{
-					Debug.Log($" Index (i,j): {i}, {j}, count: {GSRBuffer.data[i].count}, data: {GSRBuffer.data[i].data[j]}");
-				}
+				OnECGUpdate(nodeData);
 			}
 		}
 	}
-*/
+	private void OnECGUpdate(ProcessedPpgNodeData nodeData)
+	{
+		ECGData ecgData = new ECGData(DateTime.Now, nodeData.timestamp, nodeData.heartRate, nodeData.isHeartrateValid);
+
+		//Debug.Log("ecgData: hr = " + nodeData.heartRate + " valid " + nodeData.isHeartrateValid);
+		if (recording) recordedECGData.Add(ecgData);
+	}
+
 	public void StartStopRecording()
 	{
 		recording = !recording;
@@ -114,14 +64,12 @@ public class BiometricRecorder : MonoBehaviour
 		if (recording)
 		{
 			recordedECGData.Clear();
-			recordedGSRData.Clear();
 		}
 	}
 
 	public void Save()
 	{
 		FileManager.Instance().SaveECGData(recordedECGData);
-		FileManager.Instance().SaveGSRData(recordedGSRData);
 	}
 
 	public bool IsRecording()
