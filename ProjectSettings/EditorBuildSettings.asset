@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SuitMocap.unity
+    path: Assets/Scenes/FullBodyIllusion.unity
     guid: f9e4be85f50d63d46bdbb2c521d5b2ef
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}

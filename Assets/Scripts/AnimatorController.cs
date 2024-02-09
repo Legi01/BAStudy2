@@ -17,11 +17,11 @@ public class AnimatorController : MonoBehaviour
 	private GameObject knife;
 	private GameObject mirror;
 
-	public Transform target;
+	private Transform target;
 	private float movementSpeed = 2f;
 	private float stoppingDistance = 1f;
 
-	private float timer = 1;
+	private float timer = 180;
 	private float countdown;
 	private bool startCountdown;
 
@@ -34,6 +34,12 @@ public class AnimatorController : MonoBehaviour
 
 		knife = GameObject.FindGameObjectWithTag("Knife");
 		mirror = GameObject.FindGameObjectWithTag("Mirror");
+
+		target = GameObject.FindGameObjectWithTag("Player").transform.GetComponentInChildren<SkinnedMeshRenderer>().rootBone;
+		if (target == null)
+		{
+			Debug.LogError("AnimatorController: Player root bone not found");
+		}
 
 		currentState = AttackerState.Idle;
 

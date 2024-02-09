@@ -39,7 +39,6 @@ public class UI : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
 		if (tsSuitBehaviour != null)
 		{
 			if (tsSuitBehaviour.IsConnected)
