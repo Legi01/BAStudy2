@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TsHapticMaterial
   m_bytes: 
   m_assetType: 0
-  m_hapticEffect: {fileID: 5022602860645237092, guid: e45c22c2f7100964ba0a86d044c7caba, type: 3}
-  m_touchSequence: {fileID: 5022602860645237092, guid: d09856a46c58a2340aca43d18d58d9bc, type: 3}
+  m_hapticEffect: {fileID: 5022602860645237092, guid: 1380f9d55d772aa42aa0469ab0a0e81e, type: 3}
+  m_touchSequence: {fileID: 5022602860645237092, guid: 5aee1e22ad8909f4aa1601ec98e33a0e, type: 3}

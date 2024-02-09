@@ -419,7 +419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorOffset: 0.05
-  hipsOffset: -0.2
+  hipsOffset: -0.1
 --- !u!4 &80829798
 Transform:
   m_ObjectHideFlags: 0

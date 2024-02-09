@@ -25,6 +25,8 @@ public class TsHapticImpulseMaterialObject : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         var collisionHandler = collision.gameObject.GetComponent<TsHapticCollisionHandler>();
+
+        //Debug.Log("Play haptics on " + collisionHandler.name);
         if(collisionHandler != null && collisionHandler.HapticPlayer.Device != null)
         {
             var device = collisionHandler.HapticPlayer.Device;
