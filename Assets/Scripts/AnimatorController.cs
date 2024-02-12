@@ -22,7 +22,7 @@ public class AnimatorController : MonoBehaviour
 	private float stoppingDistance = 1f;
 
 	private float timer = 180;
-	private float countdown;
+	public float countdown;
 	private bool startCountdown;
 
 	private bool moveMirror;
@@ -35,25 +35,32 @@ public class AnimatorController : MonoBehaviour
 		knife = GameObject.FindGameObjectWithTag("Knife");
 		mirror = GameObject.FindGameObjectWithTag("Mirror");
 
-		target = GameObject.FindGameObjectWithTag("Player").transform.GetComponentInChildren<SkinnedMeshRenderer>().rootBone;
-		if (target == null)
-		{
-			Debug.LogError("AnimatorController: Player root bone not found");
-		}
-
 		currentState = AttackerState.Idle;
 
 		moveMirror = false;
 		countdown = 0;
 	}
 
+	private bool TryFindTarget()
+	{
+		GameObject targetObject = GameObject.FindGameObjectWithTag("Player");
+		if (targetObject != null)
+			target = targetObject.transform.GetComponentInChildren<SkinnedMeshRenderer>().rootBone;
+
+		if (target != null) return true;
+		else return false;
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
+
+		if (!TryFindTarget()) return;
+
 		switch (currentState)
 		{
 			case AttackerState.Idle:
-				Debug.Log("Idle");
+				//Debug.Log("Idle");
 
 				// Introduce a threat after 3 minutes (180 s or 180000 ms)
 				if (startCountdown)
@@ -70,7 +77,8 @@ public class AnimatorController : MonoBehaviour
 				break;
 
 			case AttackerState.Walking:
-				Debug.Log("Walking");
+				//Debug.Log("Walking");
+
 				if (target != null)
 				{
 					// Teslasuit moves the hips, not the parent game objects.
@@ -93,7 +101,7 @@ public class AnimatorController : MonoBehaviour
 				break;
 
 			case AttackerState.Stabbing:
-				Debug.Log("Stabbing");
+				//Debug.Log("Stabbing");
 
 				anim.SetBool("Stabbing", true);
 
