@@ -29,6 +29,7 @@ public class UI : MonoBehaviour
 
 	private bool startStimulation = false;
 
+	public GameObject ethan;
 	public GameObject xBot_sync;
 	public GameObject xBot_async;
 	public GameObject yBot_sync;
@@ -109,6 +110,9 @@ void Update()
 				break;
 
 		}
+
+		ethan.SetActive(false);
+
 		//bool sync = stimulieDropbown.value == 0 ? true : false;
 		//bool haptics = hapticsToggle.isOn;
 
