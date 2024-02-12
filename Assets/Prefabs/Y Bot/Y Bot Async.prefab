@@ -2926,6 +2926,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7629701586496678954}
+  - component: {fileID: 4481838026944566487}
   m_Layer: 0
   m_Name: mixamorig:Head
   m_TagString: Head
@@ -2949,6 +2950,18 @@ Transform:
   - {fileID: 4664438447225006276}
   m_Father: {fileID: 7091052951160931664}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4481838026944566487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6864426176793369126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7973907373e9d9544a9a5af94730a779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7089529176506211086
 GameObject:
   m_ObjectHideFlags: 0

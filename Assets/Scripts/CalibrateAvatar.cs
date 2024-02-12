@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class CalibrateAvatar : MonoBehaviour
 {
-    private TsHumanAnimator humanAnimator;
+    private GameObject player;
     private Transform targetHips;
+    private GameObject avatarHead;
 
     private float offset = 0;
 
@@ -13,18 +14,20 @@ public class CalibrateAvatar : MonoBehaviour
     public float hipsOffset = 0.2f;
 
 	// Start is called before the first frame update
-	private void Start()
-	{
-	}
-
-	void OnEnable()
+	void Start()
     {
-        humanAnimator = GameObject.FindGameObjectWithTag("Player").transform.GetComponent<TsHumanAnimator>();
+        player = GameObject.FindGameObjectWithTag("Player");
         targetHips = GameObject.FindGameObjectWithTag("Player").transform.GetComponentInChildren<SkinnedMeshRenderer>().rootBone;
         if (targetHips == null)
         {
             Debug.LogError("CalibrateAvatar: Player root bone not found");
         }
+        else
+		{
+            Debug.Log("CalibrateAvatar: " + targetHips.name);
+		}
+
+        avatarHead = GameObject.FindGameObjectWithTag("Head");
 
         CalculateOffset();
     }
@@ -39,11 +42,13 @@ public class CalibrateAvatar : MonoBehaviour
 
     public void Calibrate()
 	{
-        humanAnimator.Calibrate();
+        player.GetComponent<TsHumanAnimator>().Calibrate();
 
-        //target.GetComponent<ScaleAvatar>().ReScale();
+        player.GetComponent<ScaleAvatar>().ReScale();
 
         CalculateOffset();
+
+        avatarHead.GetComponent<HeadAnimator>().UpdateOffset(offset);
     }
 
     private void CalculateOffset()

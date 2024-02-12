@@ -12,6 +12,7 @@ TagManager:
   - Knife
   - Mirror
   - HapticsPaintbrush
+  - Indicator
   layers:
   - Default
   - TransparentFX

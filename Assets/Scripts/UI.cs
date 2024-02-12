@@ -103,12 +103,6 @@ void Update()
 				if (female) xBot_async.SetActive(true);
 				else yBot_async.SetActive(true);
 				break;
-
-			case 2:
-				if (female) xBot_sync.SetActive(true);
-				else yBot_sync.SetActive(true);
-				break;
-
 		}
 
 		ethan.SetActive(false);
