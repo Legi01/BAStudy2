@@ -21,7 +21,7 @@ public class AnimatorController : MonoBehaviour
 	private float movementSpeed = 2f;
 	private float stoppingDistance = 1f;
 
-	private float timer = 180;
+	private float timer = 120;
 	public float countdown;
 	private bool startCountdown;
 

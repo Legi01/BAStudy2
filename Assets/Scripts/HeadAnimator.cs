@@ -31,9 +31,9 @@ public class HeadAnimator : MonoBehaviour
         Quaternion currentRelativeRotation = Quaternion.Inverse(bodyInitialRotation) * currentHMDRotation;
 
         // Apply head rotation to character's head
-        transform.rotation = bodyInitialRotation * Quaternion.Inverse(currentRelativeRotation);
+        //transform.rotation = bodyInitialRotation * Quaternion.Inverse(currentRelativeRotation);
 
         // Animate avatar head
-        transform.rotation = Camera.main.transform.rotation;
+        transform.rotation =  Quaternion.Inverse(bodyInitialRotation) * currentHMDRotation;
     }
 }

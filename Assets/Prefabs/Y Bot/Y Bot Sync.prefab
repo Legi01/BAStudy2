@@ -2802,7 +2802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HapticPlayer: {fileID: 0}
-  Channel: {fileID: 0}
+  Channel: {fileID: 11400000, guid: 885220b30da298346a48f138902c2685, type: 2}
 --- !u!1 &6358591038896976937
 GameObject:
   m_ObjectHideFlags: 0
