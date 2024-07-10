@@ -36,12 +36,13 @@ public class UI : MonoBehaviour
 	public GameObject yBot_async;
 
 	public GameObject IndicatorForBot;
+	public UITimer uiTimer;
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		bioRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<BiometricRecorder>();
-		animController = GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>();
+		//animController = GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>();
 		paintbrushHapticsCollider = GameObject.FindGameObjectWithTag("HapticsPaintbrush").GetComponent<SphereCollider>();
 
 		hapticsToggle.onValueChanged.AddListener(OnHapticsToggle);
@@ -132,8 +133,11 @@ void Update()
 			stimuliDropdown.gameObject.SetActive(false);
 			threatDropdown.gameObject.SetActive(false);
 			hapticsToggle.gameObject.SetActive(false);
-
-			animController.StartStopwatch();
+			if (uiTimer != null)
+			{
+				uiTimer.StartTimer();
+			}
+			//animController.StartStopwatch();
 
 			//bioRecorder.StartStopRecording();
 		}
