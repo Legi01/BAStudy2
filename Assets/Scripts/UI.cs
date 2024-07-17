@@ -8,7 +8,7 @@ public class UI : MonoBehaviour
 {
 	public TsSuitBehaviour tsSuitBehaviour;
 
-	public Button loadAvatarButton;
+	//public Button loadAvatarButton;
 	public Button startStopButton;
 	public Button quitButton;
 
@@ -19,34 +19,38 @@ public class UI : MonoBehaviour
 	public TMP_Dropdown stimuliDropdown;	// Synchronous or asynchronous stroking
 	public TMP_Dropdown threatDropdown;		// Attack or break a bone
 	public Toggle hapticsToggle;			// With or without haptic feedback
+	public Toggle longArmsToggle; 			// long or normal arms
 
-	public TMP_InputField subjectID;
+	public TMP_InputField subjectID;		// the ID of the subject
 
-	private BiometricRecorder bioRecorder;
-	private AnimatorController animController;
+	//private BiometricRecorder bioRecorder;
+	//private AnimatorController animController;
 
 	private SphereCollider paintbrushHapticsCollider;
 
 	private bool startStimulation = false;
 
 	public GameObject ethan;
-	public GameObject xBot_sync;
-	public GameObject xBot_async;
-	public GameObject yBot_sync;
-	public GameObject yBot_async;
+	//public GameObject xBot_sync;
+	//public GameObject xBot_async;
+	//public GameObject yBot_sync;
+	//public GameObject yBot_async;
 
-	public GameObject IndicatorForBot;
+	//public GameObject IndicatorForBot;
 	public UITimer uiTimer;
+	public CubeCollisionRecorder cubeCollisionRecorder; // Reference to the CubeCollisionRecorder script
+
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		bioRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<BiometricRecorder>();
+		//bioRecorder = GameObject.FindGameObjectWithTag("Teslasuit").GetComponent<BiometricRecorder>();
 		//animController = GameObject.FindGameObjectWithTag("Attacker").GetComponent<AnimatorController>();
 		paintbrushHapticsCollider = GameObject.FindGameObjectWithTag("HapticsPaintbrush").GetComponent<SphereCollider>();
 
+		longArmsToggle.onValueChanged.AddListener(OnLongArmsToggle);
 		hapticsToggle.onValueChanged.AddListener(OnHapticsToggle);
-		loadAvatarButton.onClick.AddListener(LoadAvatar);
+		//loadAvatarButton.onClick.AddListener(LoadAvatar);
 		startStopButton.onClick.AddListener(OnStartStop);
 		quitButton.onClick.AddListener(OnQuitApplication);
 }
@@ -66,7 +70,7 @@ void Update()
 			}
 		}
 
-		if (FileManager.Instance().savingData)
+		/*if (FileManager.Instance().savingData)
 		{
 			startStopButton.interactable = false;
 			quitButton.interactable = false;
@@ -83,11 +87,11 @@ void Update()
 			stimuliDropdown.interactable = true;
 			threatDropdown.interactable = true;
 			hapticsToggle.interactable = true;
-		}
+		}*/
 
 	}
 
-	void LoadAvatar()
+	/*void LoadAvatar()
 	{
 		bool female = avatarDropdown.value == 0 ? true : false;
 
@@ -112,27 +116,32 @@ void Update()
 		//bool haptics = hapticsToggle.isOn;
 
 		IndicatorForBot.gameObject.SetActive(true);
-	}
+	}*/
 
 	void OnStartStop()
 	{
 		startStimulation = !startStimulation;
 		if (startStimulation)
 		{
-			// Start recording only if subject ID was entered
-			/*if (IsSubjectIDEmpty())
+			//Start recording only if subject ID was entered
+			if (IsSubjectIDEmpty())
 			{
 				debugLabel.text = "Enter subject ID";
 				return;
-			}*/
+			}
+			// Initialisiere DataLogger mit der eingegebenen ID
+        	string subjectIDText = GetSubjectID();
+        	string condition = cubeCollisionRecorder.GetCondition();
+        	cubeCollisionRecorder.InitializeDataLogger(subjectIDText, condition);
 
 			startStopButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop";
 			quitButton.gameObject.SetActive(false);
 			subjectID.gameObject.SetActive(false);
-			avatarDropdown.gameObject.SetActive(false);
-			stimuliDropdown.gameObject.SetActive(false);
-			threatDropdown.gameObject.SetActive(false);
+			//avatarDropdown.gameObject.SetActive(false);
+			//stimuliDropdown.gameObject.SetActive(false);
+			//threatDropdown.gameObject.SetActive(false);
 			hapticsToggle.gameObject.SetActive(false);
+			longArmsToggle.gameObject.SetActive(false);
 			if (uiTimer != null)
 			{
 				uiTimer.StartTimer();
@@ -146,10 +155,14 @@ void Update()
 			startStopButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start";
 			quitButton.gameObject.SetActive(true);
 			subjectID.gameObject.SetActive(true);
-			stimuliDropdown.gameObject.SetActive(true);
-			threatDropdown.gameObject.SetActive(true);
+			//stimuliDropdown.gameObject.SetActive(true);
+			//threatDropdown.gameObject.SetActive(true);
 			hapticsToggle.gameObject.SetActive(true);
-
+			longArmsToggle.gameObject.SetActive(true);
+			if (uiTimer != null)
+			{
+				uiTimer.ResetAndStopTimer();
+			}
 			//bioRecorder.StartStopRecording();
 			//bioRecorder.Save();
 		}
@@ -158,6 +171,11 @@ void Update()
 	void OnHapticsToggle(bool toggle)
 	{
 		paintbrushHapticsCollider.enabled = toggle;
+	}
+
+	void OnLongArmsToggle(bool toggle)
+	{
+		//falls gecklickt, andere Klasse, die Armlänge anpasst
 	}
 
 	public void OnQuitApplication()
